@@ -1,6 +1,7 @@
-﻿using System.Reflection;
+﻿using LiteApi.Contracts.Models;
+using System.Reflection;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IControllerDiscoverer
     {

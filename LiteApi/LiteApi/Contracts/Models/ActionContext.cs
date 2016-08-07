@@ -1,11 +1,6 @@
-﻿using LiteApi.Attributes;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Models
 {
     public class ActionContext
     {

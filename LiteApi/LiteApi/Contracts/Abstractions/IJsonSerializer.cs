@@ -1,4 +1,4 @@
-﻿namespace LiteApi.Contracts
+﻿namespace LiteApi.Contracts.Abstractions
 {
     public interface IJsonSerializer
     {

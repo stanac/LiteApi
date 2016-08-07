@@ -1,6 +1,7 @@
-﻿using System;
+﻿using LiteApi.Contracts.Models;
+using System;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IActionDiscoverer
     {

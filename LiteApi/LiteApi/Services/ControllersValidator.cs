@@ -1,8 +1,8 @@
-﻿using LiteApi.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 
 namespace LiteApi.Services
 {

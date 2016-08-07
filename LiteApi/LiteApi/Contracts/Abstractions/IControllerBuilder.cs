@@ -1,4 +1,6 @@
-﻿namespace LiteApi.Contracts
+﻿using LiteApi.Contracts.Models;
+
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IControllerBuilder
     {

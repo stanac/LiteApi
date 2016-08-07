@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IActionInvoker
     {

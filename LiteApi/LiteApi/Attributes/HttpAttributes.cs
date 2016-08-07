@@ -1,4 +1,4 @@
-﻿using LiteApi.Contracts;
+﻿using LiteApi.Contracts.Models;
 using System;
 
 namespace LiteApi.Attributes

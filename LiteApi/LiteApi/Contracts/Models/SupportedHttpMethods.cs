@@ -1,4 +1,4 @@
-﻿namespace LiteApi.Contracts
+﻿namespace LiteApi.Contracts.Models
 {
     public enum SupportedHttpMethods
     {

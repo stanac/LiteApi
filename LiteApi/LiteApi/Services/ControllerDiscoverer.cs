@@ -1,4 +1,6 @@
-﻿using LiteApi.Contracts;
+﻿using LiteApi.Attributes;
+using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -26,7 +28,8 @@ namespace LiteApi.Services
                 ctrls[i] = new ControllerContext
                 {
                     ControllerType = types[i],
-                    Name = GetControllerName(types[i].FullName)
+                    Name = GetControllerName(types[i].FullName),
+                    UrlRoot = GetControllerRoot(types[i])
                 };
                 ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
             }
@@ -43,6 +46,17 @@ namespace LiteApi.Services
                 name = name.Substring(0, name.Length - controller.Length);
             }
             return name;
+        }
+
+        private static string GetControllerRoot(Type ctrlType)
+        {
+            string root = "api";
+            var rootAttrib = ctrlType.GetTypeInfo().GetCustomAttribute<UrlRootAttribute>();
+            if (rootAttrib != null)
+            {
+                root = rootAttrib.UrlRoot ?? "";
+            }
+            return root;
         }
     }
 }

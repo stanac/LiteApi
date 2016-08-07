@@ -1,7 +1,9 @@
 ﻿using LiteApi.Attributes;
-using LiteApi.Contracts;
+using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace LiteApi.Services
 {

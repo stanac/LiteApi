@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿using LiteApi.Contracts.Models;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IParametersDiscoverer
     {

@@ -1,4 +1,5 @@
-﻿using LiteApi.Contracts;
+﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

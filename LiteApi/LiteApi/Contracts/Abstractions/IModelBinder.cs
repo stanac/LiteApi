@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Http;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IModelBinder
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Models
 {
     public class ActionParameter
     {

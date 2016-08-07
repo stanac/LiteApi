@@ -1,4 +1,4 @@
-﻿using LiteApi.Contracts;
+﻿using LiteApi.Contracts.Abstractions;
 using Newtonsoft.Json;
 
 namespace LiteApi.Services

@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using LiteApi.Contracts.Models;
+using System.Collections.Generic;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IParametersValidator
     {

@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using LiteApi.Contracts.Models;
+using System.Collections;
 using System.Collections.Generic;
 
-namespace LiteApi.Contracts
+namespace LiteApi.Contracts.Abstractions
 {
     public interface IControllersValidator
     {
