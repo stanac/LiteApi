@@ -13,11 +13,11 @@ namespace LiteApi
     {
         private RequestDelegate _next;
 
-        internal static LiteMiddlewareOptions Options { get; private set; }
+        internal static LiteApiOptions Options { get; private set; }
         internal static bool IsRegistered { get; private set; }
         internal static IServiceProvider Services;
 
-        public LiteApiMiddleware(RequestDelegate next, LiteMiddlewareOptions options, IServiceProvider services)
+        public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services)
         {
             if (IsRegistered) throw new Exception("Middleware is already registered.");
 

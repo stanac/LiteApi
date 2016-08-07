@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
+using LiteApi.Contracts.Abstractions;
 
 namespace LiteApi.Contracts.Models
 {
     public class ActionParameter
     {
-        public ActionParameter(ActionContext parentActionCtx)
+        public static Func<IJsonSerializer> ResolveJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
+
+        public ActionParameter(ActionContext parentActionCtx, IJsonSerializer jsonSerializer)
         {
             if (parentActionCtx == null) throw new ArgumentNullException(nameof(parentActionCtx));
+            if (jsonSerializer == null) throw new ArgumentNullException(nameof(jsonSerializer));
             ParentActionCtx = parentActionCtx;
         }
 
@@ -49,6 +52,7 @@ namespace LiteApi.Contracts.Models
             typeof (decimal),
             typeof (float),
             typeof (double),
+            typeof (DateTime),
 
             typeof (bool?),
             // typeof (string?),
@@ -64,7 +68,8 @@ namespace LiteApi.Contracts.Models
             typeof (SByte?),
             typeof (decimal?),
             typeof (float?),
-            typeof (double?)
+            typeof (double?),
+            typeof (DateTime?)
         };
 
         private Type _type;
@@ -77,7 +82,7 @@ namespace LiteApi.Contracts.Models
             }
             if (ParameterSource == ParameterSources.Body)
             {
-                return JsonConvert.DeserializeObject(value, Type);
+                return ResolveJsonSerializer().Deserialize(value, Type);
             }
             throw new ArgumentException($"Parameter {Name} has unknown source. " + Attributes.AttributeConventions.ErrorResolutionSuggestion);
         }
@@ -123,6 +128,8 @@ namespace LiteApi.Contracts.Models
             if (Type == typeof(decimal)) return decimal.Parse(value);
             if (Type == typeof(float)) return float.Parse(value);
             if (Type == typeof(double)) return double.Parse(value);
+            if (Type == typeof(DateTime)) return DateTime.Parse(value);
+            
             if (Type == typeof(bool?)) return bool.Parse(value);
             if (Type == typeof(char?)) return char.Parse(value);
             if (Type == typeof(Guid?)) return Guid.Parse(value);
@@ -137,6 +144,7 @@ namespace LiteApi.Contracts.Models
             if (Type == typeof(decimal?)) return decimal.Parse(value);
             if (Type == typeof(float?)) return float.Parse(value);
             if (Type == typeof(double?)) return double.Parse(value);
+            if (Type == typeof(DateTime?)) return DateTime.Parse(value);
 
             throw new ArgumentOutOfRangeException();
         }

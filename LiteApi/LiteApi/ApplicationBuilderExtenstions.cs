@@ -4,12 +4,13 @@ namespace LiteApi
 {
     public static class ApplicationBuilderExtenstions
     {
-        public static void UseLiteApi(this IApplicationBuilder appBuilder)
-            => UseLiteApi(appBuilder, LiteMiddlewareOptions.Default);
+        public static IApplicationBuilder UseLiteApi(this IApplicationBuilder appBuilder)
+            => UseLiteApi(appBuilder, LiteApiOptions.Default);
 
-        public static void UseLiteApi(this IApplicationBuilder appBuilder, LiteMiddlewareOptions options)
+        public static IApplicationBuilder UseLiteApi(this IApplicationBuilder appBuilder, LiteApiOptions options)
         {
             appBuilder.UseMiddleware<LiteApiMiddleware>(options, appBuilder.ApplicationServices);
+            return appBuilder;
         }
     }
 }

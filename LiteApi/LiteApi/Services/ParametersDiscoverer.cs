@@ -21,7 +21,7 @@ namespace LiteApi.Services
                 if (isFromQuery && !isFromBody) source = ParameterSources.Query;
                 else if (!isFromQuery && isFromBody) source = ParameterSources.Body;
 
-                parameters[i] = new ActionParameter(actionCtx)
+                parameters[i] = new ActionParameter(actionCtx, LiteApiMiddleware.Options.JsonSerializer)
                 {
                     Name = param.Name.ToLower(),
                     DefaultValue = param.DefaultValue,
