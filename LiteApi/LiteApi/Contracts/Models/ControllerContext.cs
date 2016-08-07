@@ -15,7 +15,7 @@ namespace LiteApi.Contracts.Models
 
         public void Init()
         {
-            if (ActionMappings != null)
+            if (ActionMappings == null)
             {
                 CreateActionMappingsAndUrlStart();
             }

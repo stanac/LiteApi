@@ -1,6 +1,7 @@
 ﻿using LiteApi.Attributes;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,14 @@ namespace LiteApi.Services
         private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
         private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
 
-        public LiteController Build(ControllerContext controllerCtx)
+        public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
             ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
             ParameterInfo[] parameters = GetConstructorParameters(constructor);
             object[] parameterValues = GetConstructorParameterValues(parameters);
-            return constructor.Invoke(parameterValues) as LiteController;
+            var controller = constructor.Invoke(parameterValues) as LiteController;
+            controller.HttpContext = httpContext;
+            return controller;
         }
 
         private static ConstructorInfo GetConstructor(Type controllerType)
@@ -28,7 +31,7 @@ namespace LiteApi.Services
                 return Constructors[controllerType.FullName];
             }
 
-            var constructors = controllerType.GetConstructors(BindingFlags.Public);
+            var constructors = controllerType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
             if (constructors.Length > 1)
             {
                 constructors = constructors.Where(x => x.GetCustomAttribute<ApiConstructorAttribute>() != null).ToArray();

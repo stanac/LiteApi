@@ -18,7 +18,7 @@ namespace LiteApi.Contracts.Models
 
         public ActionContext ParentActionCtx { get; set; }
         public string Name { get; set; }
-        public ParameterSources ParameterSource { get; set; }
+        public ParameterSources ParameterSource { get; set; } = ParameterSources.Unknown;
         public object DefaultValue { get; set; }
         public bool HasDefaultValue { get; set; }
         
@@ -34,7 +34,7 @@ namespace LiteApi.Contracts.Models
             }
         }
 
-        public bool IsComplex => SupportedTypesFromUrl.Contains(Type);
+        public bool IsComplex => !SupportedTypesFromUrl.Contains(Type);
 
         private static readonly Type[] SupportedTypesFromUrl = {
             typeof (bool),

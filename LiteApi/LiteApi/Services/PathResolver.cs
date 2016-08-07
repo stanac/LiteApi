@@ -31,7 +31,7 @@ namespace LiteApi.Services
             foreach (var ctrl in _controllerContrxts)
             {
                 actionCtx = ctrl.GetActionByPath(path, urlStart);
-                if (actionCtx != null)
+                if (actionCtx != null && ActionMethodMatches(actionCtx, request))
                 {
                     return actionCtx;
                 }
@@ -52,5 +52,8 @@ namespace LiteApi.Services
             }
             return urlStart;
         }
+
+        private bool ActionMethodMatches(ActionContext action, HttpRequest request) 
+            => request.Method.ToLower() == action.HttpMethod.ToString().ToLower();
     }
 }

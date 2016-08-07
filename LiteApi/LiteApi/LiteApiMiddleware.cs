@@ -1,21 +1,26 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using LiteApi.Contracts.Abstractions;
+using LiteApi.Services;
+using LiteApi.Contracts.Models;
 
 namespace LiteApi
 {
     public class LiteApiMiddleware
     {
         private RequestDelegate _next;
+        private IPathResolver _pathResolver;
+        private IActionInvoker _actionInvoker;
 
         internal static LiteApiOptions Options { get; private set; }
         internal static bool IsRegistered { get; private set; }
         internal static IServiceProvider Services;
+
 
         public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services)
         {
@@ -29,17 +34,25 @@ namespace LiteApi
             Options = options;
             Services = services;
             _next = next;
-            IsRegistered = true;
+            IsRegistered = true;            
+            
+            Initialize();
         }
 
         public async Task Invoke(HttpContext context, ILoggerFactory loggerFactory)
         {
-            Debug.WriteLine("12");
-
-            await _next?.Invoke(context);
+            ActionContext action = _pathResolver.ResolvePath(context.Request);
+            if (action == null)
+            {
+                await _next?.Invoke(context);
+            }
+            else
+            {
+                await _actionInvoker.Invoke(context, action);
+            }
         }
         
-        public void AddControllerAssemblies(IEnumerable<Assembly> assemblies)
+        private void AddControllerAssemblies(IEnumerable<Assembly> assemblies)
         {
             foreach (var assembly in assemblies)
             {
@@ -47,7 +60,7 @@ namespace LiteApi
             }
         }
 
-        public void AddControllerAssembly(Assembly assembly)
+        private void AddControllerAssembly(Assembly assembly)
         {
             if (!Options.ControllerAssemblies.Any(x => x.FullName == assembly.FullName))
             {
@@ -55,9 +68,32 @@ namespace LiteApi
             }
         }
 
-        public void ReloadControllers()
+        private void Initialize()
         {
+            IParametersDiscoverer parameterDiscoverer = new ParametersDiscoverer();
+            IActionDiscoverer actionDiscoverer = new ActionDiscoverer(parameterDiscoverer);
+            IControllerDiscoverer ctrlDiscoverer = new ControllerDiscoverer(actionDiscoverer);
 
+            List<ControllerContext> ctrlContexts = new List<ControllerContext>();
+
+            foreach (var assembly in Options.ControllerAssemblies)
+            {
+                ctrlContexts.AddRange(ctrlDiscoverer.GetControllers(assembly));
+            }
+
+            _pathResolver = new PathResolver(ctrlContexts.ToArray());
+
+            IControllerBuilder ctrlBuilder = new ControllerBuilder();
+            IModelBinder modelBinder = new ModelBinder();
+
+            _actionInvoker = new ActionInvoker(ctrlBuilder, modelBinder);
+
+            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var errors = validator.GetValidationErrors(ctrlContexts.ToArray()).ToArray();
+            if (errors.Any())
+            {
+                throw new LiteApiRegistrationException($"Failed to initialize {nameof(LiteApiMiddleware)}, see property Errors.", errors);
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ namespace LiteApi.Services
 {
     public class ActionInvoker : IActionInvoker
     {
+        public static Func<IJsonSerializer> GetJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
         private readonly IControllerBuilder _controllerBuilder;
         private readonly IModelBinder _modelBinder;
 
@@ -19,17 +20,40 @@ namespace LiteApi.Services
             _modelBinder = modelBinder;
         }
 
-        public Task Invoke(HttpContext httpCtx, ActionContext action)
+        public async Task Invoke(HttpContext httpCtx, ActionContext action)
         {
-            LiteController ctrl = _controllerBuilder.Build(action.ParentController);
+            LiteController ctrl = _controllerBuilder.Build(action.ParentController, httpCtx);
             object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, action);
 
+            object result = null;
             if (action.Method.ReturnType == typeof(Task))
             {
-                return action.Method.Invoke(ctrl, paramValues) as Task;
+                var task = (action.Method.Invoke(ctrl, paramValues) as Task);
+                await task;
             }
+            else if (action.Method.ReturnType == typeof(Task<>))
+            {
+                var task = (dynamic)(action.Method.Invoke(ctrl, paramValues));
+                result = await task;
+            }
+            else
+            {
+                result = action.Method.Invoke(ctrl, paramValues);
+            }
+            int statusCode = 405; // method not allowed
+            switch (httpCtx.Request.Method)
+            {
+                case "GET": statusCode = 200; break;
+                case "POST": statusCode = 201; break;
+                case "PUT": statusCode = 201; break;
+                case "DELETE": statusCode = 204; break;
 
-            return Task.Run(() => action.Method.Invoke(ctrl, paramValues));
+            }
+            httpCtx.Response.StatusCode = statusCode;
+            if (result != null)
+            {
+                await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+            }
         }
     }
 }

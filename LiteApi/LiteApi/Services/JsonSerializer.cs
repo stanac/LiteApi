@@ -16,6 +16,6 @@ namespace LiteApi.Services
 
         public T Deserialize<T>(string json) => JsonConvert.DeserializeObject<T>(json, _settings);
 
-        public string Serialize<T>(T obj) => JsonConvert.SerializeObject(obj, _settings);
+        public string Serialize(object obj) => JsonConvert.SerializeObject(obj, _settings);
     }
 }

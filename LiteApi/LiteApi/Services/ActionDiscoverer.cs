@@ -4,6 +4,7 @@ using LiteApi.Contracts.Abstractions;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace LiteApi.Services
 {
@@ -18,13 +19,27 @@ namespace LiteApi.Services
         }
 
         public ActionContext[] GetActions(ControllerContext controllerCtx)
-            => controllerCtx.ControllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+        {
+            var properties = controllerCtx.ControllerType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var propertyMethods = new List<string>();
+            propertyMethods.AddRange(properties.Where(x => x.GetMethod?.Name != null).Select(x => x.GetMethod.Name));
+            propertyMethods.AddRange(properties.Where(x => x.SetMethod?.Name != null).Select(x => x.SetMethod.Name));
+
+            return controllerCtx.ControllerType.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Where(x => !propertyMethods.Contains(x.Name))
                 .Where(MethodIsAction)
                 .Select(x => GetActionContext(x, controllerCtx))
                 .ToArray();
+        }
 
         private static bool MethodIsAction(MethodInfo method)
-            => GetHttpAttribute(method) != null;
+        {
+            if (method.GetCustomAttribute<DontMappedToApiAttribute>() != null) return false;
+
+            if (method.DeclaringType == typeof(object)) return false;
+
+            return true;
+        }
 
         private ActionContext GetActionContext(MethodInfo method, ControllerContext ctrlCtx)
         {
