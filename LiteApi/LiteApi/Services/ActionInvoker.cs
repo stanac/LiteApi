@@ -26,18 +26,25 @@ namespace LiteApi.Services
             object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, action);
 
             object result = null;
-            if (action.Method.ReturnType == typeof(Task))
+            bool isVoid = true;
+            if (action.Method.ReturnType == typeof(void))
+            {
+                action.Method.Invoke(ctrl, paramValues);
+            }
+            else if (action.Method.ReturnType == typeof(Task))
             {
                 var task = (action.Method.Invoke(ctrl, paramValues) as Task);
                 await task;
             }
-            else if (action.Method.ReturnType == typeof(Task<>))
-            {
+            else if (action.Method.ReturnType.IsConstructedGenericType && action.Method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+            { 
+                isVoid = false;
                 var task = (dynamic)(action.Method.Invoke(ctrl, paramValues));
                 result = await task;
             }
             else
             {
+                isVoid = false;
                 result = action.Method.Invoke(ctrl, paramValues);
             }
             int statusCode = 405; // method not allowed
@@ -50,8 +57,9 @@ namespace LiteApi.Services
 
             }
             httpCtx.Response.StatusCode = statusCode;
-            if (result != null)
+            if (!isVoid)
             {
+                httpCtx.Response.ContentType = "application/json";
                 await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
             }
         }
