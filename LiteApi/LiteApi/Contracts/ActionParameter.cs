@@ -7,10 +7,18 @@ namespace LiteApi.Contracts
 {
     public class ActionParameter
     {
+        public ActionParameter(ActionContext parentActionCtx)
+        {
+            if (parentActionCtx == null) throw new ArgumentNullException(nameof(parentActionCtx));
+            ParentActionCtx = parentActionCtx;
+        }
+
+        public ActionContext ParentActionCtx { get; set; }
         public string Name { get; set; }
-        public bool IsQuery { get; set; }
+        public ParameterSources ParameterSource { get; set; }
         public object DefaultValue { get; set; }
         public bool HasDefaultValue { get; set; }
+        
         private bool _isTypeNullable;
 
         public Type Type
@@ -23,7 +31,9 @@ namespace LiteApi.Contracts
             }
         }
 
-        private static readonly Type[] SupportedTypes = {
+        public bool IsComplex => SupportedTypesFromUrl.Contains(Type);
+
+        private static readonly Type[] SupportedTypesFromUrl = {
             typeof (bool),
             typeof (string),
             typeof (char),
@@ -61,20 +71,20 @@ namespace LiteApi.Contracts
 
         public object ParseValue(string value)
         {
-            if (IsQuery)
+            if (ParameterSource == ParameterSources.Query)
             {
                 return ParseQueryValue(value);
             }
-            if (value == null)
+            if (ParameterSource == ParameterSources.Body)
             {
-                return null;
+                return JsonConvert.DeserializeObject(value, Type);
             }
-            return JsonConvert.DeserializeObject(value, Type);
+            throw new ArgumentException($"Parameter {Name} has unknown source. " + Attributes.AttributeConventions.ErrorResolutionSuggestion);
         }
 
         public static IEnumerable<Type> GetSupportedType()
         {
-            return SupportedTypes.Select(x => x);
+            return SupportedTypesFromUrl.Select(x => x);
         }
 
         private object ParseQueryValue(string value)
@@ -91,7 +101,7 @@ namespace LiteApi.Contracts
 
             if (value == null && _isTypeNullable)
             {
-                return true;
+                return null;
             }
 
             if (value == null /*&& !_isTypeNullable*/)
@@ -131,12 +141,13 @@ namespace LiteApi.Contracts
             throw new ArgumentOutOfRangeException();
         }
 
-        public void ThrowOnInvalidType()
+        public bool IsTypeSupported()
         {
-            if (IsQuery && !SupportedTypes.Contains(Type))
+            if (ParameterSource == ParameterSources.Query)
             {
-                throw new InvalidOperationException("Type is not supported for query parameters, check NameFront.HttpServer.ActionRequestHandler.ActionParameter.GetSupportedType() for supported types in query parameters");
+                return SupportedTypesFromUrl.Contains(Type);
             }
+            return true;
         }
     }
 }

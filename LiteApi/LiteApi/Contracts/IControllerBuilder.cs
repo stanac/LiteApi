@@ -2,6 +2,6 @@
 {
     public interface IControllerBuilder
     {
-        object Build(ControllerContext controllerCtx);
+        LiteController Build(ControllerContext controllerCtx);
     }
 }

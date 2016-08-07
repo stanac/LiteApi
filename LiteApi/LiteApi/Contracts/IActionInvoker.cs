@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace LiteApi.Contracts
 {
     public interface IActionInvoker
     {
-        Task Invoke(ActionContext actionCtx, ActionParameter[] actionParameters);
+        Task Invoke(HttpContext httpCtx, ActionContext actionCtx);
     }
 }
