@@ -22,6 +22,17 @@ namespace LiteApi.Services
 
         public async Task Invoke(HttpContext httpCtx, ActionContext action)
         {
+            ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, action);
+
+            if (!filterResult.ShouldContinue)
+            {
+                if (filterResult.SetResponseCode.HasValue)
+                {
+                    httpCtx.Response.StatusCode = filterResult.SetResponseCode.Value;
+                }
+                return;
+            }
+
             LiteController ctrl = _controllerBuilder.Build(action.ParentController, httpCtx);
             object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, action);
 
@@ -62,6 +73,28 @@ namespace LiteApi.Services
                 httpCtx.Response.ContentType = "application/json";
                 await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
             }
+        }
+
+        internal async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
+        {
+            if (action.SkipAuth) return new ApiFilterRunResult { ShouldContinue = true };
+
+            ApiFilterRunResult result = await action.ParentController.ValidateFilters(httpCtx);
+            if (!result.ShouldContinue)
+            {
+                return result;
+            }
+
+            foreach (var filter in action.Filters)
+            {
+                result = await filter.ShouldContinueAsync(httpCtx);
+                if (!result.ShouldContinue)
+                {
+                    return result;
+                }
+            }
+
+            return new ApiFilterRunResult { ShouldContinue = true };
         }
     }
 }

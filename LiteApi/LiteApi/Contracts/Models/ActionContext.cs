@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using LiteApi.Contracts.Abstractions;
+using System.Reflection;
 
 namespace LiteApi.Contracts.Models
 {
@@ -9,5 +10,7 @@ namespace LiteApi.Contracts.Models
         public SupportedHttpMethods HttpMethod { get; set; }
         public MethodInfo Method { get; set; }
         public ControllerContext ParentController { get; set; }
+        public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+        public bool SkipAuth { get; set; }
     }
 }
