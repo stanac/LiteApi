@@ -13,18 +13,20 @@ namespace LiteApi.Services
     {
         private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
         private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
+        private static readonly CompiledActionInvokerCache _cache = new CompiledActionInvokerCache();
 
         public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
             ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
             ParameterInfo[] parameters = GetConstructorParameters(constructor);
             object[] parameterValues = GetConstructorParameterValues(parameters);
+            // var controller = _cache.GetProxy(controllerCtx.ControllerGuid).InvokeConstructor(parameterValues) as LiteController;
             var controller = constructor.Invoke(parameterValues) as LiteController;
             controller.HttpContext = httpContext;
             return controller;
         }
 
-        private static ConstructorInfo GetConstructor(Type controllerType)
+        internal static ConstructorInfo GetConstructor(Type controllerType)
         {
             if (Constructors.ContainsKey(controllerType.FullName))
             {

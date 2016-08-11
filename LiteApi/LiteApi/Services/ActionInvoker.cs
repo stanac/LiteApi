@@ -20,7 +20,7 @@ namespace LiteApi.Services
             _modelBinder = modelBinder;
         }
 
-        public async Task Invoke(HttpContext httpCtx, ActionContext action)
+        public virtual async Task Invoke(HttpContext httpCtx, ActionContext action)
         {
             ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, action);
 
@@ -58,6 +58,7 @@ namespace LiteApi.Services
                 isVoid = false;
                 result = action.Method.Invoke(ctrl, paramValues);
             }
+
             int statusCode = 405; // method not allowed
             switch (httpCtx.Request.Method)
             {
@@ -75,7 +76,7 @@ namespace LiteApi.Services
             }
         }
 
-        internal async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
+        internal static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
         {
             if (action.SkipAuth) return new ApiFilterRunResult { ShouldContinue = true };
 

@@ -11,6 +11,7 @@ namespace LiteApi.Contracts.Models
         internal Dictionary<string, ActionContext> ActionMappings { get; private set; }
         internal string UrlStart { get; private set; }
 
+        public Guid ControllerGuid { get; } = Guid.NewGuid();
         public string Name { get; set; }
         public string UrlRoot { get; set; }
         public ActionContext[] Actions { get; set; }

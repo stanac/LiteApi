@@ -9,10 +9,10 @@ namespace LiteApi.Demo.Controllers
             return a + b;
         }
 
-        public async Task<int> AddAsync(int a, int b)
-        {
-            await Task.Delay(2000);
-            return Add(a, b);
-        }
+        //public async Task<int> AddAsync(int a, int b)
+        //{
+        //    await Task.Delay(2000);
+        //    return Add(a, b);
+        //}
     }
 }

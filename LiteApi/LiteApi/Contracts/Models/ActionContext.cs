@@ -1,10 +1,12 @@
 ﻿using LiteApi.Contracts.Abstractions;
+using System;
 using System.Reflection;
 
 namespace LiteApi.Contracts.Models
 {
     public class ActionContext
     {
+        public Guid ActionGuid { get; } = Guid.NewGuid();
         public string Name { get; set; }
         public ActionParameter[] Parameters { get; set; }
         public SupportedHttpMethods HttpMethod { get; set; }
