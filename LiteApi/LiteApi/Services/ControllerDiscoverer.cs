@@ -29,7 +29,8 @@ namespace LiteApi.Services
                 {
                     ControllerType = types[i],
                     Name = GetControllerName(types[i].FullName),
-                    UrlRoot = GetControllerRoot(types[i])
+                    UrlRoot = GetControllerRoot(types[i]),
+                    // IsSingleton = types[i].GetTypeInfo().GetCustomAttribute<SingletonControllerAttribute>() != null
                 };
                 ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
             }

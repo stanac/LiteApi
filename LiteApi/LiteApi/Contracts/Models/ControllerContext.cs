@@ -17,6 +17,7 @@ namespace LiteApi.Contracts.Models
         public ActionContext[] Actions { get; set; }
         public Type ControllerType { get; set; }
         public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+        // public bool IsSingleton { get; set; }
 
         public void Init()
         {

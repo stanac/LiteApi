@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using LiteApi.Attributes;
+using System.Threading.Tasks;
 
 namespace LiteApi.Demo.Controllers
 {
+    // [SingletonController]
     public class TestController : LiteController
     {
         public int Add(int a, int b)
