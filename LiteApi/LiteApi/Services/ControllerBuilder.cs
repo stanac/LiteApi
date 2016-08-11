@@ -13,9 +13,9 @@ namespace LiteApi.Services
     {
         private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
         private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
-        private static readonly Dictionary<string, LiteController> SingletonControllers = new Dictionary<string, LiteController>();
+        // private static readonly Dictionary<string, LiteController> SingletonControllers = new Dictionary<string, LiteController>();
         private static readonly CompiledActionInvokerCache _cache = new CompiledActionInvokerCache();
-        private static readonly object Sync = new object();
+        // private static readonly object Sync = new object();
 
         public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
