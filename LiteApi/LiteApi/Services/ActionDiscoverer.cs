@@ -34,7 +34,7 @@ namespace LiteApi.Services
 
         private static bool MethodIsAction(MethodInfo method)
         {
-            if (method.GetCustomAttribute<DontMappToApiAttribute>() != null) return false;
+            if (method.GetCustomAttribute<DontMapToApiAttribute>() != null) return false;
 
             if (method.DeclaringType == typeof(object)) return false;
 
