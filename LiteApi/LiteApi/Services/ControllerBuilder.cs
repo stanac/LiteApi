@@ -19,7 +19,6 @@ namespace LiteApi.Services
             ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
             ParameterInfo[] parameters = GetConstructorParameters(constructor);
             object[] parameterValues = GetConstructorParameterValues(parameters);
-            // var controller = _cache.GetProxy(controllerCtx.ControllerGuid).InvokeConstructor(parameterValues) as LiteController;
             var controller = constructor.Invoke(parameterValues) as LiteController;
             controller.HttpContext = httpContext;
             return controller;
