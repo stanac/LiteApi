@@ -21,7 +21,7 @@ namespace LiteApi.Demo
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware<StackifyMiddleware.RequestTracerMiddleware>();
             app.UseStaticFiles();
 
             app.UseLiteApi();

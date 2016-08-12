@@ -13,44 +13,16 @@ namespace LiteApi.Services
     {
         private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
         private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
-        // private static readonly Dictionary<string, LiteController> SingletonControllers = new Dictionary<string, LiteController>();
-        // private static readonly CompiledActionInvokerCache _cache = new CompiledActionInvokerCache();
-        // private static readonly object Sync = new object();
 
         public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
-            //if (controllerCtx.IsSingleton)
-            //{
-            //    string key = controllerCtx.ControllerType.FullName;
-            //    LiteController ctrl = null;
-            //    if (!SingletonControllers.ContainsKey(key))
-            //    {
-            //        lock (Sync)
-            //        {
-            //            if (!SingletonControllers.ContainsKey(key))
-            //            {
-            //                ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
-            //                ParameterInfo[] parameters = GetConstructorParameters(constructor);
-            //                object[] parameterValues = GetConstructorParameterValues(parameters);
-            //                var controller = constructor.Invoke(parameterValues) as LiteController;
-            //                controller.IsSingleton = true;
-            //                // DO NOT SET HttpContext on singleton controller
-            //                SingletonControllers[key] = controller;
-            //            }
-            //        }
-            //    }
-            //    return SingletonControllers[key];
-            //}
-            //else
-            //{
-                ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
-                ParameterInfo[] parameters = GetConstructorParameters(constructor);
-                object[] parameterValues = GetConstructorParameterValues(parameters);
-                // var controller = _cache.GetProxy(controllerCtx.ControllerGuid).InvokeConstructor(parameterValues) as LiteController;
-                var controller = constructor.Invoke(parameterValues) as LiteController;
-                controller.HttpContext = httpContext;
-                return controller;
-            //}
+            ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
+            ParameterInfo[] parameters = GetConstructorParameters(constructor);
+            object[] parameterValues = GetConstructorParameterValues(parameters);
+            // var controller = _cache.GetProxy(controllerCtx.ControllerGuid).InvokeConstructor(parameterValues) as LiteController;
+            var controller = constructor.Invoke(parameterValues) as LiteController;
+            controller.HttpContext = httpContext;
+            return controller;
         }
 
         internal static ConstructorInfo GetConstructor(Type controllerType)
