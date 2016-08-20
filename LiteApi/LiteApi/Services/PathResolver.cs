@@ -39,7 +39,7 @@ namespace LiteApi.Services
             {
                 foreach (var ctrl in _controllerContrxts)
                 {
-                    var actions = ctrl.GetActionsByPath(path, urlStart);
+                    var actions = ctrl.GetActionsByPath(path, urlStart).ToArray();
                     if (actions != null)
                     {
                         foreach (var a in actions.Where(x => x.IsHttpMethodMatched(method)))

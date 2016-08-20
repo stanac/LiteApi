@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace LiteApi.Demo.Controllers
 {
     // [SingletonController]
-    public class TestStringController : LiteController
+    public class TestController : LiteController
     {
         public int Add(int a, int b)
         {
