@@ -7,14 +7,28 @@ namespace LiteApi.Contracts.Models
 {
     public class ActionContext
     {
+        private SupportedHttpMethods _httpMethod;
+        private string _httpMethodString;
+
         // public Guid ActionGuid { get; } = Guid.NewGuid();
         public string Name { get; set; }
         public ActionParameter[] Parameters { get; set; }
-        public SupportedHttpMethods HttpMethod { get; set; }
+        public SupportedHttpMethods HttpMethod
+        {
+            get { return _httpMethod; }
+            set
+            {
+                _httpMethod = value;
+                _httpMethodString = value.ToString().ToLower();
+            }
+        }
         public MethodInfo Method { get; set; }
         public ControllerContext ParentController { get; set; }
         public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
         public bool SkipAuth { get; set; }
-
+        public bool IsHttpMethodMatched(string httpMethod)
+        {
+            return httpMethod == _httpMethodString;
+        }
     }
 }

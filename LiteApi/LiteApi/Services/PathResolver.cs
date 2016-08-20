@@ -22,18 +22,19 @@ namespace LiteApi.Services
             }
         }
 
-        public ActionContext ResolvePath(HttpRequest request)
+        public ActionContext ResolveAction(HttpRequest request)
         {
-            var actions = GetActionsForPath(request).ToArray();
+            var actions = GetActionsForPathAndMethod(request).ToArray();
             if (actions.Length == 1) return actions[0];
             if (actions.Length == 0) return null;
             return ResolveActionContextByQueryParameterTypes(request, actions);
         }
 
-        public IEnumerable<ActionContext> GetActionsForPath(HttpRequest request)
+        public IEnumerable<ActionContext> GetActionsForPathAndMethod(HttpRequest request)
         {
             string path = request.Path.Value.ToLower();
             string urlStart = GetUrlStart(path);
+            var method = request.Method.ToLower();
             if (urlStart != null)
             {
                 foreach (var ctrl in _controllerContrxts)
@@ -41,7 +42,7 @@ namespace LiteApi.Services
                     var actions = ctrl.GetActionsByPath(path, urlStart);
                     if (actions != null)
                     {
-                        foreach (var a in actions)
+                        foreach (var a in actions.Where(x => x.IsHttpMethodMatched(method)))
                         {
                             yield return a;
                         }
@@ -53,7 +54,7 @@ namespace LiteApi.Services
         private ActionContext ResolveActionContextByQueryParameterTypes(HttpRequest request, ActionContext[] actions)
         {
             PossibleParameterType[] paramTypes = request.GetPossibleParameterTypes().ToArray();
-            var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes));
+            var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes)).ToArray();
             return actionsWithWeight.OrderByDescending(x => x.Weight).FirstOrDefault()?.ActionCtx;
         }
 

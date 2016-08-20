@@ -10,6 +10,10 @@ namespace LiteApi.Tests.Fakes
 {
     public class FakeHttpRequest : HttpRequest
     {
+        private FakeHttpRequest() { }
+
+        #region overrides
+
         public override Stream Body { get; set; }
 
         public override long? ContentLength { get; set; }
@@ -38,7 +42,7 @@ namespace LiteApi.Tests.Fakes
 
         public override string Protocol { get; set; }
 
-        public override IQueryCollection Query { get; set; }
+        public override IQueryCollection Query { get; set; } = new FakeQueryCollection(); 
 
         public override QueryString QueryString { get; set; }
 
@@ -47,6 +51,27 @@ namespace LiteApi.Tests.Fakes
         public override Task<IFormCollection> ReadFormAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
+        }
+
+        #endregion
+
+        public static FakeHttpRequest WithGetMethod()
+        {
+            return new FakeHttpRequest
+            {
+                Method = "GET"
+            };
+        }
+
+        public FakeHttpRequest WithPath(string path)
+        {
+            Path = path;
+            return this;
+        }
+
+        public void AddQuery(string key, string value)
+        {
+            (Query as FakeQueryCollection).Add(key, value);
         }
     }
 }

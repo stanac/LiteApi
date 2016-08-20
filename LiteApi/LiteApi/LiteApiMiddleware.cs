@@ -41,7 +41,7 @@ namespace LiteApi
 
         public async Task Invoke(HttpContext context, ILoggerFactory loggerFactory)
         {
-            ActionContext action = _pathResolver.ResolvePath(context.Request);
+            ActionContext action = _pathResolver.ResolveAction(context.Request);
             if (action == null)
             {
                 await _next?.Invoke(context);

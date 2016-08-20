@@ -5,6 +5,6 @@ namespace LiteApi.Contracts.Abstractions
 {
     public interface IPathResolver
     {
-        ActionContext ResolvePath(HttpRequest request);
+        ActionContext ResolveAction(HttpRequest request);
     }
 }

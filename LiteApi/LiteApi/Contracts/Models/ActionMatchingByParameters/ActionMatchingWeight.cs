@@ -41,12 +41,23 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
                 }
             }
 
+            // calculate for extra params
+            foreach (var param in ActionCtx.Parameters)
+            {
+                if (!parametersMatchedByName.Any(x => param.IsMatchedByName(x)))
+                {
+                    weight -= (int)(weightConst * 0.67);
+                }
+            }
+
             foreach (PossibleParameterType param in parametersMatchedByName)
             {
                 var actionParam = ActionCtx.Parameters.First(x => x.IsMatchedByName(param));
                 var matchingWeight = param.GetParameterMatchingWeight(actionParam);
                 weight += (weightConst - matchingWeight);
             }
+
+            Weight = weight;
         }
     }
 }
