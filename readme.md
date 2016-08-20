@@ -1,4 +1,6 @@
-### LiteApi, a simple WEB API with JSON only support
+# LiteApi
+
+## MVC-style inspired .NET Core WEB API with JSON only support
 
 LiteApi is .net core framework inspired by MVC-style Controller/Action principles.
 It's still in alpha and currently initial tests are showing that it can handle about 50% 
