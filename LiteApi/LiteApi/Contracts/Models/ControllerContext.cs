@@ -2,23 +2,23 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
 {
     public class ControllerContext
     {
-        internal Dictionary<string, ActionContext> ActionMappings { get; private set; }
+        internal List<KeyValuePair<string, ActionContext>> ActionMappings { get; private set; }
         internal string UrlStart { get; private set; }
 
-        public Guid ControllerGuid { get; } = Guid.NewGuid();
+        // public Guid ControllerGuid { get; } = Guid.NewGuid();
         public string Name { get; set; }
         public string UrlRoot { get; set; }
         public ActionContext[] Actions { get; set; }
         public Type ControllerType { get; set; }
         public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
-        // public bool IsSingleton { get; set; }
-
+        
         public void Init()
         {
             if (ActionMappings == null)
@@ -27,17 +27,19 @@ namespace LiteApi.Contracts.Models
             }
         }
 
-        public ActionContext GetActionByPath(string path, string urlStart)
+        public IEnumerable<ActionContext> GetActionsByPath(string path, string urlStart)
         {
-            if (urlStart != UrlStart) return null;
-
-            if (ActionMappings == null)
+            if (urlStart == UrlStart)
             {
-                CreateActionMappingsAndUrlStart();
+                if (ActionMappings == null)
+                {
+                    CreateActionMappingsAndUrlStart();
+                }
+                foreach (var a in ActionMappings.Where(x => x.Key == path).Select(x => x.Value))
+                {
+                    yield return a;
+                }
             }
-            ActionContext action;
-            ActionMappings.TryGetValue(path, out action);
-            return action;
         }
 
         private void CreateActionMappingsAndUrlStart()
@@ -53,11 +55,11 @@ namespace LiteApi.Contracts.Models
             }
             string urlStart = urlRoot + Name.ToLower() + "/";
             UrlStart = urlStart;
-            Dictionary<string, ActionContext> mappings = new Dictionary<string, ActionContext>();
+            List<KeyValuePair<string, ActionContext>> mappings = new List<KeyValuePair<string, ActionContext>>();
             foreach (var action in Actions)
             {
                 string url = urlStart + action.Name.ToLower();
-                mappings[url] = action;
+                mappings.Add(new KeyValuePair<string, ActionContext>(url, action));
             }
             ActionMappings = mappings;
         }

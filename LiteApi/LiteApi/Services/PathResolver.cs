@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
+using System.Collections.Generic;
+using System.Linq;
+using LiteApi.Contracts.Models.ActionMatchingByParameters;
 
 namespace LiteApi.Services
 {
@@ -21,22 +24,37 @@ namespace LiteApi.Services
 
         public ActionContext ResolvePath(HttpRequest request)
         {
-            ActionContext actionCtx = null;
+            var actions = GetActionsForPath(request).ToArray();
+            if (actions.Length == 1) return actions[0];
+            if (actions.Length == 0) return null;
+            return ResolveActionContextByQueryParameterTypes(request, actions);
+        }
+
+        public IEnumerable<ActionContext> GetActionsForPath(HttpRequest request)
+        {
             string path = request.Path.Value.ToLower();
             string urlStart = GetUrlStart(path);
-            if (urlStart == null)
+            if (urlStart != null)
             {
-                return null;
-            }
-            foreach (var ctrl in _controllerContrxts)
-            {
-                actionCtx = ctrl.GetActionByPath(path, urlStart);
-                if (actionCtx != null && ActionMethodMatches(actionCtx, request))
+                foreach (var ctrl in _controllerContrxts)
                 {
-                    return actionCtx;
+                    var actions = ctrl.GetActionsByPath(path, urlStart);
+                    if (actions != null)
+                    {
+                        foreach (var a in actions)
+                        {
+                            yield return a;
+                        }
+                    }
                 }
             }
-            return null;
+        }
+        
+        private ActionContext ResolveActionContextByQueryParameterTypes(HttpRequest request, ActionContext[] actions)
+        {
+            PossibleParameterType[] paramTypes = request.GetPossibleParameterTypes().ToArray();
+            var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes));
+            return actionsWithWeight.OrderByDescending(x => x.Weight).FirstOrDefault()?.ActionCtx;
         }
 
         private string GetUrlStart(string url)

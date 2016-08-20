@@ -17,7 +17,7 @@ namespace LiteApi
         private IPathResolver _pathResolver;
         private IActionInvoker _actionInvoker;
 
-        internal static LiteApiOptions Options { get; private set; }
+        internal static LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
         internal static bool IsRegistered { get; private set; }
         internal static IServiceProvider Services;
 
@@ -82,16 +82,12 @@ namespace LiteApi
             }
 
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
-            // CompiledActionInvokerCache cache = new CompiledActionInvokerCache();
-            // cache.GenerateProxiesForActions(actions);
-            // cache.GenerateProxiesForControllerConstructors(ctrlContexts.ToArray());
 
             _pathResolver = new PathResolver(ctrlContexts.ToArray());
 
             IControllerBuilder ctrlBuilder = new ControllerBuilder();
             IModelBinder modelBinder = new ModelBinder();
-
-            // _actionInvoker = new RuntimeCompiledActionInvoker(ctrlBuilder, modelBinder);
+            
             _actionInvoker = new ActionInvoker(ctrlBuilder, modelBinder);
 
             var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
