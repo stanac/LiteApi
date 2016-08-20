@@ -69,9 +69,16 @@ namespace LiteApi.Tests.Fakes
             return this;
         }
 
-        public void AddQuery(string key, string value)
+        public FakeHttpRequest AddQuery(string key, string value)
         {
             (Query as FakeQueryCollection).Add(key, value);
+            return this;
+        }
+
+        public FakeHttpRequest ClearQuery()
+        {
+            (Query as FakeQueryCollection).Clear();
+            return this;
         }
     }
 }

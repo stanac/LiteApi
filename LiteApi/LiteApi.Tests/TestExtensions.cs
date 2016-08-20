@@ -1,13 +1,22 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Reflection;
+using Xunit;
 
 namespace LiteApi.Tests
 {
     internal static class TestExtensions
     {
+        public static void ResolveAndAssert(this PathResolver resolver, HttpRequest request, string expectedResult)
+        {
+            var action = resolver.ResolveAction(request);
+            string actualResult = action.InvokeStringMethod();
+            Assert.Equal(expectedResult, actualResult);
+        }
+
         public static string InvokeStringMethod(this ActionContext action)
         {
             var parentObj = action.ParentController.ControllerType.GetConstructor(new Type[0]).Invoke(new object[0]);

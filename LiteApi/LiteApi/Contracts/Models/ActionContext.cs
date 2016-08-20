@@ -2,6 +2,7 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LiteApi.Contracts.Models
 {
@@ -30,5 +31,8 @@ namespace LiteApi.Contracts.Models
         {
             return httpMethod == _httpMethodString;
         }
+
+        public override string ToString() => 
+            $"{ParentController.ControllerType.Name}.{Method.Name}({string.Join(", ", Parameters.Select(x => x.Type.Name + " " + x.Name))})";
     }
 }

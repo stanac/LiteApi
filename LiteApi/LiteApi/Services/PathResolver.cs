@@ -54,8 +54,10 @@ namespace LiteApi.Services
         private ActionContext ResolveActionContextByQueryParameterTypes(HttpRequest request, ActionContext[] actions)
         {
             PossibleParameterType[] paramTypes = request.GetPossibleParameterTypes().ToArray();
-            var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes)).ToArray();
-            return actionsWithWeight.OrderByDescending(x => x.Weight).FirstOrDefault()?.ActionCtx;
+            var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes))
+                .OrderByDescending(x => x.Weight)
+                .ToArray();
+            return actionsWithWeight.FirstOrDefault()?.ActionCtx;
         }
 
         private string GetUrlStart(string url)

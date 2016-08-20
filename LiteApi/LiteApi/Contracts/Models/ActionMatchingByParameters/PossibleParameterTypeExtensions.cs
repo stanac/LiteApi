@@ -149,7 +149,7 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 
         public static int GetParameterMatchingWeight(this PossibleParameterType possibleParam, ActionParameter actionParam)
         {
-            var matchingType = possibleParam.GetMatchingType(actionParam.Type);
+            var matchingType = possibleParam.GetNotNullableType(actionParam.Type);
             return new TypeWithPriority(matchingType).TypePriority;
         }
     }

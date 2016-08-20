@@ -14,14 +14,20 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
         public StringValues QueryValues { get; set; }
         public bool HasValue { get; set; }
 
-        public Type GetMatchingType(Type type)
+        public bool CanHandleType(Type type)
+        {
+            type = GetNotNullableType(type);
+            return PossibleTypes.Any(x => x.Type == type);
+        }
+
+        public Type GetNotNullableType(Type type)
         {
             var info = type.GetTypeInfo();
             if (!info.IsGenericType)
             {
                 return type;
             }
-            return info.GenericTypeArguments.Single();
+            return info.GenericTypeArguments.FirstOrDefault();
         }
     }
 }

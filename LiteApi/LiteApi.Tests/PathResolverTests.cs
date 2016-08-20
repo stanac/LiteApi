@@ -1,6 +1,5 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
-using System.Reflection;
 using Xunit;
 
 namespace LiteApi.Tests
@@ -24,44 +23,34 @@ namespace LiteApi.Tests
             var resolver = new PathResolver(ctrlCtx);
             var path = "/api/DifferentHttpMethods/Action";
             var request = Fakes.FakeHttpRequest.WithGetMethod().WithPath(path);
-            var getAction = resolver.ResolveAction(request);
-            var actionResult = getAction.InvokeStringMethod();
-
-            Assert.Equal("default get", actionResult);
+            resolver.ResolveAndAssert(request, "default get");
 
             request.AddQuery("a", "5");
-            getAction = resolver.ResolveAction(request);
-            actionResult = getAction.InvokeStringMethod();
-
-            Assert.Equal("get", actionResult);
+            resolver.ResolveAndAssert(request, "get");
 
             request.Method = "POST";
-            var postAction = resolver.ResolveAction(request);
-            actionResult = postAction.InvokeStringMethod();
-
-            Assert.Equal("post", actionResult);
-
-
+            resolver.ResolveAndAssert(request, "post");
+            
             request.Method = "pUT";
-            var putAction = resolver.ResolveAction(request);
-            actionResult = putAction.InvokeStringMethod();
-
-            Assert.Equal("put", actionResult);
-
+            resolver.ResolveAndAssert(request, "put");
 
             request.Method = "DelETe";
-            var deleteAction = resolver.ResolveAction(request);
-            actionResult = deleteAction.InvokeStringMethod();
-
-            Assert.Equal("delete", actionResult);
+            resolver.ResolveAndAssert(request, "delete");
         }
 
         [Fact]
         public void PathResolver_ControllerWithOverridenActions_CanResolveMethodOverridenWithDifferentNumberOfParameters()
         {
-            throw new System.NotImplementedException();
-        }
+            var ctrlCtx = new Controllers.ActionOverloadController().GetControllerContextAsArray();
 
-        
+            var resolver = new PathResolver(ctrlCtx);
+            var path = "/api/ActionOverload/GetString";
+            var request = Fakes.FakeHttpRequest.WithGetMethod()
+                .WithPath(path)
+                .AddQuery("a", "test string");
+
+            resolver.ResolveAndAssert(request, "string a");
+        }
+                
     }
 }

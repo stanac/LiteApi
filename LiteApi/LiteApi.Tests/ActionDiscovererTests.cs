@@ -12,7 +12,7 @@ namespace LiteApi.Tests
             var actions = discoverer.GetActions(new Contracts.Models.ControllerContext
             {
                 Name = "TestController",
-                ControllerType = typeof(Controllers.TestStringController)
+                ControllerType = typeof(Controllers.ActionOverloadController)
             });
 
             Assert.True(actions.Length > 0);

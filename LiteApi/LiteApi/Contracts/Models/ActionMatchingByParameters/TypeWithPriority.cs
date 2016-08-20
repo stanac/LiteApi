@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
@@ -15,6 +16,16 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             if (type == null) throw new ArgumentNullException(nameof(type));
             Type = type;
             SetTypePriority();
+        }
+
+        public static int GetTypePriority(Type type)
+        {
+            var info = type.GetTypeInfo();
+            if (info.IsGenericType)
+            {
+                type = info.GetGenericArguments().Single();
+            }
+            return new TypeWithPriority(type).TypePriority;
         }
 
         private void SetTypePriority()

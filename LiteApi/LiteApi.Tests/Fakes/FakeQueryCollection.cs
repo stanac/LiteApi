@@ -27,5 +27,10 @@ namespace LiteApi.Tests.Fakes
         {
             _collection[key] = new StringValues(value);
         }
+
+        public void Clear()
+        {
+            _collection.Clear();
+        }
     }
 }

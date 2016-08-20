@@ -52,12 +52,18 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 
             foreach (PossibleParameterType param in parametersMatchedByName)
             {
-                var actionParam = ActionCtx.Parameters.First(x => x.IsMatchedByName(param));
-                var matchingWeight = param.GetParameterMatchingWeight(actionParam);
-                weight += (weightConst - matchingWeight);
+                ActionParameter actionParam = ActionCtx.Parameters.First(x => x.IsMatchedByName(param));
+                int matchingWeight = weightConst - TypeWithPriority.GetTypePriority(actionParam.Type);
+                if (!param.CanHandleType(actionParam.Type))
+                {
+                    matchingWeight = matchingWeight * -1;
+                }
+                weight += matchingWeight;
             }
 
             Weight = weight;
         }
+
+        public override string ToString() => $"action: {ActionCtx}, weight: {Weight}";
     }
 }
