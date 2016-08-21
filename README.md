@@ -20,7 +20,7 @@ public class TestController : LiteController
 ``` 
 
 You can use attributes: HttpGetAttribute, HttpPostAttribute, HttpPutAttribute, 
-HttpDeleteAttribute, buy default action is GET if no attribute is set.
+HttpDeleteAttribute, by default action is GET if no attribute is set.
 
 ---
 
