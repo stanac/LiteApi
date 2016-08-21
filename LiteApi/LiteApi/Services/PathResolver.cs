@@ -65,7 +65,15 @@ namespace LiteApi.Services
             string[] parts = url.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             string urlStart = null;
             if (parts.Length == 2) urlStart = "/" + parts[0] + "/";
-            else if (parts.Length == 3) urlStart = "/" + parts[0] + "/" + parts[1] + "/";
+            else if (parts.Length > 2)
+            {
+                // urlStart = "/" + parts[0] + "/" + parts[1] + "/";
+                urlStart = "/";
+                for (int i = 0; i < parts.Length - 1; i++)
+                {
+                    urlStart += parts[i] + "/";
+                }
+            }
 
             if (urlStart != null)
             {

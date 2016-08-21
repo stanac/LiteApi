@@ -53,7 +53,7 @@ namespace LiteApi.Contracts.Models
                     urlRoot = urlRoot.Replace("//", "/");
                 }
             }
-            string urlStart = urlRoot + Name.ToLower() + "/";
+            string urlStart = urlRoot.ToLower() + Name.ToLower() + "/";
             UrlStart = urlStart;
             List<KeyValuePair<string, ActionContext>> mappings = new List<KeyValuePair<string, ActionContext>>();
             foreach (var action in Actions)

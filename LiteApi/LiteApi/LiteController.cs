@@ -31,5 +31,10 @@ namespace LiteApi
         }
 
         public bool IsSingleton { get; internal set; }
+
+        public override string ToString()
+        {
+            return "CTRL: " + GetType().FullName;
+        }
     }
 }

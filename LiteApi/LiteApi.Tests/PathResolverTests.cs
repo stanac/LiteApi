@@ -1,5 +1,7 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace LiteApi.Tests
@@ -82,6 +84,31 @@ namespace LiteApi.Tests
             resolver.ResolveAndAssert(request, "DateTime? a");
         }
 
+        [Fact]
+        public void PathResolver_DifferentOrNoRootController_CanResolveDifferentOrNoRootAction()
+        {
+            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer()))
+                .GetControllers(typeof(Controllers.NoRootController).GetTypeInfo().Assembly);
 
+            var resolver = new PathResolver(ctrlCtx);
+
+            var request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/api/v2/DifferentRoot/Get");
+            resolver.ResolveAndAssert(request, "DifferentRootController");
+
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/theApi/simpleDifferentRoot/Get");
+            resolver.ResolveAndAssert(request, "SimpleDifferentRoot");
+
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/complex/root/with/multiple/parts/complexRoot/get");
+            resolver.ResolveAndAssert(request, "ComplexRoot");
+
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/noroot/get");
+            resolver.ResolveAndAssert(request, "NoRoot");
+
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/differentnoroot/get");
+            resolver.ResolveAndAssert(request, "DifferentNoRoot");
+
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/api/NoCtrlInName/get");
+            resolver.ResolveAndAssert(request, "NoCtrlInName");
+        }
     }
 }
