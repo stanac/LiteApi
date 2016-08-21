@@ -39,18 +39,49 @@ namespace LiteApi.Tests
         }
 
         [Fact]
-        public void PathResolver_ControllerWithOverridenActions_CanResolveMethodOverridenWithDifferentNumberOfParameters()
+        public void PathResolver_ControllerWithOverridenActions_CanResolveMethodOverloadedWithDifferentNumberAndTypeOfParameters()
         {
             var ctrlCtx = new Controllers.ActionOverloadController().GetControllerContextAsArray();
 
             var resolver = new PathResolver(ctrlCtx);
             var path = "/api/ActionOverload/GetString";
+
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .WithPath(path)
                 .AddQuery("a", "test string");
-
             resolver.ResolveAndAssert(request, "string a");
+
+            request.ClearQuery().AddQuery("a", "");
+            resolver.ResolveAndAssert(request, "string a");
+
+            request.ClearQuery().AddQuery("a", "test string 1").AddQuery("b", "test string 2");
+            resolver.ResolveAndAssert(request, "string a, string b");
+
+            request.ClearQuery().AddQuery("a", "1");
+            resolver.ResolveAndAssert(request, "int a");
+
+            request.ClearQuery().AddQuery("a", "1").AddQuery("b", "4545");
+            resolver.ResolveAndAssert(request, "int a, int b");
+
+            request.ClearQuery().AddQuery("a", "1").AddQuery("b", "2").AddQuery("c", "55");
+            resolver.ResolveAndAssert(request, "int a, int b, int c");
+
+            request.ClearQuery().AddQuery("a", "true");
+            resolver.ResolveAndAssert(request, "bool a");
+
+            request.ClearQuery().AddQuery("a", " TRUE ").AddQuery("b", "  FALSE");
+            resolver.ResolveAndAssert(request, "bool a, bool b");
+
+            request.ClearQuery().AddQuery("a", "{DC6F0519-973B-479F-8777-EB3063984457}");
+            resolver.ResolveAndAssert(request, "Guid a");
+
+            request.ClearQuery().AddQuery("a", "{DC6F0519-973B-479F-8777-EB3063984457}").AddQuery("b", "DC6F0519-973B-479F-8777-EB3063984457");
+            resolver.ResolveAndAssert(request, "Guid a, Guid b");
+
+            request.ClearQuery().AddQuery("a", $"{System.DateTime.Now}");
+            resolver.ResolveAndAssert(request, "DateTime? a");
         }
-                
+
+
     }
 }

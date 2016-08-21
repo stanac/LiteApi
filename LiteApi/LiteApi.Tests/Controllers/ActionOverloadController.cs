@@ -29,15 +29,30 @@ namespace LiteApi.Tests.Controllers
         {
             return "int a, int b, int c";
         }
+        
+        public string GetString(bool a)
+        {
+            return "bool a";
+        }
 
         public string GetString(bool a, bool b)
         {
             return "bool a, bool b";
         }
 
+        public string GetString(Guid a)
+        {
+            return "Guid a";
+        }
+
         public string GetString(Guid a, Guid b)
         {
             return "Guid a, Guid b";
+        }
+        
+        public string GetString(DateTime? a = null)
+        {
+            return "DateTime? a";
         }
     }
 }
