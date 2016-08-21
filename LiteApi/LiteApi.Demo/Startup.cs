@@ -10,7 +10,7 @@ namespace LiteApi.Demo
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            services.AddSingleton<IDemoService, DemoService>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

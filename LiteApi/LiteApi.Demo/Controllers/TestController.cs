@@ -1,20 +1,22 @@
-﻿using LiteApi.Attributes;
-using System.Threading.Tasks;
-
-namespace LiteApi.Demo.Controllers
+﻿namespace LiteApi.Demo.Controllers
 {
-    // [SingletonController]
     public class TestController : LiteController
     {
-        public int Add(int a, int b)
+        readonly IDemoService _service;
+
+        public TestController(IDemoService service)
         {
-            return a + b;
+            _service = service;
         }
 
-        //public async Task<int> AddAsync(int a, int b)
-        //{
-        //    await Task.Delay(2000);
-        //    return Add(a, b);
-        //}
+        public int Add(int a, int b)
+        {
+            return _service.Add(a, b);
+        }
+
+        public string Add(string a, string b)
+        {
+            return _service.Add(a, b);
+        }
     }
 }
