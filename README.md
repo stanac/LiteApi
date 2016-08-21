@@ -24,7 +24,7 @@ HttpDeleteAttribute, by default action is GET if no attribute is set.
 
 ---
 
-For installation you need to build the framework yourself (no nugget release at the moment)
+For installation you need to build the framework yourself (no nuget release at the moment)
 and use middleware in your startup class:
 
 ``` cs
