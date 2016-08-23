@@ -5,8 +5,16 @@ using System.Linq;
 
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 {
+    /// <summary>
+    /// Extension used for possible parameter type determination
+    /// </summary>
     public static class PossibleParameterTypeExtensions
     {
+        /// <summary>
+        /// Gets the possible parameter types.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns>Possible parameter types</returns>
         public static IEnumerable<PossibleParameterType> GetPossibleParameterTypes(this HttpRequest request)
         {
             var httpMethod = request.Method.ToLower();
@@ -47,6 +55,11 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             }
         }
 
+        /// <summary>
+        /// Gets the possible types.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns>Possible types</returns>
         private static IEnumerable<Type> GetPossibleTypes(string value)
         {
             bool tempBool;
@@ -141,12 +154,30 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified possible parameter is matched by name.
+        /// </summary>
+        /// <param name="actionParam">The action parameter.</param>
+        /// <param name="possibleParam">The possible parameter.</param>
+        /// <returns>True is match is found</returns>
         public static bool IsMatchedByName(this ActionParameter actionParam, PossibleParameterType possibleParam)
             => actionParam.Name == possibleParam.Name;
 
+        /// <summary>
+        /// Determines whether the specified possible parameter is matched by name.
+        /// </summary>
+        /// <param name="possibleParam">The possible parameter.</param>
+        /// <param name="actionParam">The action parameter.</param>
+        /// <returns>True is match is found</returns>
         public static bool IsMatchedByName(this PossibleParameterType possibleParam, ActionParameter actionParam)
             => actionParam.Name == possibleParam.Name;
 
+        /// <summary>
+        /// Gets the parameter matching weight.
+        /// </summary>
+        /// <param name="possibleParam">The possible parameter.</param>
+        /// <param name="actionParam">The action parameter.</param>
+        /// <returns>Weight from <see cref="PossibleParameterType"/></returns>
         public static int GetParameterMatchingWeight(this PossibleParameterType possibleParam, ActionParameter actionParam)
         {
             var matchingType = possibleParam.GetNotNullableType(actionParam.Type);

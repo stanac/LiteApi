@@ -2,7 +2,7 @@
 
 ## MVC-style inspired .NET Core WEB API with JSON only support
 
-LiteApi is .net core framework inspired by MVC-style Controller/Action principles.
+LiteApi is .net core middleware inspired by MVC-style Controller/Action principles.
 It's still in alpha and currently initial tests are showing that it can handle about 50% 
 more requests per second than MVC6 (asp.net core).
 
@@ -24,7 +24,7 @@ HttpDeleteAttribute, by default action is GET if no attribute is set.
 
 ---
 
-For installation you need to build the framework yourself (no nuget release at the moment)
+For installation you need to build the middleware yourself (no nuget release at the moment)
 and use middleware in your startup class:
 
 ``` cs
@@ -53,6 +53,6 @@ namespace MyApp
 ---
 
 There is a lot of documentation to be written about parameters and actions matching,
-and currently framework does not support array types from query string. Plan is to
+and currently middleware does not support array types from query string. Plan is to
 implement array support before initial stable release. Also a lot of testing needs to
 be done before initial release.

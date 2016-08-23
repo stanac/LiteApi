@@ -3,14 +3,48 @@ using System.Linq;
 
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ActionMatchingWeight
     {
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ActionMatchingWeight"/> class from being created.
+        /// </summary>
         private ActionMatchingWeight() { }
 
+        /// <summary>
+        /// Gets the action context.
+        /// </summary>
+        /// <value>
+        /// The action context.
+        /// </value>
         public ActionContext ActionCtx { get; private set; }
+
+        /// <summary>
+        /// Gets the weight. Wight is used to tell which action is more of a match to a request.
+        /// </summary>
+        /// <value>
+        /// The weight.
+        /// </value>
         public int Weight { get; private set; }
+
+        /// <summary>
+        /// Gets the parameters.
+        /// </summary>
+        /// <value>
+        /// The parameters.
+        /// </value>
         public PossibleParameterType[] Parameters { get; private set; }
 
+        /// <summary>
+        /// Calculates the weight.
+        /// </summary>
+        /// <param name="actionCtx">The action CTX.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>Wight, how much the action is matched to the request</returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public static ActionMatchingWeight CalculateWeight(ActionContext actionCtx, PossibleParameterType[] parameters)
         {
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
@@ -24,6 +58,9 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             return weight;
         }
 
+        /// <summary>
+        /// Calculates the weight. Wight is how much the action is matched to the request
+        /// </summary>
         private void CalculateWeight()
         {
             const int weightConst = 8500;
@@ -64,6 +101,12 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             Weight = weight;
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
         public override string ToString() => $"action: {ActionCtx}, weight: {Weight}";
     }
 }

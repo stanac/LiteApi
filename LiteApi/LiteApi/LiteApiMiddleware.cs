@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
 using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Builder;
 
 namespace LiteApi
 {
@@ -19,10 +20,20 @@ namespace LiteApi
 
         internal static LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
         internal static bool IsRegistered { get; private set; }
-        internal static IServiceProvider Services;
+        internal static IServiceProvider Services { get; private set; }
+        internal static ILogger Logger { get; private set; }
 
-
-        public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LiteApiMiddleware"/> class.
+        /// </summary>
+        /// <param name="next">The next, provided by ASP.NET</param>
+        /// <param name="options">The options, passed by <see cref="IApplicationBuilder"/> extension method.</param>
+        /// <param name="services">The services, provided by ASP.NET</param>
+        /// <param name="loggerFactory">The logger factory, provided by ASP.NET</param>
+        /// <exception cref="System.Exception">Middleware is already registered.</exception>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="System.ArgumentException">Assemblies with controllers is not passed to the LiteApiMiddleware</exception>
+        public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services, ILoggerFactory loggerFactory)
         {
             if (IsRegistered) throw new Exception("Middleware is already registered.");
 
@@ -32,6 +43,7 @@ namespace LiteApi
                 throw new ArgumentException("Assemblies with controllers is not passed to the LiteApiMiddleware");
             }
             Options = options;
+            Logger = new InternalLogger(options.EnableLogging, loggerFactory.CreateLogger<LiteApiMiddleware>());
             Services = services;
             _next = next;
             IsRegistered = true;            
@@ -39,7 +51,12 @@ namespace LiteApi
             Initialize();
         }
 
-        public async Task Invoke(HttpContext context, ILoggerFactory loggerFactory)
+        /// <summary>
+        /// Gets called by ASP.NET framework
+        /// </summary>
+        /// <param name="context">Instance of <see cref="HttpContext"/> provided by ASP.NET framework</param>
+        /// <returns></returns>
+        public async Task Invoke(HttpContext context)
         {
             ActionContext action = _pathResolver.ResolveAction(context.Request);
             if (action == null)

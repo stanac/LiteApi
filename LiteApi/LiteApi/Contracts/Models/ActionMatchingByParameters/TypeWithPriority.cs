@@ -1,16 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 {
+    /// <summary>
+    /// Determines type priority for action overloading
+    /// </summary>
     public class TypeWithPriority
     {
+        /// <summary>
+        /// Gets the type.
+        /// </summary>
+        /// <value>
+        /// The type.
+        /// </value>
         public Type Type { get; private set; }
+
+        /// <summary>
+        /// Gets the type priority.
+        /// </summary>
+        /// <value>
+        /// The type priority.
+        /// </value>
         public int TypePriority { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeWithPriority" /> class.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public TypeWithPriority(Type type)
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
@@ -18,6 +37,11 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             SetTypePriority();
         }
 
+        /// <summary>
+        /// Gets the type priority.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>int, Types priority</returns>
         public static int GetTypePriority(Type type)
         {
             var info = type.GetTypeInfo();
@@ -28,6 +52,10 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             return new TypeWithPriority(type).TypePriority;
         }
 
+        /// <summary>
+        /// Sets the type priority.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException">Type;Failed to set type priority</exception>
         private void SetTypePriority()
         {
             if (Type == typeof(bool)) TypePriority = 10;

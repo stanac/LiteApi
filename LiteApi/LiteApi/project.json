@@ -1,12 +1,12 @@
 {
   "title": "LiteApi",
-  "description": "MVC style web API framework that supports JSON only",
+  "description": "MVC style web API middleware that supports JSON only",
   "version": "0.1.0-*",
   "dependencies": {
     "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
     "NETStandard.Library": "1.6.0",
-    "Newtonsoft.Json": "9.0.1"//,
+    "Newtonsoft.Json": "9.0.1" //,
     // "Microsoft.CodeAnalysis.CSharp": "1.3.0",
     // "System.Runtime.Loader": "4.0.0"
   },
@@ -16,6 +16,6 @@
     }
   },
   "buildOptions": {
-    "xmlDoc": false
+    "xmlDoc": true
   }
 }

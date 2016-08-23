@@ -10,7 +10,8 @@
     "Microsoft.Extensions.Logging.Console": "1.0.0",
     "Microsoft.AspNetCore.StaticFiles": "1.0.0",
     "LiteApi": "0.1.0-*",
-    "StackifyMiddleware": "1.4.1"
+    "StackifyMiddleware": "1.4.1",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0"
   },
 
   "tools": {

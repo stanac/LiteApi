@@ -7,18 +7,70 @@ using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
 {
+    /// <summary>
+    /// Controller metadata
+    /// </summary>
     public class ControllerContext
     {
+        /// <summary>
+        /// Gets the action mappings.
+        /// </summary>
+        /// <value>
+        /// The action mappings.
+        /// </value>
         internal List<KeyValuePair<string, ActionContext>> ActionMappings { get; private set; }
-        internal string UrlStart { get; private set; }
 
-        // public Guid ControllerGuid { get; } = Guid.NewGuid();
-        public string Name { get; set; }
-        public string UrlRoot { get; set; }
-        public ActionContext[] Actions { get; set; }
-        public Type ControllerType { get; set; }
-        public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+        /// <summary>
+        /// Gets the URL start. Used to determine if request is matched to this controller.
+        /// </summary>
+        /// <value>
+        /// The URL start. Used to determine if request is matched to this controller.
+        /// </value>
+        internal string UrlStart { get; private set; }
         
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL root. URL prefix for controller, default is /api/
+        /// </summary>
+        /// <value>
+        /// The URL root. URL prefix for controller, default is /api/
+        /// </value>
+        public string UrlRoot { get; set; }
+
+        /// <summary>
+        /// Gets or sets the actions belonging to this controller.
+        /// </summary>
+        /// <value>
+        /// The actions.
+        /// </value>
+        public ActionContext[] Actions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Type"/> of the controller.
+        /// </summary>
+        /// <value>
+        /// The <see cref="Type"/> of the controller.
+        /// </value>
+        public Type ControllerType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the filters. Filters are used for filtering requests (e.g. for authentication/authorization)
+        /// </summary>
+        /// <value>
+        /// The filters. Filters are used for filtering requests (e.g. for authentication/authorization)
+        /// </value>
+        public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public void Init()
         {
             if (ActionMappings == null)
@@ -27,6 +79,12 @@ namespace LiteApi.Contracts.Models
             }
         }
 
+        /// <summary>
+        /// Gets the actions by path.
+        /// </summary>
+        /// <param name="path">The path.</param>
+        /// <param name="urlStart">The URL start.</param>
+        /// <returns>Actions matching to the provided path</returns>
         public IEnumerable<ActionContext> GetActionsByPath(string path, string urlStart)
         {
             if (urlStart == UrlStart)
@@ -42,6 +100,9 @@ namespace LiteApi.Contracts.Models
             }
         }
 
+        /// <summary>
+        /// Creates the action mappings and URL start.
+        /// </summary>
         private void CreateActionMappingsAndUrlStart()
         {
             string urlRoot = "/";
@@ -64,6 +125,11 @@ namespace LiteApi.Contracts.Models
             ActionMappings = mappings;
         }
 
+        /// <summary>
+        /// Validates the filters.
+        /// </summary>
+        /// <param name="httpCtx">The HTTP context.</param>
+        /// <returns><see cref="ApiFilterRunResult"/> containing result of the filter run.</returns>
         internal async Task<ApiFilterRunResult> ValidateFilters(HttpContext httpCtx)
         {
             foreach (var filter in Filters)

@@ -4,37 +4,35 @@ using System.Security.Claims;
 
 namespace LiteApi
 {
+    /// <summary>
+    /// Base class for all controllers that should be registered by the middleware
+    /// </summary>
     public abstract class LiteController
     {
         private HttpContext _httpContext;
 
-        public HttpContext HttpContext
-        {
-            get
-            {
-                if (IsSingleton) throw new InvalidOperationException("Cannot use HttpContext in singleton controller.");
-                return _httpContext;
-            }
-            internal set
-            {
-                _httpContext = value;
-            }
-        }
+        /// <summary>
+        /// Gets the HTTP context.
+        /// </summary>
+        /// <value>
+        /// The HTTP context.
+        /// </value>>
+        public HttpContext HttpContext { get; internal set; }
 
-        public ClaimsPrincipal User
-        {
-            get
-            {
-                if (IsSingleton) throw new InvalidOperationException("Cannot use HttpContext in singleton controller.");
-                return HttpContext?.User;
-            }
-        }
+        /// <summary>
+        /// Gets the user.
+        /// </summary>
+        /// <value>
+        /// The user.
+        /// </value>
+        public ClaimsPrincipal User => HttpContext?.User;
 
-        public bool IsSingleton { get; internal set; }
-
-        public override string ToString()
-        {
-            return "CTRL: " + GetType().FullName;
-        }
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString() => "CTRL: " + GetType().FullName;
     }
 }
