@@ -6,6 +6,12 @@ LiteApi is .net core middleware inspired by MVC-style Controller/Action principl
 It's still in alpha and currently initial tests are showing that it can handle about 50% 
 more requests per second than MVC6 (asp.net core).
 
+LiteApi is still in prerelease phase, to install it use nuget, or add it to project.json file manually:
+
+```
+Install-Package LiteApi -Pre
+```
+
 Super simple example of a controller:
 
 ``` cs
