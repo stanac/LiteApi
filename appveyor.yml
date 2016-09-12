@@ -1,0 +1,10 @@
+before_build:
+  - nuget restore
+branches:
+  only:
+    - master
+image: Visual Studio 2015
+configuration: Release
+test:
+  assemblies: 
+    - LiteApi\\LiteApi.Tests.dll
