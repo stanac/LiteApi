@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Xunit;
 
 namespace LiteApi.Tests
@@ -57,6 +58,18 @@ namespace LiteApi.Tests
                 return Activator.CreateInstance(type);
             }
             return null;
+        }
+
+        public static string ReadBody(this HttpResponse response)
+        {
+            if (response.Body == null) return null;
+            if (response.Body.Length == 0) return "";
+            long position = response.Body.Position;
+            response.Body.Position = 0;
+            byte[] data = new byte[response.Body.Length];
+            response.Body.Read(data, 0, data.Length);
+            response.Body.Position = position;
+            return Encoding.UTF8.GetString(data);
         }
     }
 }

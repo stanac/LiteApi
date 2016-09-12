@@ -17,19 +17,19 @@ namespace LiteApi.Tests.Controllers
         }
 
         [HttpPost]
-        public string Action(int a, int b)
+        public string Action([FromUrl]int a, [FromUrl]int b)
         {
             return "post";
         }
 
         [HttpPut]
-        public string Action(int a, int b, int c)
+        public string Action([FromUrl]int a, [FromUrl]int b, [FromUrl]int c)
         {
             return "put";
         }
 
         [HttpDelete]
-        public string Action(string d)
+        public string Action([FromUrl]string d)
         {
             return "delete";
         }

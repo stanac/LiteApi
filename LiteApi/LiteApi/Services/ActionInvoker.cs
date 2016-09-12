@@ -60,7 +60,7 @@ namespace LiteApi.Services
             }
 
             int statusCode = 405; // method not allowed
-            switch (httpCtx.Request.Method)
+            switch (httpCtx.Request.Method.ToUpper())
             {
                 case "GET": statusCode = 200; break;
                 case "POST": statusCode = 201; break;
