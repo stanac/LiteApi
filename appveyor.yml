@@ -1,0 +1,12 @@
+version: 0.1.1.{build}
+before_build:
+- cmd: dotnet restore
+build:
+  verbosity: minimal
+test_script:
+- cmd: >-
+    cd LiteApi
+
+    cd LiteApi.Tests
+
+    dotnet test
