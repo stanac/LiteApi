@@ -2,6 +2,8 @@
 
 ## MVC-style inspired .NET Core WEB API with JSON only support
 
+[![Build status](https://ci.appveyor.com/api/projects/status/5crmsp0tfgduwcvo?svg=true)](https://ci.appveyor.com/project/ProjectMona/liteapi)
+
 LiteApi is .net core middleware inspired by MVC-style Controller/Action principles.
 It's still in beta and currently initial tests are showing that it can handle about 50%-90%
 more requests per second than MVC6 (asp.net core). Check [intro post](http://stanacev.com/2016/09/06/liteapi-alternative-web-api-net-core-middleware-intro/) and [performance comparison post](http://stanacev.com/2016/09/08/liteapi-performance-comparison/).
