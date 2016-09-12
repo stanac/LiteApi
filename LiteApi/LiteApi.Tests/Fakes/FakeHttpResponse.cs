@@ -9,10 +9,10 @@ namespace LiteApi.Tests.Fakes
 {
     public class FakeHttpResponse : HttpResponse, IDisposable
     {
-        internal IResponseCookies cookies;
-        internal IHeaderDictionary headers;
-        internal HttpContext httpContext;
-        internal bool hasStarted;
+        internal IResponseCookies cookies = null;
+        internal IHeaderDictionary headers = null;
+        internal HttpContext httpContext = null;
+        internal bool hasStarted = false;
 
         public override Stream Body { get; set; } = new MemoryStream();
 
