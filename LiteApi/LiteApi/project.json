@@ -16,6 +16,6 @@
     }
   },
   "buildOptions": {
-    "xmlDoc": true
+    "xmlDoc": false
   }
 }
