@@ -9,11 +9,21 @@ using System.Reflection;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class that builds controllers.
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IControllerBuilder" />
     public class ControllerBuilder : IControllerBuilder
     {
         private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
         private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
 
+        /// <summary>
+        /// Builds the specified controller from controller context and HTTP context.
+        /// </summary>
+        /// <param name="controllerCtx">The controller context.</param>
+        /// <param name="httpContext">The HTTP context.</param>
+        /// <returns>Instance of the built controller.</returns>
         public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
             ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
@@ -24,7 +34,7 @@ namespace LiteApi.Services
             return controller;
         }
 
-        internal static ConstructorInfo GetConstructor(Type controllerType)
+        private static ConstructorInfo GetConstructor(Type controllerType)
         {
             if (Constructors.ContainsKey(controllerType.FullName))
             {

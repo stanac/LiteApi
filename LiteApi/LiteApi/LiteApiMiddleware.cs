@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Builder;
 
 namespace LiteApi
 {
+    /// <summary>
+    /// Middleware to register with ASP.NET Core
+    /// </summary>
     public class LiteApiMiddleware
     {
         private RequestDelegate _next;

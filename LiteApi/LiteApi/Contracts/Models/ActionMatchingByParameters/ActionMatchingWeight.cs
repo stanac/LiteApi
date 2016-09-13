@@ -4,7 +4,7 @@ using System.Linq;
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 {
     /// <summary>
-    /// 
+    /// Class to work with action matching weight that is used in action overloading to find closest match to an action to HTTP request.
     /// </summary>
     public class ActionMatchingWeight
     {

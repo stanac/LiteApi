@@ -8,10 +8,19 @@ using LiteApi.Contracts.Models.ActionMatchingByParameters;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class for resolving which action (if any) should be invoked for the HTTP request.
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IPathResolver" />
     public class PathResolver : IPathResolver
     {
         private readonly ControllerContext[] _controllerContrxts;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PathResolver"/> class.
+        /// </summary>
+        /// <param name="controllers">Controllers to check.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public PathResolver(ControllerContext[] controllers)
         {
             if (controllers == null) throw new ArgumentNullException(nameof(controllers));
@@ -22,6 +31,11 @@ namespace LiteApi.Services
             }
         }
 
+        /// <summary>
+        /// Resolves which action (if any) should be invoked for given HTTP request.
+        /// </summary>
+        /// <param name="request">The HTTP request.</param>
+        /// <returns>ActionContext that should be invoked.</returns>
         public ActionContext ResolveAction(HttpRequest request)
         {
             var actions = GetActionsForPathAndMethod(request).ToArray();
@@ -29,8 +43,8 @@ namespace LiteApi.Services
             if (actions.Length == 0) return null;
             return ResolveActionContextByQueryParameterTypes(request, actions);
         }
-
-        public IEnumerable<ActionContext> GetActionsForPathAndMethod(HttpRequest request)
+        
+        private IEnumerable<ActionContext> GetActionsForPathAndMethod(HttpRequest request)
         {
             string path = request.Path.Value.ToLower();
             string urlStart = GetUrlStart(path);

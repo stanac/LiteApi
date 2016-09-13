@@ -7,6 +7,11 @@ namespace LiteApi.Contracts.Abstractions
     /// </summary>
     public interface IActionDiscoverer
     {
+        /// <summary>
+        /// Discovers action in given controller.
+        /// </summary>
+        /// <param name="controllerCtx">Controller context in which to look for actions.</param>
+        /// <returns></returns>
         ActionContext[] GetActions(ControllerContext controllerCtx);
     }
 }

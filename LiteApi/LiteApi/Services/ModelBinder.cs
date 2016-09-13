@@ -8,8 +8,18 @@ using LiteApi.Contracts.Models;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class for resolving parameter values for given <see cref="ActionContext"/>
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
     public class ModelBinder : IModelBinder
     {
+        /// <summary>
+        /// Gets the parameter values from the HTTP request.
+        /// </summary>
+        /// <param name="request">The HTTP request.</param>
+        /// <param name="actionCtx">The action context which should be invoked.</param>
+        /// <returns></returns>
         public object[] GetParameterValues(HttpRequest request, ActionContext actionCtx)
         {
             object[] values = new object[actionCtx.Parameters.Length];

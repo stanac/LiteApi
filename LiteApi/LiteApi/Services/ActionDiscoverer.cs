@@ -8,16 +8,30 @@ using System.Collections.Generic;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class that is discovering actions in given <see cref="ControllerContext"/>
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IActionDiscoverer" />
     public class ActionDiscoverer : IActionDiscoverer
     {
         private readonly IParametersDiscoverer _parameterDiscoverer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionDiscoverer"/> class.
+        /// </summary>
+        /// <param name="parameterDiscoverer">The parameter discoverer.</param>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public ActionDiscoverer(IParametersDiscoverer parameterDiscoverer)
         {
             if (parameterDiscoverer == null) throw new ArgumentNullException(nameof(parameterDiscoverer));
             _parameterDiscoverer = parameterDiscoverer;
         }
 
+        /// <summary>
+        /// Discovers action in given controller.
+        /// </summary>
+        /// <param name="controllerCtx">Controller context in which to look for actions.</param>
+        /// <returns></returns>
         public ActionContext[] GetActions(ControllerContext controllerCtx)
         {
             var properties = controllerCtx.ControllerType.GetProperties(BindingFlags.Instance | BindingFlags.Public);

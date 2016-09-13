@@ -7,8 +7,17 @@ using System;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class for validating action parameters.
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersValidator" />
     public class ParametersValidator : IParametersValidator
     {
+        /// <summary>
+        /// Gets the parameters errors.
+        /// </summary>
+        /// <param name="actionCtx">The action CTX.</param>
+        /// <returns>Collection of strings that contains errors, if not empty an exception should be raised.</returns>
         public IEnumerable<string> GetParametersErrors(ActionContext actionCtx)
         {
             foreach (ActionParameter param in actionCtx.Parameters)

@@ -5,8 +5,17 @@ using LiteApi.Contracts.Models;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class for resolving parameters metadata in an action
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersDiscoverer" />
     public class ParametersDiscoverer : IParametersDiscoverer
     {
+        /// <summary>
+        /// Gets the action parameters metadata for the given action context.
+        /// </summary>
+        /// <param name="actionCtx">The action context.</param>
+        /// <returns>Array of <see cref="ActionParameter"/> retrieved from action context.</returns>
         public ActionParameter[] GetParameters(ActionContext actionCtx)
         {
             var methodParams = actionCtx.Method.GetParameters();

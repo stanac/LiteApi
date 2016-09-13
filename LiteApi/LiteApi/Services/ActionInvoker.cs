@@ -6,12 +6,23 @@ using System.Threading.Tasks;
 
 namespace LiteApi.Services
 {
+    /// <summary>
+    /// Class that is used for invoking actions
+    /// </summary>
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IActionInvoker" />
     public class ActionInvoker : IActionInvoker
     {
         public static Func<IJsonSerializer> GetJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
         private readonly IControllerBuilder _controllerBuilder;
         private readonly IModelBinder _modelBinder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionInvoker"/> class.
+        /// </summary>
+        /// <param name="controllerBuilder">The controller builder.</param>
+        /// <param name="modelBinder">The model binder.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public ActionInvoker(IControllerBuilder controllerBuilder, IModelBinder modelBinder)
         {
             if (controllerBuilder == null) throw new ArgumentNullException(nameof(controllerBuilder));
@@ -20,6 +31,12 @@ namespace LiteApi.Services
             _modelBinder = modelBinder;
         }
 
+        /// <summary>
+        /// Invokes the specified <see cref="ActionContext"/>.
+        /// </summary>
+        /// <param name="httpCtx">The HTTP context, set by the middleware.</param>
+        /// <param name="actionCtx">The action CTX.</param>
+        /// <returns></returns>
         public virtual async Task Invoke(HttpContext httpCtx, ActionContext action)
         {
             ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, action);
@@ -76,7 +93,7 @@ namespace LiteApi.Services
             }
         }
 
-        internal static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
+        private static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
         {
             if (action.SkipAuth) return new ApiFilterRunResult { ShouldContinue = true };
 
