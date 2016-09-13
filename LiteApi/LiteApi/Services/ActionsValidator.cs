@@ -22,7 +22,8 @@ namespace LiteApi.Services
             {
                 foreach (var error in _paramsValidator.GetParametersErrors(action))
                 {
-                    yield return $"Error with parameters in controller {action.ParentController.Name} action {action.Name}: {error}";
+                    yield return $"Error with parameters in controller '{action.ParentController.Name}' "
+                        + $"action '{action.Name}', HTTP method: '{action.HttpMethod}'. Error details: {error}";
                 }
             }
         }

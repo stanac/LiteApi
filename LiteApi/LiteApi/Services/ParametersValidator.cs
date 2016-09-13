@@ -21,12 +21,16 @@ namespace LiteApi.Services
             
             if (!actionCtx.HttpMethod.HasBody() && actionCtx.Parameters.Any(x => x.ParameterSource == ParameterSources.Body))
             {
-                yield return $"HTTP methods GET and DELETE does not support parameters from body, and there is at least one parameter from body found. " + AttributeConventions.ErrorResolutionSuggestion;
+                yield return $"HTTP methods GET and DELETE does not support parameters from body, "
+                    + "and there is at least one parameter from body found. " 
+                    + $"in action '{actionCtx.Name}' in controller: '{actionCtx.ParentController?.Name}'. "
+                    + AttributeConventions.ErrorResolutionSuggestion;
             }
 
             if (actionCtx.Parameters.Count(x => x.ParameterSource == ParameterSources.Body) > 1)
             {
-                yield return "Multiple parameters from body found, maximum number of parameters from body is 1. " + AttributeConventions.ErrorResolutionSuggestion;
+                yield return $"Multiple parameters from body found in action '{actionCtx.Name}' in controller '{actionCtx.ParentController?.Name}'. "
+                    + "Maximum number of parameters from body is 1. " + AttributeConventions.ErrorResolutionSuggestion;
             }
         }
     }
