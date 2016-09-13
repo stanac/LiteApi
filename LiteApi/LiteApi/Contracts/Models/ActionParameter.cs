@@ -6,7 +6,7 @@ using LiteApi.Contracts.Abstractions;
 namespace LiteApi.Contracts.Models
 {
     /// <summary>
-    /// 
+    /// Metadata for action parameter that is received by the API.
     /// </summary>
     public class ActionParameter
     {
@@ -72,10 +72,10 @@ namespace LiteApi.Contracts.Models
         private bool _isTypeNullable;
 
         /// <summary>
-        /// Gets or sets the type.
+        /// Gets or sets the reflected parameter type.
         /// </summary>
         /// <value>
-        /// The type.
+        /// The reflected parameter type.
         /// </value>
         public Type Type
         {
@@ -143,7 +143,7 @@ namespace LiteApi.Contracts.Models
         /// Parses the string value.
         /// </summary>
         /// <param name="value">The string value to parse.</param>
-        /// <returns>Parsed string value in for of an object</returns>
+        /// <returns>Parsed string value</returns>
         /// <exception cref="System.ArgumentException"></exception>
         public object ParseValue(string value)
         {
@@ -161,8 +161,8 @@ namespace LiteApi.Contracts.Models
         /// <summary>
         /// Gets the supported types.
         /// </summary>
-        /// <returns>Collection of supported <see cref="Type"/></returns>
-        public static IEnumerable<Type> GetSupportedType()
+        /// <returns>Collection of supported <see cref="Type"/> from URL</returns>
+        public static IEnumerable<Type> GetSupportedTypesFromUrl()
         {
             return SupportedTypesFromUrl.Select(x => x);
         }

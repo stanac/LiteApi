@@ -1,5 +1,8 @@
 ﻿namespace LiteApi.Attributes
 {
+    /// <summary>
+    /// Internally used for describing how to resolve some of the validation errors.
+    /// </summary>
     internal static class AttributeConventions
     {
         public static string ErrorResolutionSuggestion =>

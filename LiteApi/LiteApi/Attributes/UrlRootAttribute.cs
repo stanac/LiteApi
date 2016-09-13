@@ -3,7 +3,8 @@
 namespace LiteApi.Attributes
 {
     /// <summary>
-    /// Used to set root of the URL for a controller (if not set controller root URL is "api", so controller named "UserController" will respond to URL "/api/user/{action}". If you don't want to use URL root, set value to null or empty string.
+    /// Used to set root of the URL for a controller (if not set controller root URL is "api", so controller named "UserController" 
+    /// will respond to URL "/api/user/{action}". If you don't want to use URL root, set value to null or empty string.
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Class)]
@@ -20,7 +21,7 @@ namespace LiteApi.Attributes
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlRootAttribute"/> class.
         /// </summary>
-        /// <param name="urlRoot">The URL root.</param>
+        /// <param name="urlRoot">The URL root for the controller.</param>
         public UrlRootAttribute(string urlRoot)
         {
             urlRoot = urlRoot ?? "";

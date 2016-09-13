@@ -5,7 +5,7 @@ using System.Linq;
 namespace LiteApi.Contracts.Models
 {
     /// <summary>
-    /// Action context, keeps metadata of an action
+    /// Action context, keeps metadata of an action.
     /// </summary>
     public class ActionContext
     {
@@ -21,10 +21,10 @@ namespace LiteApi.Contracts.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the parameters.
+        /// Gets or sets the action parameters.
         /// </summary>
         /// <value>
-        /// The parameters.
+        /// The action parameters.
         /// </value>
         public ActionParameter[] Parameters { get; set; }
 
@@ -45,10 +45,10 @@ namespace LiteApi.Contracts.Models
         }
 
         /// <summary>
-        /// Gets or sets the method.
+        /// Gets or sets the reflected method.
         /// </summary>
         /// <value>
-        /// The method.
+        /// The reflected method.
         /// </value>
         /// 
         public MethodInfo Method { get; set; }
@@ -73,12 +73,12 @@ namespace LiteApi.Contracts.Models
         /// Gets or sets a value indicating whether to skip authentication.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>.
+        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="SkipAuthorizationAttribute"/>.
         /// </value>
         public bool SkipAuth { get; set; }
 
         /// <summary>
-        /// Determines whether [is HTTP method matched] [the specified HTTP method].
+        /// Determines whether is HTTP method matched the specified HTTP method.
         /// </summary>
         /// <param name="httpMethod">The HTTP method.</param>
         /// <returns>Checks if provided httpMethod (as string) is supported by the action</returns>
