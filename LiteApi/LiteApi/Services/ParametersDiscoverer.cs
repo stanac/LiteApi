@@ -29,6 +29,13 @@ namespace LiteApi.Services
                     Type = param.ParameterType,
                     ParameterSource = source
                 };
+
+                if (parameters[i].ParameterSource == ParameterSources.Unknown)
+                {
+                    parameters[i].ParameterSource = parameters[i].IsComplex
+                        ? ParameterSources.Body
+                        : ParameterSources.Query;
+                }
             }
 
             return parameters;

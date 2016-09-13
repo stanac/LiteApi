@@ -15,7 +15,7 @@ namespace LiteApi.Services
             {
                 if (param.ParameterSource == ParameterSources.Unknown)
                 {
-                    param.ParameterSource = param.IsComplex ? ParameterSources.Body : ParameterSources.Query;
+                    throw new Exception($"Parameter {param.Name} in action {actionCtx.Name} in controller {actionCtx.ParentController?.Name} doesn't have source set.");
                 }
             }
             
