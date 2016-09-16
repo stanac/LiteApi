@@ -61,6 +61,4 @@ namespace MyApp
 ---
 
 There is a lot of documentation to be written about parameters and actions matching,
-and currently middleware does not support array types from query string. Plan is to
-implement array support before initial stable release. Also a lot of testing needs to
-be done before initial release.
+also a lot of testing needs to be done before initial release.
