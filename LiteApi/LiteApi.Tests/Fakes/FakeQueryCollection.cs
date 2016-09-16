@@ -23,7 +23,7 @@ namespace LiteApi.Tests.Fakes
 
         IEnumerator IEnumerable.GetEnumerator() => _collection.GetEnumerator();
 
-        public void Add(string key, string value)
+        public void Add(string key, params string[] value)
         {
             _collection[key] = new StringValues(value);
         }

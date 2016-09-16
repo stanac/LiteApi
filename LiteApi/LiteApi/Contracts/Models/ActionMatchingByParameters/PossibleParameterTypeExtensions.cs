@@ -43,7 +43,6 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
 
                 if (possibleType.QueryValues.Any())
                 {
-                    // TODO: add support for arrays
                     string first = possibleType.QueryValues.FirstOrDefault();
                     if (!string.IsNullOrEmpty(first))
                     {

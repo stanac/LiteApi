@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using LiteApi.Contracts.Abstractions;
+using System.Reflection;
+using System.Collections;
 
 namespace LiteApi.Contracts.Models
 {
@@ -10,6 +12,13 @@ namespace LiteApi.Contracts.Models
     /// </summary>
     public class ActionParameter
     {
+        private bool _isTypeNullable;
+        private bool _isTypeArray;
+        private bool _isTypeList;
+        private Type _collectionElementType;
+        private bool _isCollectionElementTypeNullable;
+        private Type _type;
+
         /// <summary>
         /// Gets or sets the JSON serializer factory.
         /// </summary>
@@ -69,8 +78,6 @@ namespace LiteApi.Contracts.Models
         /// </value>
         public bool HasDefaultValue { get; set; }
         
-        private bool _isTypeNullable;
-
         /// <summary>
         /// Gets or sets the reflected parameter type.
         /// </summary>
@@ -82,10 +89,66 @@ namespace LiteApi.Contracts.Models
             get { return _type; }
             set
             {
+                string debugStr = value.ToString();
                 _type = value;
-                _isTypeNullable = Type.IsGenericParameter && Type.GetGenericTypeDefinition() == typeof(Nullable<>);
+                TypeInfo info = value.GetTypeInfo();
+                Type nullableArgument;
+                if (_isTypeNullable = info.IsNullable(out nullableArgument))
+                {
+                    _type = nullableArgument;
+                }
+                if (info.IsGenericType && info.GetGenericTypeDefinition() == typeof(List<>))
+                {
+                    _isTypeList = true;
+                    _collectionElementType = value.GenericTypeArguments.Single();
+                }
+                else if (value.IsArray)
+                {
+                    _isTypeArray = true;
+                    _collectionElementType = value.GetElementType();
+                }
+                if (IsArrayOrList)
+                {
+                    TypeInfo collectionElementInfo = _collectionElementType.GetTypeInfo();
+                    if (_isCollectionElementTypeNullable = _collectionElementType.GetTypeInfo().IsNullable(out nullableArgument))
+                    {
+                        _collectionElementType = nullableArgument;
+                    }
+                }
             }
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this action parameter is array.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this action parameter is array; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsArray => _isTypeArray;
+
+        /// <summary>
+        /// Gets a value indicating whether this action parameter is list.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this action parameter is list; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsList => _isTypeList;
+
+        /// <summary>
+        /// Gets a value indicating whether this action parameter is array or list.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this action parameter is array or list; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsArrayOrList => _isTypeArray || _isTypeList;
+
+        /// <summary>
+        /// Gets a value indicating whether this action parameter is nullable.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this action parameter is nullable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsNullable => _isTypeNullable;
 
         /// <summary>
         /// Gets a value indicating whether the parameter is complex (not in <see cref="SupportedTypesFromUrl"/>).
@@ -95,8 +158,7 @@ namespace LiteApi.Contracts.Models
         /// </value>
         public bool IsComplex => !SupportedTypesFromUrl.Contains(Type);
 
-
-        // TODO: add support for arrays
+        #region SupportedTypesFromUrl
 
         /// <summary>
         /// The supported types from URL
@@ -119,6 +181,23 @@ namespace LiteApi.Contracts.Models
             typeof (DateTime),
             typeof (Guid),
 
+            typeof (bool[][]),
+            typeof (string[]),
+            typeof (char[]),
+            typeof (Int16[]),
+            typeof (Int32[]),
+            typeof (Int64[]),
+            typeof (UInt16[]),
+            typeof (UInt32[]),
+            typeof (UInt64[]),
+            typeof (Byte[]),
+            typeof (SByte[]),
+            typeof (decimal[]),
+            typeof (float[]),
+            typeof (double[]),
+            typeof (DateTime[]),
+            typeof (Guid[]),
+
             typeof (bool?),
             // typeof (string?),
             typeof (char?),
@@ -134,18 +213,69 @@ namespace LiteApi.Contracts.Models
             typeof (float?),
             typeof (double?),
             typeof (DateTime?),
-            typeof (Guid?)
-        };
-        
-        private Type _type;
+            typeof (Guid?),
 
+            typeof (bool?[]),
+            // typeof (string?[]),
+            typeof (char?[]),
+            typeof (Int16?[]),
+            typeof (Int32?[]),
+            typeof (Int64?[]),
+            typeof (UInt16?[]),
+            typeof (UInt32?[]),
+            typeof (UInt64?[]),
+            typeof (Byte?[]),
+            typeof (SByte?[]),
+            typeof (decimal?[]),
+            typeof (float?[]),
+            typeof (double?[]),
+            typeof (DateTime?[]),
+            typeof (Guid?[]),
+
+            typeof (List<bool>),
+            typeof (List<string>),
+            typeof (List<char>),
+            typeof (List<Int16>),
+            typeof (List<Int32>),
+            typeof (List<Int64>),
+            typeof (List<UInt16>),
+            typeof (List<UInt32>),
+            typeof (List<UInt64>),
+            typeof (List<Byte>),
+            typeof (List<SByte>),
+            typeof (List<decimal>),
+            typeof (List<float>),
+            typeof (List<double>),
+            typeof (List<DateTime>),
+            typeof (List<Guid>),
+
+            typeof (List<bool?>),
+            //typeof (List<string?>),
+            typeof (List<char?>),
+            typeof (List<Int16?>),
+            typeof (List<Int32?>),
+            typeof (List<Int64?>),
+            typeof (List<UInt16?>),
+            typeof (List<UInt32?>),
+            typeof (List<UInt64?>),
+            typeof (List<Byte?>),
+            typeof (List<SByte?>),
+            typeof (List<decimal?>),
+            typeof (List<float?>),
+            typeof (List<double?>),
+            typeof (List<DateTime?>),
+            typeof (List<Guid?>)
+        };
+
+        #endregion
+                
         /// <summary>
         /// Parses the string value.
         /// </summary>
         /// <param name="value">The string value to parse.</param>
         /// <returns>Parsed string value</returns>
         /// <exception cref="System.ArgumentException"></exception>
-        public object ParseValue(string value)
+        public object ParseValue(string[] value)
         {
             if (ParameterSource == ParameterSources.Query)
             {
@@ -153,7 +283,7 @@ namespace LiteApi.Contracts.Models
             }
             if (ParameterSource == ParameterSources.Body)
             {
-                return ResolveJsonSerializer().Deserialize(value, Type);
+                return ResolveJsonSerializer().Deserialize(value.Single(), Type);
             }
             throw new ArgumentException($"Parameter {Name} has unknown source. " + Attributes.AttributeConventions.ErrorResolutionSuggestion);
         }
@@ -174,61 +304,71 @@ namespace LiteApi.Contracts.Models
         /// <returns>Parse value in form of an object</returns>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        private object ParseQueryValue(string value)
+        private object ParseQueryValue(string[] values)
         {
+            if (IsArrayOrList)
+            {
+                return ParseCollectionParameter(values);
+            }
+            string value = values.FirstOrDefault();
+
             if (value == null && HasDefaultValue)
             {
                 return DefaultValue;
             }
+            
+            return ParseSingleQueryValue(value, Type, _isTypeNullable, Name);
+        }
 
-            if (Type == typeof(string))
+        private static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName)
+        {
+            if (type == typeof(string))
             {
                 return value;
             }
 
-            if (value == null && _isTypeNullable)
+            if (string.IsNullOrEmpty(value))
             {
-                return null;
+                if (isNullable)
+                {
+                    return null;
+                }
+                throw new ArgumentException($"Value is not provided for parameter: {parameterName}");
             }
 
-            if (value == null /*&& !_isTypeNullable*/)
-            {
-                throw new ArgumentException($"Value is not provided for parameter: {Name}");
-            }
-
-            if (Type == typeof(bool)) return bool.Parse(value);
-            if (Type == typeof(char)) return char.Parse(value);
-            if (Type == typeof(Guid)) return Guid.Parse(value);
-            if (Type == typeof(Int16)) return Int16.Parse(value);
-            if (Type == typeof(Int32)) return Int32.Parse(value);
-            if (Type == typeof(Int64)) return Int64.Parse(value);
-            if (Type == typeof(UInt16)) return UInt16.Parse(value);
-            if (Type == typeof(UInt32)) return UInt32.Parse(value);
-            if (Type == typeof(UInt64)) return UInt64.Parse(value);
-            if (Type == typeof(Byte)) return Byte.Parse(value);
-            if (Type == typeof(SByte)) return SByte.Parse(value);
-            if (Type == typeof(decimal)) return decimal.Parse(value);
-            if (Type == typeof(float)) return float.Parse(value);
-            if (Type == typeof(double)) return double.Parse(value);
-            if (Type == typeof(DateTime)) return DateTime.Parse(value);
-            if (Type == typeof(Guid)) return Guid.Parse(value);
+            if (type == typeof(bool)) return bool.Parse(value);
+            if (type == typeof(char)) return char.Parse(value);
+            if (type == typeof(Guid)) return Guid.Parse(value);
+            if (type == typeof(Int16)) return Int16.Parse(value);
+            if (type == typeof(Int32)) return Int32.Parse(value);
+            if (type == typeof(Int64)) return Int64.Parse(value);
+            if (type == typeof(UInt16)) return UInt16.Parse(value);
+            if (type == typeof(UInt32)) return UInt32.Parse(value);
+            if (type == typeof(UInt64)) return UInt64.Parse(value);
+            if (type == typeof(Byte)) return Byte.Parse(value);
+            if (type == typeof(SByte)) return SByte.Parse(value);
+            if (type == typeof(decimal)) return decimal.Parse(value);
+            if (type == typeof(float)) return float.Parse(value);
+            if (type == typeof(double)) return double.Parse(value);
+            if (type == typeof(DateTime)) return DateTime.Parse(value);
+            if (type == typeof(Guid)) return Guid.Parse(value);
             
-            if (Type == typeof(bool?)) return bool.Parse(value);
-            if (Type == typeof(char?)) return char.Parse(value);
-            if (Type == typeof(Guid?)) return Guid.Parse(value);
-            if (Type == typeof(Int16?)) return Int16.Parse(value);
-            if (Type == typeof(Int32?)) return Int32.Parse(value);
-            if (Type == typeof(Int64?)) return Int64.Parse(value);
-            if (Type == typeof(UInt16?)) return UInt16.Parse(value);
-            if (Type == typeof(UInt32?)) return UInt32.Parse(value);
-            if (Type == typeof(UInt64?)) return UInt64.Parse(value);
-            if (Type == typeof(Byte?)) return Byte.Parse(value);
-            if (Type == typeof(SByte?)) return SByte.Parse(value);
-            if (Type == typeof(decimal?)) return decimal.Parse(value);
-            if (Type == typeof(float?)) return float.Parse(value);
-            if (Type == typeof(double?)) return double.Parse(value);
-            if (Type == typeof(DateTime?)) return DateTime.Parse(value);
-            if (Type == typeof(Guid?)) return Guid.Parse(value);
+            //if (type == typeof(bool?)) return bool.Parse(value);
+            //if (type == typeof(char?)) return char.Parse(value);
+            //if (type == typeof(Guid?)) return Guid.Parse(value);
+            //if (type == typeof(Int16?)) return Int16.Parse(value);
+            //if (type == typeof(Int32?)) return Int32.Parse(value);
+            //if (type == typeof(Int64?)) return Int64.Parse(value);
+            //if (type == typeof(UInt16?)) return UInt16.Parse(value);
+            //if (type == typeof(UInt32?)) return UInt32.Parse(value);
+            //if (type == typeof(UInt64?)) return UInt64.Parse(value);
+            //if (type == typeof(Byte?)) return Byte.Parse(value);
+            //if (type == typeof(SByte?)) return SByte.Parse(value);
+            //if (type == typeof(decimal?)) return decimal.Parse(value);
+            //if (type == typeof(float?)) return float.Parse(value);
+            //if (type == typeof(double?)) return double.Parse(value);
+            //if (type == typeof(DateTime?)) return DateTime.Parse(value);
+            //if (type == typeof(Guid?)) return Guid.Parse(value);
 
             throw new ArgumentOutOfRangeException();
         }
@@ -245,5 +385,30 @@ namespace LiteApi.Contracts.Models
             }
             return true;
         }
+
+        private object ParseCollectionParameter(string[] values)
+        {
+            if (_isTypeArray)
+            {
+                Array parsedValues = Array.CreateInstance(_collectionElementType, values.Length);
+                for (int i = 0; i < values.Length; i++)
+                {
+                    parsedValues.SetValue(ParseSingleQueryValue(values[i], _collectionElementType, _isCollectionElementTypeNullable, Name), i);
+                }
+                return parsedValues;
+            }
+            if (_isTypeList)
+            {
+                IList parsedValues = Activator.CreateInstance(Type) as IList;
+                foreach (var value in values)
+                {
+                    parsedValues.Add(ParseSingleQueryValue(value, _collectionElementType, _isCollectionElementTypeNullable, Name));
+                }
+                return parsedValues;
+            }
+
+            throw new InvalidOperationException("Action parameter is not list or array");
+        }
+        
     }
 }

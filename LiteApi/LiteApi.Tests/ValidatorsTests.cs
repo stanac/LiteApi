@@ -30,6 +30,29 @@ namespace LiteApi.Tests
             AssertErrorMessage(" Multiple parameters from body found in action 'postint' in controller 'two'");
         }
 
+        [Fact]
+        public void Validators_GenericArrayAndListParameters_AreAcceptable()
+        {
+            var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
+            var ctrls = discoverer.GetControllers(null);
+            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var errors = validator.GetValidationErrors(ctrls).ToArray();
+            Assert.Empty(errors);
+        }
+
+        [Fact]
+        public void Validators_GenericArrayAndListWithComplexParameters_AreNotAcceptable()
+        {
+            var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.InvalidCollectionsController));
+            var ctrls = discoverer.GetControllers(null);
+            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var errors = validator.GetValidationErrors(ctrls).ToArray();
+            Assert.Equal(3, errors.Length);
+            Assert.True(errors.Any(x => x.Contains("InvalidCollectionsGet1".ToLower())));
+            Assert.True(errors.Any(x => x.Contains("InvalidCollectionsGet2".ToLower())));
+            Assert.True(errors.Any(x => x.Contains("InvalidCollectionsGet3".ToLower())));
+        }
+        
         private void AssertErrorMessage(string errorMsg)
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.Two), typeof(Controllers.TwoController));

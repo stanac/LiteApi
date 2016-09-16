@@ -41,6 +41,8 @@ namespace LiteApi.Services
                 yield return $"Multiple parameters from body found in action '{actionCtx.Name}' in controller '{actionCtx.ParentController?.Name}'. "
                     + "Maximum number of parameters from body is 1. " + AttributeConventions.ErrorResolutionSuggestion;
             }
+
+            // TODO: add validation for array and list parameters 
         }
     }
 }

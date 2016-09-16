@@ -26,11 +26,11 @@ namespace LiteApi.Services
             List<object> args = new List<object>();
             foreach (var param in actionCtx.Parameters)
             {
-                string valueString = null;
+                string[] valueStrings = null;
                 if (param.ParameterSource == ParameterSources.Query)
                 {
-                    valueString = request.Query[param.Name];
-                    if (valueString == null)
+                    valueStrings = request.Query[param.Name];
+                    if (valueStrings == null)
                     {
                         if (param.HasDefaultValue)
                         {
@@ -47,7 +47,7 @@ namespace LiteApi.Services
                 {
                     using (TextReader reader = new StreamReader(request.Body))
                     {
-                        valueString = reader.ReadToEnd();
+                        valueStrings = new[] { reader.ReadToEnd() };
                     }
                     request.Body.Dispose();
                 }
@@ -58,7 +58,7 @@ namespace LiteApi.Services
                         + "has unknown source (body or URL). " + AttributeConventions.ErrorResolutionSuggestion);
                 }
 
-                args.Add(param.ParseValue(valueString));
+                args.Add(param.ParseValue(valueStrings));
             }
             return args.ToArray();
         }

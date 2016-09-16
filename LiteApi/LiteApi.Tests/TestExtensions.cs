@@ -71,5 +71,26 @@ namespace LiteApi.Tests
             response.Body.Position = position;
             return Encoding.UTF8.GetString(data);
         }
+
+        public static void AssertExpectedException<T>(Action action, string errorMessage)
+            where T: Exception
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                if (!typeof(T).IsAssignableFrom(ex.GetType()))
+                {
+                    Assert.True(false, $"Exception of type {typeof(T).FullName} was expected but not thrown, instead exception of type {ex.GetType().FullName} was thrown, details: {errorMessage}, exception details {ex}");
+                }
+
+                Assert.True(true);
+                return;
+            }
+
+            Assert.True(false, $"Exception of type {typeof(T).FullName} was expected but not thrown, details: {errorMessage}");
+        }
     }
 }
