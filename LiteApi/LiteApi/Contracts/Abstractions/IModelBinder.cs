@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace LiteApi.Contracts.Abstractions
 {
@@ -13,7 +14,15 @@ namespace LiteApi.Contracts.Abstractions
         /// </summary>
         /// <param name="request">The HTTP request.</param>
         /// <param name="actionCtx">The action context which should be invoked.</param>
-        /// <returns></returns>
+        /// <returns>Collection of parameters to be passed to action when being invoked</returns>
         object[] GetParameterValues(HttpRequest request, ActionContext actionCtx);
+
+        /// <summary>
+        /// Checks if type is supported by model binder instance.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns><c>true</c> is parameter is supported, otherwise <c>false</c></returns>
+        bool DoesSupportType(Type type, ParameterSources source);
+        
     }
 }

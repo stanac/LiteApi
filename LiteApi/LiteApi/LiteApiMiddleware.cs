@@ -9,6 +9,7 @@ using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Builder;
+using LiteApi.Services.ModelBinders;
 
 namespace LiteApi
 {
@@ -106,7 +107,11 @@ namespace LiteApi
             _pathResolver = new PathResolver(ctrlContexts.ToArray());
 
             IControllerBuilder ctrlBuilder = new ControllerBuilder();
-            IModelBinder modelBinder = new ModelBinder();
+            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer);
+            foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
+            {
+                modelBinder.AddAdditionalQueryModelBinder(qmb);
+            }
             
             _actionInvoker = new ActionInvoker(ctrlBuilder, modelBinder);
 

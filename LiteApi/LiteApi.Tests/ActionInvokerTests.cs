@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
+using LiteApi.Services.ModelBinders;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -62,7 +63,7 @@ namespace LiteApi.Tests
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder(),
-                new ModelBinder()
+                new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
@@ -77,7 +78,7 @@ namespace LiteApi.Tests
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder(),
-                new ModelBinder()
+                new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
             ctx.Request.Method = actionMethod.ToString().ToLower();

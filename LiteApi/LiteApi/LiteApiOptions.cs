@@ -10,6 +10,8 @@ namespace LiteApi
     /// </summary>
     public class LiteApiOptions
     {
+        internal List<IQueryModelBinder> AdditionalQueryModelBinders { get; private set; } = new List<IQueryModelBinder>();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.
         /// </summary>
@@ -82,6 +84,19 @@ namespace LiteApi
         public LiteApiOptions SetEnableLogging(bool enabled)
         {
             EnableLogging = enabled;
+            return this;
+        }
+
+        /// <summary>
+        /// Adds an additional query model binder.
+        /// </summary>
+        /// <param name="queryModelBinder">The query model binder.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public LiteApiOptions AddAdditionalQueryModelBinder(IQueryModelBinder queryModelBinder)
+        {
+            if (queryModelBinder == null) throw new System.ArgumentNullException(nameof(queryModelBinder));
+            AdditionalQueryModelBinders.Add(queryModelBinder);
             return this;
         }
     }

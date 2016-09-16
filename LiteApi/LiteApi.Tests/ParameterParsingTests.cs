@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
+using LiteApi.Services.ModelBinders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get1");
-            ModelBinder mb = new ModelBinder();
+            var mb = new ModelBinderCollection(new JsonSerializer());
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "1", "2", "5678", "abcd");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -30,7 +31,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get2");
-            ModelBinder mb = new ModelBinder();
+            var mb = new ModelBinderCollection(new JsonSerializer());
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "1", "2", "5678");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -45,7 +46,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get3");
-            ModelBinder mb = new ModelBinder();
+            var mb = new ModelBinderCollection(new JsonSerializer());
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "", "1", "2", "5678");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -60,7 +61,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get4");
-            ModelBinder mb = new ModelBinder();
+            var mb = new ModelBinderCollection(new JsonSerializer());
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "b5477041395b47e8ad52605a42462936", "", "{aa2ec3ca-c3e7-4695-be0c-0c33e527515b}", "d29f0102-2c99-4033-ad65-672f6db25a23");
             object[] parameters = mb.GetParameterValues(request, action);
