@@ -73,7 +73,7 @@ namespace LiteApi.Contracts.Models
         /// Gets or sets a value indicating whether to skip authentication.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="SkipAuthorizationAttribute"/>.
+        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipAuthorizationAttribute"/>.
         /// </value>
         public bool SkipAuth { get; set; }
 

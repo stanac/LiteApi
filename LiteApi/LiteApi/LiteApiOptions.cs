@@ -48,7 +48,7 @@ namespace LiteApi
         /// Gets the JSON serializer. Implementation of <see cref="IJsonSerializer"/>
         /// </summary>
         /// <value>
-        /// The JSON serializer. Implementation of <see cref="IJsonSerializer"
+        /// The JSON serializer. Implementation of <see cref="IJsonSerializer"/>
         /// </value>
         public IJsonSerializer JsonSerializer { get; private set; } = new JsonSerializer();
 

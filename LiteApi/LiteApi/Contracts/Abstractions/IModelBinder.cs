@@ -21,6 +21,7 @@ namespace LiteApi.Contracts.Abstractions
         /// Checks if type is supported by model binder instance.
         /// </summary>
         /// <param name="type">The type to check.</param>
+        /// <param name="source">Parameter source.</param>
         /// <returns><c>true</c> is parameter is supported, otherwise <c>false</c></returns>
         bool DoesSupportType(Type type, ParameterSources source);
         

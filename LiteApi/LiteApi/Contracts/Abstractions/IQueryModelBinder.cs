@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace LiteApi.Contracts.Abstractions
 {
+    /// <summary>
+    /// Contract for model binder where source of the model is query
+    /// </summary>
     public interface IQueryModelBinder
     {
         /// <summary>

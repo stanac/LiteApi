@@ -119,6 +119,10 @@ namespace LiteApi.Services.ModelBinders
             return args.ToArray();
         }
 
+        /// <summary>
+        /// Gets the supported types from URL.
+        /// </summary>
+        /// <returns>Collection of supported types</returns>
         public IEnumerable<Type> GetSupportedTypesFromUrl()
         {
             if (_supportedTypesFromUrl == null)

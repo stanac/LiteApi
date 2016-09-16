@@ -12,7 +12,14 @@ namespace LiteApi.Services
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionInvoker" />
     public class ActionInvoker : IActionInvoker
     {
+        /// <summary>
+        /// Gets or sets JSON serializer.
+        /// </summary>
+        /// <value>
+        /// JSON serializer.
+        /// </value>
         public static Func<IJsonSerializer> GetJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
+
         private readonly IControllerBuilder _controllerBuilder;
         private readonly IModelBinder _modelBinder;
 
@@ -35,11 +42,11 @@ namespace LiteApi.Services
         /// Invokes the specified <see cref="ActionContext"/>.
         /// </summary>
         /// <param name="httpCtx">The HTTP context, set by the middleware.</param>
-        /// <param name="actionCtx">The action CTX.</param>
+        /// <param name="actionCtx">The action context.</param>
         /// <returns></returns>
-        public virtual async Task Invoke(HttpContext httpCtx, ActionContext action)
+        public virtual async Task Invoke(HttpContext httpCtx, ActionContext actionCtx)
         {
-            ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, action);
+            ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, actionCtx);
 
             if (!filterResult.ShouldContinue)
             {
@@ -50,30 +57,30 @@ namespace LiteApi.Services
                 return;
             }
 
-            LiteController ctrl = _controllerBuilder.Build(action.ParentController, httpCtx);
-            object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, action);
+            LiteController ctrl = _controllerBuilder.Build(actionCtx.ParentController, httpCtx);
+            object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, actionCtx);
 
             object result = null;
             bool isVoid = true;
-            if (action.Method.ReturnType == typeof(void))
+            if (actionCtx.Method.ReturnType == typeof(void))
             {
-                action.Method.Invoke(ctrl, paramValues);
+                actionCtx.Method.Invoke(ctrl, paramValues);
             }
-            else if (action.Method.ReturnType == typeof(Task))
+            else if (actionCtx.Method.ReturnType == typeof(Task))
             {
-                var task = (action.Method.Invoke(ctrl, paramValues) as Task);
+                var task = (actionCtx.Method.Invoke(ctrl, paramValues) as Task);
                 await task;
             }
-            else if (action.Method.ReturnType.IsConstructedGenericType && action.Method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
+            else if (actionCtx.Method.ReturnType.IsConstructedGenericType && actionCtx.Method.ReturnType.GetGenericTypeDefinition() == typeof(Task<>))
             { 
                 isVoid = false;
-                var task = (dynamic)(action.Method.Invoke(ctrl, paramValues));
+                var task = (dynamic)(actionCtx.Method.Invoke(ctrl, paramValues));
                 result = await task;
             }
             else
             {
                 isVoid = false;
-                result = action.Method.Invoke(ctrl, paramValues);
+                result = actionCtx.Method.Invoke(ctrl, paramValues);
             }
 
             int statusCode = 405; // method not allowed
