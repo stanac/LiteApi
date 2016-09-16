@@ -76,5 +76,20 @@ namespace LiteApi.Tests
             };
             Assert.Equal(expected, listFromParams);
         }
+
+        [Fact]
+        public void ModelBinder_IEnumerableOfChars_CanParse()
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
+            var ctrl = discoverer.GetControllers(null).Single();
+            var action = ctrl.Actions.Single(x => x.Name == "get5");
+            var mb = new ModelBinderCollection(new JsonSerializer());
+            var request = Fakes.FakeHttpRequest.WithGetMethod()
+                .AddQuery("data", "a", "b", "c", "d", "e");
+            object[] parameters = mb.GetParameterValues(request, action);
+            Assert.Equal(1, parameters.Length);
+            var collectionFromParams = (IEnumerable<char>)parameters[0];
+            Assert.Equal(new[] { 'a', 'b', 'c', 'd', 'e' }.AsEnumerable(), collectionFromParams);
+        }
     }
 }

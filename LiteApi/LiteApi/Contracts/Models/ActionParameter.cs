@@ -113,11 +113,7 @@ namespace LiteApi.Contracts.Models
         /// <c>true</c> if the parameter is complex; otherwise, <c>false</c>.
         /// </value>
         public bool IsComplex => !GetSupportedTypesFromUrl().Contains(Type);
-
-        #region SupportedTypesFromUrl
         
-        #endregion
-                
         /// <summary>
         /// Gets the supported types.
         /// </summary>

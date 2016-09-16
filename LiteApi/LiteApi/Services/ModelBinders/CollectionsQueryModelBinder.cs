@@ -85,7 +85,41 @@ namespace LiteApi.Services.ModelBinders
             typeof (List<float?>),
             typeof (List<double?>),
             typeof (List<DateTime?>),
-            typeof (List<Guid?>)
+            typeof (List<Guid?>),
+
+            typeof (IEnumerable<bool>),
+            typeof (IEnumerable<string>),
+            typeof (IEnumerable<char>),
+            typeof (IEnumerable<Int16>),
+            typeof (IEnumerable<Int32>),
+            typeof (IEnumerable<Int64>),
+            typeof (IEnumerable<UInt16>),
+            typeof (IEnumerable<UInt32>),
+            typeof (IEnumerable<UInt64>),
+            typeof (IEnumerable<Byte>),
+            typeof (IEnumerable<SByte>),
+            typeof (IEnumerable<decimal>),
+            typeof (IEnumerable<float>),
+            typeof (IEnumerable<double>),
+            typeof (IEnumerable<DateTime>),
+            typeof (IEnumerable<Guid>),
+
+            typeof (IEnumerable<bool?>),
+            //typeof (IEnumerable<string?>),
+            typeof (IEnumerable<char?>),
+            typeof (IEnumerable<Int16?>),
+            typeof (IEnumerable<Int32?>),
+            typeof (IEnumerable<Int64?>),
+            typeof (IEnumerable<UInt16?>),
+            typeof (IEnumerable<UInt32?>),
+            typeof (IEnumerable<UInt64?>),
+            typeof (IEnumerable<Byte?>),
+            typeof (IEnumerable<SByte?>),
+            typeof (IEnumerable<decimal?>),
+            typeof (IEnumerable<float?>),
+            typeof (IEnumerable<double?>),
+            typeof (IEnumerable<DateTime?>),
+            typeof (IEnumerable<Guid?>)
         };
 
         #endregion
@@ -142,7 +176,7 @@ namespace LiteApi.Services.ModelBinders
                 throw new Exception($"Non nullable parameter {parameter.Name} is missing from query");
             }
 
-            if (details.IsArray)
+            if (details.IsArray || details.IsIEnumerable)
             {
                 Array a = Array.CreateInstance(details.OriginalCollectionElementType, values.Length);
                 for (int i = 0; i < values.Length; i++)
@@ -160,7 +194,7 @@ namespace LiteApi.Services.ModelBinders
                 }
                 return parsedValues;
             }
-            throw new Exception($"Parameter is not neither array nor list.");
+            throw new Exception($"Parameter is not array, list or IEnumerable.");
         }
 
         private CollectionsQueryModelParameterDetails GetDetailsForActionParameter(ActionParameter actionParam)
@@ -179,6 +213,7 @@ namespace LiteApi.Services.ModelBinders
         {
             public bool IsArray { get; private set; }
             public bool IsList { get; private set; }
+            public bool IsIEnumerable { get; private set; }
             public bool IsCollectionElementTypeNullable { get; private set; }
             public Type CollectionElementType { get; private set; }
             public Type OriginalCollectionElementType { get; private set; }
@@ -186,6 +221,7 @@ namespace LiteApi.Services.ModelBinders
             public CollectionsQueryModelParameterDetails(Type parameterType)
             {
                 IsArray = parameterType.IsArray;
+                var info = parameterType.GetTypeInfo();
 
                 if (IsArray)
                 {
@@ -193,13 +229,18 @@ namespace LiteApi.Services.ModelBinders
                 }
                 else
                 {
-                    var info = parameterType.GetTypeInfo();
                     IsList = info.IsGenericType && info.GetGenericTypeDefinition() == typeof(List<>);
                     CollectionElementType = info.GenericTypeArguments.Single();
                 }
                 if (!IsArray && !IsList)
                 {
-                    throw new Exception($"Parameter is not neither array nor list.");
+                    IsIEnumerable = info.IsGenericType && info.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+                    CollectionElementType = info.GenericTypeArguments.Single();
+                }
+
+                if (!IsArray && !IsList && !IsIEnumerable)
+                {
+                    throw new Exception($"Parameter is not array, list or IEnumerable.");
                 }
                 OriginalCollectionElementType = CollectionElementType;
                 Type nullableArgument;

@@ -24,5 +24,10 @@ namespace LiteApi.Tests.Controllers
         {
             return "List<Guid?>";
         }
+
+        public string Get5(IEnumerable<char> data)
+        {
+            return "IEnumerable<char>";
+        }
     }
 }
