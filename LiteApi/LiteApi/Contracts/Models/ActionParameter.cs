@@ -87,7 +87,6 @@ namespace LiteApi.Contracts.Models
             get { return _type; }
             set
             {
-                string debugStr = value.ToString();
                 _type = value;
                 TypeInfo info = value.GetTypeInfo();
                 Type nullableArgument;
@@ -112,7 +111,14 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// <c>true</c> if the parameter is complex; otherwise, <c>false</c>.
         /// </value>
-        public bool IsComplex => !GetSupportedTypesFromUrl().Contains(Type);
+        public bool IsComplex
+        {
+            get
+            {
+                var modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
+                return !modelBinder.DoesSupportType(Type, ParameterSources.Query);
+            }
+        }
         
         /// <summary>
         /// Gets the supported types.

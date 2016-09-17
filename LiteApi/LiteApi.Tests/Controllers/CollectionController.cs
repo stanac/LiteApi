@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+#pragma warning disable RECS0154 // Parameter is never used
 
 namespace LiteApi.Tests.Controllers
 {
@@ -29,5 +30,11 @@ namespace LiteApi.Tests.Controllers
         {
             return "IEnumerable<char>";
         }
+
+        public string Get6(IDictionary<int, string> data)
+        {
+            return "IDictionary<int, string>";
+        }
     }
 }
+#pragma warning restore RECS0154 // Parameter is never used

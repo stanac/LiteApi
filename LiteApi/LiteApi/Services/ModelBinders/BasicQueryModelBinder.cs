@@ -11,7 +11,7 @@ namespace LiteApi.Services.ModelBinders
     /// Class for resolving parameter values for given <see cref="ActionContext"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
-    internal class BasicQueryModelBinder : IQueryModelBinder
+    public class BasicQueryModelBinder : IQueryModelBinder
     {
         #region _supportedTypes
 
@@ -54,6 +54,12 @@ namespace LiteApi.Services.ModelBinders
 
         #endregion
 
+        /// <summary>
+        /// Gets or sets the supported types.
+        /// </summary>
+        /// <value>
+        /// The supported types.
+        /// </value>
         public virtual IEnumerable<Type> SupportedTypes => _supportedTypes.Select(x => x);
        
         /// <summary>

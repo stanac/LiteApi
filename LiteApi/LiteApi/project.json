@@ -1,7 +1,7 @@
 {
   "title": "LiteApi",
   "description": "MVC style web API middleware that supports JSON only",
-  "version": "0.1.0-*",
+  "version": "0.2.0-*",
   "dependencies": {
     "Microsoft.AspNetCore.Http.Abstractions": "1.0.0",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0",

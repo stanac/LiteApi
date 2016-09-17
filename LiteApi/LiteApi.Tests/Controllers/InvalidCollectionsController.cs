@@ -10,7 +10,7 @@ namespace LiteApi.Tests.Controllers
             return "List<Tuple<int, int>>";
         }
 
-        public string InvalidCollectionsGet2(Dictionary<int, int> p1)
+        public string InvalidCollectionsGet2(Dictionary<Tuple<int, string>, int> p1)
         {
             return "Dictionary<int, int>";
         }

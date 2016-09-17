@@ -91,5 +91,27 @@ namespace LiteApi.Tests
             var collectionFromParams = (IEnumerable<char>)parameters[0];
             Assert.Equal(new[] { 'a', 'b', 'c', 'd', 'e' }.AsEnumerable(), collectionFromParams);
         }
+
+        [Fact]
+        public void ModelBinder_Dictionary_CanParse()
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
+            var ctrl = discoverer.GetControllers(null).Single();
+            var action = ctrl.Actions.Single(x => x.Name == "get6");
+            var mb = new ModelBinderCollection(new JsonSerializer());
+            var request = Fakes.FakeHttpRequest.WithGetMethod()
+                .AddQuery("data.1", "a")
+                .AddQuery("data.2", "b")
+                .AddQuery("data.3", "c")
+                .AddQuery("data.4", "d");
+            object[] parameters = mb.GetParameterValues(request, action);
+            Assert.Equal(1, parameters.Length);
+            var collectionFromParams = (IDictionary<int, string>)parameters[0];
+            var expected = new Dictionary<int, string>
+            {
+                { 1, "a" }, { 2, "b" }, { 3, "c" }, { 4, "d" }
+            } as IDictionary<int, string>;
+            Assert.Equal(expected, collectionFromParams);
+        }
     }
 }

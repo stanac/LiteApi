@@ -31,6 +31,7 @@ namespace LiteApi.Services.ModelBinders
             
             _binders.Add(new BasicQueryModelBinder());
             _binders.Add(new CollectionsQueryModelBinder());
+            _binders.Add(new DictionaryQueryModelBinder());
         }
 
         /// <summary>
