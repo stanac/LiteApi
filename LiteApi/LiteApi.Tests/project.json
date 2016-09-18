@@ -2,9 +2,12 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "LiteApi": "0.1.*",
+    "LiteApi": "0.2.0-*",
     "NETStandard.Library": "1.6.0",
     "xunit": "2.2.0-beta2-build3300"
+  },
+  "tools": {
+    "OpenCover": "4.6.519"
   },
 
   "frameworks": {
