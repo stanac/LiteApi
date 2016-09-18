@@ -3,6 +3,9 @@ before_build:
 - cmd: dotnet restore
 build:
   verbosity: minimal
+environment:
+  COVERALL_TOKEN:
+    secure: Xldcm2fCjAGzhwY/OF7sBXiuamRWDD6H7icrLQHRL+DmyJgdOoPMryBfEgvJai3Q
 test_script:
-- cmd: >-
-    runtests.bat
+- ps: >-
+    .\runtests.ps1
