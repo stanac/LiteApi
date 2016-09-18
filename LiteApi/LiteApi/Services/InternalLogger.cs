@@ -20,7 +20,10 @@ namespace LiteApi.Services
         /// <exception cref="System.ArgumentNullException"></exception>
         public InternalLogger(bool isEnabled, ILogger logger)
         {
-            if (logger == null) throw new ArgumentNullException(nameof(logger));
+            if (isEnabled)
+            {
+                if (logger == null) throw new ArgumentNullException(nameof(logger));
+            }
             _logger = logger;
             _isEnabled = isEnabled;
         }

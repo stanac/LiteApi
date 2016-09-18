@@ -47,7 +47,14 @@ namespace LiteApi
                 throw new ArgumentException("Assemblies with controllers is not passed to the LiteApiMiddleware");
             }
             Options = options;
-            Logger = new InternalLogger(options.EnableLogging, loggerFactory.CreateLogger<LiteApiMiddleware>());
+            if (loggerFactory != null)
+            {
+                Logger = new InternalLogger(options.EnableLogging, loggerFactory.CreateLogger<LiteApiMiddleware>());
+            }
+            else
+            {
+                Logger = new InternalLogger(false, null);
+            }
             Services = services;
             _next = next;
             IsRegistered = true;            
@@ -65,7 +72,10 @@ namespace LiteApi
             ActionContext action = _pathResolver.ResolveAction(context.Request);
             if (action == null)
             {
-                await _next?.Invoke(context);
+                if (_next != null)
+                {
+                    await _next?.Invoke(context);
+                }
             }
             else
             {
