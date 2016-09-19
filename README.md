@@ -14,7 +14,7 @@ LiteApi is still in prerelease phase, to install it use nuget, or add it to proj
 Install-Package LiteApi -Pre
 ```
 
-Super simple example of a controller:
+Super simple example of a controller: 
 
 ``` cs
 public class TestController : LiteController
