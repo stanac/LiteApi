@@ -1,8 +1,5 @@
 ﻿using LiteApi.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace LiteApi.Tests.Controllers
 {
@@ -12,6 +9,11 @@ namespace LiteApi.Tests.Controllers
         public string Get()
         {
             return "ComplexRoot";
+        }
+
+        public ClaimsPrincipal GetUser()
+        {
+            return User;
         }
     }
 }
