@@ -1,3 +1,5 @@
+0.3.0 - Fixed and refactored AuthorizeFilterAttribute
+
 0.2.0 - Support for URL parameters of types List, Array, IEnumerable, Dictionary and IDictionary
 
 0.1.1 - Fix nuget package
