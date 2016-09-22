@@ -46,6 +46,7 @@ namespace LiteApi.Services
                     UrlRoot = GetControllerRoot(types[i]),
                 };
                 ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
+                ctrls[i].Init();
             }
 
             return ctrls;

@@ -54,6 +54,18 @@ namespace LiteApi.Services
                 {
                     httpCtx.Response.StatusCode = filterResult.SetResponseCode.Value;
                 }
+                else
+                {
+                    bool isAuthenticated = httpCtx?.User?.Identity?.IsAuthenticated ?? false;
+                    if (!isAuthenticated)
+                    {
+                        httpCtx.Response.StatusCode = 401;
+                    }
+                    else
+                    {
+                        httpCtx.Response.StatusCode = 403;
+                    }
+                }
                 return;
             }
 

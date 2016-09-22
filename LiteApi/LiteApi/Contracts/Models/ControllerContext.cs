@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
@@ -66,7 +67,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The filters. Filters are used for filtering requests (e.g. for authentication/authorization)
         /// </value>
-        public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+        public IApiFilter[] Filters { get; set; }
 
         /// <summary>
         /// Initializes this instance.
@@ -76,6 +77,19 @@ namespace LiteApi.Contracts.Models
             if (ActionMappings == null)
             {
                 CreateActionMappingsAndUrlStart();
+            }
+            if (Filters == null)
+            {
+                Filters = ControllerType
+                    .GetTypeInfo()
+                    .GetCustomAttributes()
+                    .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
+                    .Cast<IApiFilter>()
+                    .ToArray();
+                foreach (var action in Actions)
+                {
+                    action.Init();
+                }
             }
         }
 

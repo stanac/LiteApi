@@ -1,23 +1,15 @@
-﻿using LiteApi.Attributes;
-using LiteApi.Contracts.Abstractions;
+﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace LiteApi.Services
 {
     /// <summary>
     /// Class that builds controllers.
     /// </summary>
-    /// <seealso cref="LiteApi.Contracts.Abstractions.IControllerBuilder" />
-    public class ControllerBuilder : IControllerBuilder
+    /// <seealso cref="IControllerBuilder" />
+    public class ControllerBuilder : ObjectBuilder, IControllerBuilder
     {
-        private static readonly Dictionary<string, ConstructorInfo> Constructors = new Dictionary<string, ConstructorInfo>();
-        private static readonly Dictionary<string, ParameterInfo[]> ConstructorParameterTypes = new Dictionary<string, ParameterInfo[]>();
-
         /// <summary>
         /// Builds the specified controller from controller context and HTTP context.
         /// </summary>
@@ -26,58 +18,11 @@ namespace LiteApi.Services
         /// <returns>Instance of the built controller.</returns>
         public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
-            ConstructorInfo constructor = GetConstructor(controllerCtx.ControllerType);
-            ParameterInfo[] parameters = GetConstructorParameters(constructor);
-            object[] parameterValues = GetConstructorParameterValues(parameters);
-            var controller = constructor.Invoke(parameterValues) as LiteController;
+            var controller = BuildObject(controllerCtx.ControllerType) as LiteController;
             controller.HttpContext = httpContext;
             return controller;
         }
 
-        private static ConstructorInfo GetConstructor(Type controllerType)
-        {
-            if (Constructors.ContainsKey(controllerType.FullName))
-            {
-                return Constructors[controllerType.FullName];
-            }
-
-            var constructors = controllerType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
-            if (constructors.Length > 1)
-            {
-                constructors = constructors.Where(x => x.GetCustomAttribute<ApiConstructorAttribute>() != null).ToArray();
-            }
-
-            if (constructors.Length != 1)
-            {
-                throw new Exception($"Cannot find constructor for {controllerType.FullName}. Class has more than one constructor, or "
-                    + "more than one constructor is using ApiConstructorAttribute. If class has more than one constructor, only "
-                    + "one should be annotated with ApiConstructorAttribute.");
-            }
-
-            Constructors[controllerType.FullName] = constructors[0];
-            return constructors[0];
-        }
-
-        private static ParameterInfo[] GetConstructorParameters(ConstructorInfo constructor)
-        {
-            if (ConstructorParameterTypes.ContainsKey(constructor.DeclaringType.FullName))
-            {
-                return ConstructorParameterTypes[constructor.DeclaringType.FullName];
-            }
-
-            ParameterInfo[] parameters = constructor.GetParameters();
-            ConstructorParameterTypes[constructor.DeclaringType.FullName] = parameters;
-            return parameters;
-        }
-
-        private static object[] GetConstructorParameterValues(ParameterInfo[] parameters)
-        {
-            object[] values = new object[parameters.Length];
-            for (int i = 0; i < values.Length; i++)
-            {
-                values[i] = LiteApiMiddleware.Services.GetService(parameters[i].ParameterType);
-            }
-            return values;
-        }
+        
     }
 }

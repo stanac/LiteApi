@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using System.Reflection;
 using System.Linq;
+using System;
 
 namespace LiteApi.Contracts.Models
 {
@@ -67,13 +68,13 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The filters.
         /// </value>
-        public IApiFilter[] Filters { get; set; } = new IApiFilter[0];
+        public IApiFilter[] Filters { get; set; } = null;
 
         /// <summary>
         /// Gets or sets a value indicating whether to skip authentication.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipAuthorizationAttribute"/>.
+        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipAuthenticationAttribute"/>.
         /// </value>
         public bool SkipAuth { get; set; }
 
@@ -92,5 +93,24 @@ namespace LiteApi.Contracts.Models
         /// </returns>
         public override string ToString() => 
             $"{ParentController.ControllerType.Name}.{Method.Name}({string.Join(", ", Parameters.Select(x => x.Type.Name + " " + x.Name))})";
+
+        /// <summary>
+        /// Initializes filters and possibly other stuff
+        /// </summary>
+        internal void Init()
+        {
+            if (Filters == null)
+            {
+                Filters = Method
+                    .GetCustomAttributes()
+                    .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
+                    .Cast<IApiFilter>()
+                    .ToArray();
+                SkipAuth = Method
+                    .GetCustomAttributes()
+                    .Where(x => typeof(Attributes.SkipAuthenticationAttribute) == x.GetType())
+                    .Count() > 0;
+            }
+        }
     }
 }
