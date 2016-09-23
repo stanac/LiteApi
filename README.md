@@ -30,6 +30,8 @@ public class TestController : LiteController
 You can use attributes: HttpGetAttribute, HttpPostAttribute, HttpPutAttribute, 
 HttpDeleteAttribute, by default action is GET if no attribute is set.
 
+For more info chek [Wiki](https://github.com/stanac/LiteApi/wiki/URL-mappings-to-controllers,-actions-and-parameters).
+
 ---
 
 For installation you need to build the middleware yourself (no nuget release at the moment)
