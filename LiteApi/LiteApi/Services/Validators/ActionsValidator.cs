@@ -3,7 +3,7 @@ using LiteApi.Contracts.Models;
 using System;
 using System.Collections.Generic;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Validators
 {
     /// <summary>
     /// Class that validates actions before first request is received.

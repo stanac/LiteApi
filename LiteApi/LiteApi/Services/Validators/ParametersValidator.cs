@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Validators
 {
     /// <summary>
     /// Class for validating action parameters.

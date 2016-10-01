@@ -1,4 +1,5 @@
 ﻿using LiteApi.Services;
+using LiteApi.Services.Validators;
 using System.Linq;
 using Xunit;
 

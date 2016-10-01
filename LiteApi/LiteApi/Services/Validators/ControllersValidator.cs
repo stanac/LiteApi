@@ -4,7 +4,7 @@ using System.Linq;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Validators
 {
     /// <summary>
     /// Class that validates controllers before first request is received.

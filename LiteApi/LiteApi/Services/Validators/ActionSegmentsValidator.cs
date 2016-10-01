@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Validators
 {
     /// <summary>
     /// Validator for action segments
