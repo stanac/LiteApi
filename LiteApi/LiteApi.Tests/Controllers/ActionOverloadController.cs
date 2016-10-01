@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteApi.Attributes;
+using System;
 #pragma warning disable RECS0154 // Parameter is never used
 
 namespace LiteApi.Tests.Controllers
@@ -53,6 +54,12 @@ namespace LiteApi.Tests.Controllers
         public string GetString(DateTime? a = null)
         {
             return "DateTime? a";
+        }
+
+        [DontMapToApi]
+        public string NotMappedMethod()
+        {
+            return "";
         }
     }
 }

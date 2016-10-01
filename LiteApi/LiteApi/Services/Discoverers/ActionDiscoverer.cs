@@ -50,7 +50,7 @@ namespace LiteApi.Services.Discoverers
         {
             if (method.GetCustomAttribute<DontMapToApiAttribute>() != null) return false;
 
-            if (method.DeclaringType == typeof(object)) return false;
+            if (method.DeclaringType == typeof(object) || method.DeclaringType == typeof(LiteController)) return false;
 
             return true;
         }

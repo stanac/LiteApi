@@ -57,6 +57,27 @@ namespace LiteApi.Tests
             await AssertResponseHttpStatusCode(Contracts.Models.SupportedHttpMethods.Delete, 204);
         }
 
+        [Fact]
+        public async Task ActionInvoker_MethodWithDefaultParam_CanBeInvoked()
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ParametersController));
+            var controller = discoverer.GetControllers(null).Single();
+            IActionInvoker invoker = new ActionInvoker(
+                new ControllerBuilder(),
+                new ModelBinderCollection(new JsonSerializer())
+                );
+            var ctx = new Fakes.FakeHttpContext();
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"));
+            string body = ctx.Response.ReadBody();
+            Assert.Equal("\"ABC\"", body);
+
+            ctx = new Fakes.FakeHttpContext();
+            (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "zxc");
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"));
+            body = ctx.Response.ReadBody();
+            Assert.Equal("\"ZXC\"", body);
+        }
+
         private async Task AssertResponseBody(Contracts.Models.SupportedHttpMethods actionMethod, string expectedResult)
         {
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentHttpMethodsController));
