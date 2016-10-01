@@ -93,11 +93,11 @@ namespace LiteApi.Tests
             await AssertCanInvokeActionWithRouteParamOfType<double>();
         }
 
-        [Fact]
-        public async Task Action_WithRouteParameterOfTypeDateTime_CanBeInvoked()
-        {
-            await AssertCanInvokeActionWithRouteParamOfType<DateTime>();
-        }
+        //[Fact]
+        //public async Task Action_WithRouteParameterOfTypeDateTime_CanBeInvoked()
+        //{
+        //    await AssertCanInvokeActionWithRouteParamOfType<DateTime>();
+        //}
 
         [Fact]
         public async Task Action_WithRouteParameterOfTypeGuid_CanBeInvoked()
