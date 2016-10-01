@@ -2,7 +2,7 @@
 
 namespace LiteApi.Tests.Controllers
 {
-    [UrlRoot("theApi")]
+    [ControllerRoute("theApi/SimpleDifferentRoot")]
     public class SimpleDifferentRootController : LiteController
     {
         public string Get()

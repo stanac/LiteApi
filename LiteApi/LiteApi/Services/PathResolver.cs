@@ -15,6 +15,7 @@ namespace LiteApi.Services
     public class PathResolver : IPathResolver
     {
         private readonly ControllerContext[] _controllerContrxts;
+        private static readonly char[] _separator = { '/' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathResolver"/> class.
@@ -43,24 +44,18 @@ namespace LiteApi.Services
             if (actions.Length == 0) return null;
             return ResolveActionContextByQueryParameterTypes(request, actions);
         }
-        
+
         private IEnumerable<ActionContext> GetActionsForPathAndMethod(HttpRequest request)
         {
             string path = request.Path.Value.ToLower();
-            string urlStart = GetUrlStart(path);
-            var method = request.Method.ToLower();
-            if (urlStart != null)
+            string[] segments = path.TrimStart('/').TrimEnd('/').Split(_separator, StringSplitOptions.None);
+            var method = (SupportedHttpMethods)Enum.Parse(typeof(SupportedHttpMethods), request.Method, true);
+            foreach (var ctrl in _controllerContrxts)
             {
-                foreach (var ctrl in _controllerContrxts)
+                var actions = ctrl.GetActionsBySegments(segments, method).ToArray();
+                foreach (var a in actions)
                 {
-                    var actions = ctrl.GetActionsByPath(path, urlStart).ToArray();
-                    if (actions != null)
-                    {
-                        foreach (var a in actions.Where(x => x.IsHttpMethodMatched(method)))
-                        {
-                            yield return a;
-                        }
-                    }
+                    yield return a;
                 }
             }
         }
@@ -73,29 +68,7 @@ namespace LiteApi.Services
                 .ToArray();
             return actionsWithWeight.FirstOrDefault()?.ActionCtx;
         }
-
-        private string GetUrlStart(string url)
-        {
-            string[] parts = url.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            string urlStart = null;
-            if (parts.Length == 2) urlStart = "/" + parts[0] + "/";
-            else if (parts.Length > 2)
-            {
-                // urlStart = "/" + parts[0] + "/" + parts[1] + "/";
-                urlStart = "/";
-                for (int i = 0; i < parts.Length - 1; i++)
-                {
-                    urlStart += parts[i] + "/";
-                }
-            }
-
-            if (urlStart != null)
-            {
-                while (urlStart.Contains("//")) urlStart = urlStart.Replace("//", "/");
-            }
-            return urlStart;
-        }
-
+        
         private bool ActionMethodMatches(ActionContext action, HttpRequest request) 
             => request.Method.ToLower() == action.HttpMethod.ToString().ToLower();
     }

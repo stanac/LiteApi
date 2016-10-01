@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LiteApi.Attributes;
+using System;
 using System.Collections.Generic;
 #pragma warning disable RECS0154 // Parameter is never used
 
@@ -34,6 +35,12 @@ namespace LiteApi.Tests.Controllers
         public string Get6(IDictionary<int, string> data)
         {
             return "IDictionary<int, string>";
+        }
+
+        [HttpPost]
+        public string Post7(IEnumerable<Tuple<int, string>> data)
+        {
+            return "IEnumerable<Tuple<int, string>> data";
         }
     }
 }

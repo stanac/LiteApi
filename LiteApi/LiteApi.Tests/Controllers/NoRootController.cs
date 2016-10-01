@@ -2,7 +2,7 @@
 
 namespace LiteApi.Tests.Controllers
 {
-    [UrlRoot(null)]
+    [ControllerRoute("NoRoot")]
     public class NoRootController : LiteController
     {
         public string Get()

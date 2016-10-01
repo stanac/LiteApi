@@ -1,12 +1,8 @@
 ﻿using LiteApi.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LiteApi.Tests.Controllers
 {
-    [UrlRoot("/api/v2/")]
+    [ControllerRoute("/api/v2/DifferentRoot")]
     public class DifferentRootController : LiteController
     {
         public string Get()

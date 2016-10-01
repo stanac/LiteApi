@@ -101,6 +101,9 @@ namespace LiteApi.Tests
             request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/complex/root/with/multiple/parts/complexRoot/get");
             resolver.ResolveAndAssert(request, "ComplexRoot");
 
+            request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/complex/root/with/multiple/parts/get");
+            resolver.ResolveAndAssert(request, "ComplexRoot2");
+
             request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/noroot/get");
             resolver.ResolveAndAssert(request, "NoRoot");
 

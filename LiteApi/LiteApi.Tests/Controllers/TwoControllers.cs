@@ -1,4 +1,5 @@
 ﻿using LiteApi.Attributes;
+#pragma warning disable RECS0154 // Parameter is never used
 
 namespace LiteApi.Tests.Controllers
 {
@@ -13,6 +14,18 @@ namespace LiteApi.Tests.Controllers
         public int DeleteTheValue(FakeTwoModelOne model)
         {
             return model.I + model.J;
+        }
+
+        [ActionRoute("")]
+        public int NoSegments()
+        {
+            return 1;
+        }
+        
+        [ActionRoute("{param1}/{param2}/{param3}")]
+        public int NoConstantSegments(int param1, int param2, int param3)
+        {
+            return 1;
         }
     }
 
@@ -31,3 +44,4 @@ namespace LiteApi.Tests.Controllers
         public int J { get; set; }
     }
 }
+#pragma warning restore RECS0154 // Parameter is never used

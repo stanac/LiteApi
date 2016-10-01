@@ -34,9 +34,9 @@ namespace LiteApi.Services
         {
             foreach (ControllerContext ctrl in controllerCtxs)
             {
-                if (controllerCtxs.Count(x => x.Name == ctrl.Name) > 1)
+                if (controllerCtxs.Count(x => x.RouteAndName == ctrl.RouteAndName) > 1)
                 {
-                    yield return $"There are more than one controller with matching name: {ctrl.Name}";
+                    yield return $"There are more than one controller with matching name: {ctrl.RouteAndName}";
                 }
                 foreach (string error in _actionValidator.GetValidationErrors(ctrl.Actions))
                 {

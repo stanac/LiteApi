@@ -31,8 +31,7 @@ namespace LiteApi.Tests
             var context = new ControllerContext
             {
                 ControllerType = type,
-                Name = GetControllerName(type),
-                UrlRoot = "api"
+                RouteAndName = GetControllerName(type)
             };
             var ad = new ActionDiscoverer(new ParametersDiscoverer());
             context.Actions = ad.GetActions(context);
@@ -47,8 +46,8 @@ namespace LiteApi.Tests
 
         private static string GetControllerName(Type type)
         {
-            var method = typeof(ControllerDiscoverer).GetMethod("GetControllerName", BindingFlags.NonPublic | BindingFlags.Static);
-            return method.Invoke(null, new object[] { type.FullName }) as string;
+            var method = typeof(ControllerDiscoverer).GetMethod("GetControllerRute", BindingFlags.NonPublic | BindingFlags.Static);
+            return method.Invoke(null, new object[] { type }) as string;
         }
 
         private static object GetDefaultValue(this Type type)

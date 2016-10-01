@@ -9,10 +9,17 @@
         /// Source is query
         /// </summary>
         Query,
+
         /// <summary>
         /// Source is body
         /// </summary>
         Body,
+
+        /// <summary>
+        /// Source is route segment
+        /// </summary>
+        RouteSegment,
+
         /// <summary>
         /// Source is unknown
         /// </summary>

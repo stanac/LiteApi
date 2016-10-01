@@ -13,13 +13,8 @@ namespace LiteApi.Contracts.Models
     /// </summary>
     public class ControllerContext
     {
-        /// <summary>
-        /// Gets the action mappings.
-        /// </summary>
-        /// <value>
-        /// The action mappings.
-        /// </value>
-        internal List<KeyValuePair<string, ActionContext>> ActionMappings { get; private set; }
+        private string _routeAndName;
+        private string[] _segments;
 
         /// <summary>
         /// Gets the URL start. Used to determine if request is matched to this controller.
@@ -30,21 +25,29 @@ namespace LiteApi.Contracts.Models
         internal string UrlStart { get; private set; }
         
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the route and name.
         /// </summary>
         /// <value>
-        /// The name.
+        /// The route and name.
         /// </value>
-        public string Name { get; set; }
+        public string RouteAndName
+        {
+            get { return _routeAndName; }
+            set
+            {
+                _routeAndName = value;
+                _segments = value.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the URL root. URL prefix for controller, default is /api/
+        /// Gets the route segments.
         /// </summary>
         /// <value>
-        /// The URL root. URL prefix for controller, default is /api/
+        /// The route segments.
         /// </value>
-        public string UrlRoot { get; set; }
-
+        public string[] RouteSegments => _segments;
+        
         /// <summary>
         /// Gets or sets the actions belonging to this controller.
         /// </summary>
@@ -74,10 +77,6 @@ namespace LiteApi.Contracts.Models
         /// </summary>
         public void Init()
         {
-            if (ActionMappings == null)
-            {
-                CreateActionMappingsAndUrlStart();
-            }
             if (Filters == null)
             {
                 Filters = ControllerType
@@ -96,49 +95,28 @@ namespace LiteApi.Contracts.Models
         /// <summary>
         /// Gets the actions by path.
         /// </summary>
-        /// <param name="path">The path.</param>
-        /// <param name="urlStart">The URL start.</param>
+        /// <param name="requestSegments">Route segments of the request.</param>
+        /// <param name="method">HTTP request method.</param>
         /// <returns>Actions matching to the provided path</returns>
-        public IEnumerable<ActionContext> GetActionsByPath(string path, string urlStart)
+        public IEnumerable<ActionContext> GetActionsBySegments(string[] requestSegments, SupportedHttpMethods method)
         {
-            if (urlStart == UrlStart)
+            if (RequestSegmentsMatchController(requestSegments))
             {
-                if (ActionMappings == null)
+                string[] requestSegmentsWithoutController = requestSegments.Skip(RouteSegments.Length).ToArray();
+                var actions = Actions.Where(x => x.RouteSegments.Length == requestSegmentsWithoutController.Length && x.HttpMethod == method).ToArray();
+                if (actions.Length > 0)
                 {
-                    CreateActionMappingsAndUrlStart();
-                }
-                foreach (var a in ActionMappings.Where(x => x.Key == path).Select(x => x.Value))
-                {
-                    yield return a;
+                    foreach (var action in actions)
+                    {
+                        if (IsActionMatchedToRequestSegments(action, requestSegmentsWithoutController))
+                        {
+                            yield return action;
+                        }
+                    }
                 }
             }
         }
-
-        /// <summary>
-        /// Creates the action mappings and URL start.
-        /// </summary>
-        private void CreateActionMappingsAndUrlStart()
-        {
-            string urlRoot = "/";
-            if (!string.IsNullOrEmpty(UrlRoot))
-            {
-                urlRoot = "/" + UrlRoot + "/";
-                while (urlRoot.Contains("//"))
-                {
-                    urlRoot = urlRoot.Replace("//", "/");
-                }
-            }
-            string urlStart = urlRoot.ToLower() + Name.ToLower() + "/";
-            UrlStart = urlStart;
-            List<KeyValuePair<string, ActionContext>> mappings = new List<KeyValuePair<string, ActionContext>>();
-            foreach (var action in Actions)
-            {
-                string url = urlStart + action.Name.ToLower();
-                mappings.Add(new KeyValuePair<string, ActionContext>(url, action));
-            }
-            ActionMappings = mappings;
-        }
-
+        
         /// <summary>
         /// Validates the filters.
         /// </summary>
@@ -155,6 +133,38 @@ namespace LiteApi.Contracts.Models
                 }
             }
             return new ApiFilterRunResult { ShouldContinue = true };
+        }
+
+        private bool RequestSegmentsMatchController(string[] requestSegments)
+        {
+            if (requestSegments.Length < RouteSegments.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < RouteSegments.Length; i++)
+            {
+                if (RouteSegments[i] != requestSegments[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool IsActionMatchedToRequestSegments(ActionContext action, string[] requestSegments)
+        {
+            for (int i = 0; i < action.RouteSegments.Length; i++)
+            {
+                if (action.RouteSegments[i].IsConstant)
+                {
+                    if (action.RouteSegments[i].ConstantValue != requestSegments[i])
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

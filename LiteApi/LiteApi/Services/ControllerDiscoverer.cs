@@ -39,14 +39,20 @@ namespace LiteApi.Services
             ControllerContext[] ctrls = new ControllerContext[types.Length];
             for (int i = 0; i < ctrls.Length; i++)
             {
-                ctrls[i] = new ControllerContext
-                {
-                    ControllerType = types[i],
-                    Name = GetControllerName(types[i].FullName),
-                    UrlRoot = GetControllerRoot(types[i]),
-                };
-                ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
-                ctrls[i].Init();
+                //try
+                //{
+                    ctrls[i] = new ControllerContext
+                    {
+                        ControllerType = types[i],
+                        RouteAndName = GetControllerRute(types[i]),
+                    };
+                    ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
+                    ctrls[i].Init();
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw;
+                //}
             }
 
             return ctrls;
@@ -63,15 +69,15 @@ namespace LiteApi.Services
             return name;
         }
     
-        private static string GetControllerRoot(Type ctrlType)
+        private static string GetControllerRute(Type ctrlType)
         {
-            string root = "api";
-            var rootAttrib = ctrlType.GetTypeInfo().GetCustomAttribute<UrlRootAttribute>();
+            string root = "api/" + GetControllerName(ctrlType.FullName);
+            var rootAttrib = ctrlType.GetTypeInfo().GetCustomAttribute<ControllerRouteAttribute>();
             if (rootAttrib != null)
             {
-                root = rootAttrib.UrlRoot ?? "";
+                root = rootAttrib.Route ?? "";
             }
-            return root;
+            return root.ToLower().Trim('/');
         }
     }
 }

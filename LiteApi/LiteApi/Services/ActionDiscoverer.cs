@@ -57,12 +57,20 @@ namespace LiteApi.Services
 
         private ActionContext GetActionContext(MethodInfo method, ControllerContext ctrlCtx)
         {
+            string methodName = method.Name.ToLowerInvariant();
+            var segmentsAttr = method.GetCustomAttribute<ActionRouteAttribute>();
+            RouteSegment[] segments = { new RouteSegment(methodName) };
+            if (segmentsAttr != null)
+            {
+                segments = segmentsAttr.RouteSegments.ToArray();
+            }
+
             var actionCtx = new ActionContext
             {
                 HttpMethod = GetHttpAttribute(method).Method,
                 Method = method,
-                Name = method.Name.ToLowerInvariant(),
-                ParentController = ctrlCtx
+                ParentController = ctrlCtx,
+                RouteSegments = segments
             };
             actionCtx.Parameters = _parameterDiscoverer.GetParameters(actionCtx);
             return actionCtx;

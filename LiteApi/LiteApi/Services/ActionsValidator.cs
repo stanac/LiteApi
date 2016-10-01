@@ -33,10 +33,14 @@ namespace LiteApi.Services
         {
             foreach (var action in actionCtxs)
             {
+                foreach (var error in ActionSegmentsValidator.GetRouteSegmentsErrors(action))
+                {
+                    yield return error;
+                }
                 foreach (var error in _paramsValidator.GetParametersErrors(action))
                 {
-                    yield return $"Error with parameters in controller '{action.ParentController.Name}' "
-                        + $"action '{action.Name}', HTTP method: '{action.HttpMethod}'. Error details: {error}";
+                    yield return $"Error with parameters in controller '{action.ParentController.RouteAndName}'({action.ParentController.ControllerType}) "
+                        + $"action '{action.Name}'({action.Method}), HTTP method: '{action.HttpMethod}'. Error details: {error}";
                 }
             }
         }

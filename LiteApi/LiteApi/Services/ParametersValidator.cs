@@ -24,7 +24,7 @@ namespace LiteApi.Services
             {
                 if (param.ParameterSource == ParameterSources.Unknown)
                 {
-                    throw new Exception($"Parameter {param.Name} in action {actionCtx.Name} in controller {actionCtx.ParentController?.Name} doesn't have source set.");
+                    throw new Exception($"Parameter {param.Name} in action {actionCtx.Name} in controller {actionCtx.ParentController?.RouteAndName} doesn't have source set.");
                 }
             }
             
@@ -32,13 +32,13 @@ namespace LiteApi.Services
             {
                 yield return $"HTTP methods GET and DELETE does not support parameters from body, "
                     + "and there is at least one parameter from body found. " 
-                    + $"in action '{actionCtx.Name}' in controller: '{actionCtx.ParentController?.Name}'. "
+                    + $"in action '{actionCtx.Name}' in controller: '{actionCtx.ParentController?.RouteAndName}'. "
                     + AttributeConventions.ErrorResolutionSuggestion;
             }
 
             if (actionCtx.Parameters.Count(x => x.ParameterSource == ParameterSources.Body) > 1)
             {
-                yield return $"Multiple parameters from body found in action '{actionCtx.Name}' in controller '{actionCtx.ParentController?.Name}'. "
+                yield return $"Multiple parameters from body found in action '{actionCtx.Name}' in controller '{actionCtx.ParentController?.RouteAndName}'. "
                     + "Maximum number of parameters from body is 1. " + AttributeConventions.ErrorResolutionSuggestion;
             }
 

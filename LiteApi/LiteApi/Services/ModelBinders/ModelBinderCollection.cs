@@ -113,7 +113,7 @@ namespace LiteApi.Services.ModelBinders
                 else
                 {
                     throw new ArgumentException(
-                        $"Parameter {param.Name} in controller {actionCtx.ParentController.Name} in action {actionCtx.Name} "
+                        $"Parameter {param.Name} in controller {actionCtx.ParentController.RouteAndName} in action {actionCtx.Name} "
                         + "has unknown source (body or URL). " + AttributeConventions.ErrorResolutionSuggestion);
                 }
             }

@@ -63,6 +63,14 @@ namespace LiteApi.Tests.Fakes
             };
         }
 
+        public static FakeHttpRequest WithPostMethod()
+        {
+            return new FakeHttpRequest
+            {
+                Method = "POST"
+            };
+        }
+
         public FakeHttpRequest WithPath(string path)
         {
             Path = path;
@@ -78,6 +86,16 @@ namespace LiteApi.Tests.Fakes
         public FakeHttpRequest ClearQuery()
         {
             (Query as FakeQueryCollection).Clear();
+            return this;
+        }
+
+        public FakeHttpRequest WriteBody(string body)
+        {
+            Body = new MemoryStream();
+            var writer = new StreamWriter(Body);
+            writer.Write(body);
+            writer.Flush();
+            Body.Position = 0;
             return this;
         }
     }

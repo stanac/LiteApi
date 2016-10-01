@@ -113,5 +113,27 @@ namespace LiteApi.Tests
             } as IDictionary<int, string>;
             Assert.Equal(expected, collectionFromParams);
         }
+
+        [Fact]
+        public void ModelBinder_ComplexFromBodyParameter_CanParse()
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
+            var ctrl = discoverer.GetControllers(null).Single();
+            var action = ctrl.Actions.Single(x => x.Name == "post7");
+            var mb = new ModelBinderCollection(new JsonSerializer());
+            var request = Fakes.FakeHttpRequest.WithPostMethod()
+                .WriteBody(@"
+[
+    { ""Item1"": 0, ""Item2"": ""0"" },
+    { ""Item1"": 1, ""Item2"": ""2"" },
+    { ""Item1"": 3, ""Item2"": ""44"" },
+]
+");
+            object[] parameters = mb.GetParameterValues(request, action);
+            Assert.Equal(1, parameters.Length);
+            var collectionFromParams = (IEnumerable<Tuple<int, string>>)parameters[0];
+            Tuple<int, string>[] expected = { Tuple.Create(0, "0"), Tuple.Create(1, "2"), Tuple.Create(3, "44") };
+            Assert.Equal(expected, collectionFromParams);
+        }
     }
 }

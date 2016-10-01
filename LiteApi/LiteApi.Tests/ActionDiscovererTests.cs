@@ -11,7 +11,7 @@ namespace LiteApi.Tests
             var discoverer = GetActionDiscoverer();
             var actions = discoverer.GetActions(new Contracts.Models.ControllerContext
             {
-                Name = "TestController",
+                RouteAndName = "TestController",
                 ControllerType = typeof(Controllers.ActionOverloadController)
             });
 

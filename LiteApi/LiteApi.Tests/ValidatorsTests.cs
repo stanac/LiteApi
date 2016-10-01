@@ -9,25 +9,37 @@ namespace LiteApi.Tests
         [Fact]
         public void Validators_TwoControllersWithSameName_ReturnsError()
         {
-            AssertErrorMessage("There are more than one controller with matching name: two");
+            AssertErrorMessage("There are more than one controller with matching name: api/two");
         }
 
         [Fact]
         public void Validators_GetActionWithParameters_ReturnsError()
         {
-            AssertErrorMessage("parameter from body found. in action 'getthevalue' in controller: 'two");
+            AssertErrorMessage("parameter from body found. in action 'getthevalue' in controller: 'api/two");
         }
 
         [Fact]
         public void Validators_DeleteActionWithParameters_ReturnsError()
         {
-            AssertErrorMessage("parameter from body found. in action 'deletethevalue' in controller: 'two");
+            AssertErrorMessage("parameter from body found. in action 'deletethevalue' in controller: 'api/two");
         }
 
         [Fact]
         public void Validators_ActionWithTwoParametersFromBody_ReturnsError()
         {
-            AssertErrorMessage(" Multiple parameters from body found in action 'postint' in controller 'two'");
+            AssertErrorMessage(" Multiple parameters from body found in action 'postint' in controller 'api/two'");
+        }
+
+        [Fact]
+        public void Validators_ActionWithZeroSegments_ReturnsError()
+        {
+            AssertErrorMessage("Action (Int32 NoSegments()) in controller api/two(LiteApi.Contracts.Models.ControllerContext) has 0 constant route segments");
+        }
+        
+        [Fact]
+        public void Validators_ActionWithZeroConstantSegments_ReturnsError()
+        {
+            AssertErrorMessage("Action (Int32 NoConstantSegments(Int32, Int32, Int32)) in controller api/two(LiteApi.Contracts.Models.ControllerContext) has 0 constant route segments");
         }
 
         [Fact]
