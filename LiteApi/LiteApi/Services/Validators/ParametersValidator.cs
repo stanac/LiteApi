@@ -26,6 +26,21 @@ namespace LiteApi.Services.Validators
                 {
                     throw new Exception($"Parameter {param.Name} in action {actionCtx.Name} in controller {actionCtx.ParentController?.RouteAndName} doesn't have source set.");
                 }
+                if (param.ParameterSource == ParameterSources.RouteSegment)
+                {
+                    if (param.HasDefaultValue)
+                    {
+                        yield return $"Parameter {param.Name} in action {actionCtx.Name} ({actionCtx.Method} in controller "
+                            + $"{actionCtx?.ParentController.RouteAndName} ({actionCtx?.ParentController}) is from route and "
+                            + "has default value. Parameters from route cannot have default value.";
+                    }
+                    if (!param.IsTypeSupportedFromRoute())
+                    {
+                        yield return $"Parameter {param.Name} in action {actionCtx.Name} ({actionCtx.Method} in controller "
+                            + $"{actionCtx?.ParentController.RouteAndName} ({actionCtx?.ParentController}) is from route and "
+                            + $"of type {param.Type} which is not supported for route parameter type. Route parameter type are not null "
+                            + "types that can be found in ModelBinderCollection.GetSupportedTypesFromUrl()";                    }
+                }
             }
             
             if (!actionCtx.HttpMethod.HasBody() && actionCtx.Parameters.Any(x => x.ParameterSource == ParameterSources.Body))
@@ -42,7 +57,24 @@ namespace LiteApi.Services.Validators
                     + "Maximum number of parameters from body is 1. " + AttributeConventions.ErrorResolutionSuggestion;
             }
 
-            // TODO: add validation for array and list parameters 
+            var routeParams = actionCtx.Parameters.Where(x => x.ParameterSource == ParameterSources.RouteSegment).Select(x => x.Name).ToArray();
+            var routeSegments = actionCtx.RouteSegments.Where(x => x.IsParameter).Select(x => x.OriginalValue).ToArray();
+
+            foreach (var param in routeParams.Where(x => routeSegments.All(y => $"{{{x}}}" != y)))
+            {
+                yield return $"Parameter {param} in action {actionCtx.Name} ({actionCtx.Method} in controller "
+                        + $"{actionCtx?.ParentController.RouteAndName} ({actionCtx?.ParentController}) is from route and "
+                        + $"there is no matching route segment found, use [ActionRoute(\"action/{{{param}}}\")] attribute on action. "
+                        + "to add route segment with parameter.";
+            }
+
+            foreach (var segment in routeSegments.Where(x => routeParams.All(y => x != $"{{{y}}}")))
+            {
+                yield return $"Route segment {segment} is set as parameter without matching parameter in method {actionCtx.Method} "
+                    + $"in controller {actionCtx.ParentController.RouteAndName} ({actionCtx.ParentController})";
+            }
+
+
         }
     }
 }

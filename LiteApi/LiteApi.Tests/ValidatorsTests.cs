@@ -42,6 +42,24 @@ namespace LiteApi.Tests
         {
             AssertErrorMessage("Action (Int32 NoConstantSegments(Int32, Int32, Int32)) in controller api/two(LiteApi.Contracts.Models.ControllerContext) has 0 constant route segments");
         }
+        
+        [Fact]
+        public void Validators_ActionParameterFromRouteWithDefaultValue_ReturnsError()
+        {
+            AssertErrorMessage("in controller api/two (LiteApi.Contracts.Models.ControllerContext) is from route and has default value.");
+        }
+
+        [Fact]
+        public void Validators_ActionParameterFromRouteWithWithoutRouteSegment_ReturnsError()
+        {
+            AssertErrorMessage("Parameter b in action routeparamwithoutsegment (Int32 RouteParamWithoutSegment(Int32) in controller api/two (LiteApi.Contracts.Models.ControllerContext) is from route and there is no matching route segment found");
+        }
+
+        [Fact]
+        public void Validators_ActionRouteParameterSegmentWihtoutParameter_ReturnsError()
+        {
+            AssertErrorMessage("Route segment {b} is set as parameter without matching parameter in method");
+        }
 
         [Fact]
         public void Validators_GenericArrayAndListParameters_AreAcceptable()

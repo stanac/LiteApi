@@ -4,6 +4,7 @@ using LiteApi.Services.ModelBinders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace LiteApi.Tests
@@ -135,5 +136,228 @@ namespace LiteApi.Tests
             Tuple<int, string>[] expected = { Tuple.Create(0, "0"), Tuple.Create(1, "2"), Tuple.Create(3, "44") };
             Assert.Equal(expected, collectionFromParams);
         }
+
+        [Fact]
+        public void ModelBinder_Parameterbool_CanParse()
+        {
+            AssertCanParseSimpleParam<bool>();
+        }
+
+        [Fact]
+        public void ModelBinder_Parameterstring_CanParse()
+        {
+            AssertCanParseSimpleParam<string>();
+        }
+
+        [Fact]
+        public void ModelBinder_Parameterchar_CanParse()
+        {
+            AssertCanParseSimpleParam<char>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt16_CanParse()
+        {
+            AssertCanParseSimpleParam<Int16>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt32_CanParse()
+        {
+            AssertCanParseSimpleParam<Int32>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt64_CanParse()
+        {
+            AssertCanParseSimpleParam<Int64>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt16_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt16>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt32_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt32>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt64_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt64>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterByte_CanParse()
+        {
+            AssertCanParseSimpleParam<Byte>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterSByte_CanParse()
+        {
+            AssertCanParseSimpleParam<SByte>();
+        }
+
+        [Fact]
+        public void ModelBinder_Parameterdecimal_CanParse()
+        {
+            AssertCanParseSimpleParam<decimal>();
+        }
+
+        [Fact]
+        public void ModelBinder_Parameterfloat_CanParse()
+        {
+            AssertCanParseSimpleParam<float>();
+        }
+
+        [Fact]
+        public void ModelBinder_Parameterdouble_CanParse()
+        {
+            AssertCanParseSimpleParam<double>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterDateTime_CanParse()
+        {
+            AssertCanParseSimpleParam<DateTime>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterGuid_CanParse()
+        {
+            AssertCanParseSimpleParam<Guid>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterboolNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<bool?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParametercharNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<char?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt16Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<Int16?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt32Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<Int32?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterInt64Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<Int64?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt16Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt16?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt32Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt32?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterUInt64Nullable_CanParse()
+        {
+            AssertCanParseSimpleParam<UInt64?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterByteNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<Byte?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterSByteNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<SByte?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterdecimalNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<decimal?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterfloatNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<float?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterdoubleNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<double?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterDateTimeNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<DateTime?>();
+        }
+
+        [Fact]
+        public void ModelBinder_ParameterGuidNullable_CanParse()
+        {
+            AssertCanParseSimpleParam<Guid?>();
+        }
+
+        private void AssertCanParseSimpleParam<T>()
+        {
+            Type type;
+            Type nullableArg;
+            bool isNullable = false;
+            if (typeof(T).GetTypeInfo().IsNullable(out nullableArg))
+            {
+                type = nullableArg;
+                isNullable = true;
+            }
+            else
+            {
+                type = typeof(T);
+            }
+
+            object value = "";
+            if (typeof(T) != typeof(string))
+            {
+                value = Activator.CreateInstance(type);
+            }
+
+            string actionName = "Action_" + type.Name + (isNullable ? "_Nullable" : "");
+            string url = "/ParameterParsing/" + actionName;
+            var request = Fakes.FakeHttpRequest.WithGetMethod();
+            request.Path = url;
+            request.AddQuery("p", value.ToString());
+            var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ParameterParsingController));
+            var ctrl = discoverer.GetControllers(null).Single();
+            var action = ctrl.Actions.Single(x => x.Name == actionName.ToLower());
+
+            ModelBinderCollection mb = new ModelBinderCollection(new JsonSerializer());
+            object[] parameters = mb.GetParameterValues(request, action);
+            Assert.Equal(value, parameters.Single());
+        }
+
+        
     }
 }

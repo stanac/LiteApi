@@ -2,6 +2,7 @@
 using LiteApi.Attributes;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
+using System.Linq;
 
 namespace LiteApi.Services.Discoverers
 {
@@ -25,10 +26,12 @@ namespace LiteApi.Services.Discoverers
                 var param = actionCtx.Method.GetParameters()[i];
                 bool isFromQuery = param.GetCustomAttribute<FromUrlAttribute>() != null;
                 bool isFromBody = param.GetCustomAttribute<FromBodyAttribute>() != null;
-
+                bool isFromRoute = param.GetCustomAttribute<FromRouteAttribute>() != null;
+                
                 ParameterSources source = ParameterSources.Unknown;
-                if (isFromQuery && !isFromBody) source = ParameterSources.Query;
-                else if (!isFromQuery && isFromBody) source = ParameterSources.Body;
+                if (isFromQuery && !isFromBody && !isFromRoute) source = ParameterSources.Query;
+                else if (!isFromQuery && isFromBody && !isFromRoute) source = ParameterSources.Body;
+                else if (!isFromQuery && !isFromBody && isFromRoute) source = ParameterSources.RouteSegment;
 
                 parameters[i] = new ActionParameter(actionCtx)
                 {
@@ -41,9 +44,18 @@ namespace LiteApi.Services.Discoverers
 
                 if (parameters[i].ParameterSource == ParameterSources.Unknown)
                 {
-                    parameters[i].ParameterSource = parameters[i].IsComplex
-                        ? ParameterSources.Body
-                        : ParameterSources.Query;
+                    if (parameters[i].IsComplex)
+                    {
+                        parameters[i].ParameterSource = ParameterSources.Body;
+                    }
+                    else if (actionCtx.RouteSegments.Any(x => x.IsParameter && x.ParameterName == parameters[i].Name))
+                    {
+                        parameters[i].ParameterSource = ParameterSources.RouteSegment;
+                    }
+                    else
+                    {
+                        parameters[i].ParameterSource = ParameterSources.Query;
+                    }
                 }
             }
 

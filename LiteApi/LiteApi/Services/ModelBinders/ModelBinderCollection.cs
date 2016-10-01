@@ -110,6 +110,10 @@ namespace LiteApi.Services.ModelBinders
                     }
                     request.Body.Dispose();
                 }
+                else if (param.ParameterSource == ParameterSources.RouteSegment)
+                {
+                    args.Add(RouteSegmentQueryModelBinder.GetParameterValue(actionCtx, param, request));
+                }
                 else
                 {
                     throw new ArgumentException(

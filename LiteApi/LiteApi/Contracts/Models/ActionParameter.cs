@@ -16,6 +16,7 @@ namespace LiteApi.Contracts.Models
         internal bool _isTypeNullable;
         internal Type _type;
         private static Type[] _supportedTypesFromUrl;
+        private static readonly ModelBinderCollection _modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
 
         /// <summary>
         /// Gets or sets the JSON serializer factory.
@@ -43,6 +44,12 @@ namespace LiteApi.Contracts.Models
         /// The parent action CTX.
         /// </value>
         public ActionContext ParentActionCtx { get; set; }
+
+        internal bool IsTypeSupportedFromRoute()
+        {
+            if (IsNullable) return false;
+            return !IsComplex;
+        }
 
         /// <summary>
         /// Gets or sets the name.
@@ -115,8 +122,7 @@ namespace LiteApi.Contracts.Models
         {
             get
             {
-                var modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
-                return !modelBinder.DoesSupportType(Type, ParameterSources.Query);
+                return !_modelBinder.DoesSupportType(Type, ParameterSources.Query);
             }
         }
         

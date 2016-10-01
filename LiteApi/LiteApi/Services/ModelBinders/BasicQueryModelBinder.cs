@@ -107,7 +107,7 @@ namespace LiteApi.Services.ModelBinders
         /// <returns></returns>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        protected object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName)
+        internal static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName)
         {
             if (type == typeof(string))
             {

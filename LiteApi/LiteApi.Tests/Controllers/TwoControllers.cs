@@ -36,6 +36,25 @@ namespace LiteApi.Tests.Controllers
         {
             return m1.J + m2.I;
         }
+
+        [ActionRoute("/a/{a}")]
+        public int RouteParamWithDefaultValue(int a = 0)
+        {
+            return a + 1;
+        }
+
+        [ActionRoute("/ab/{b}")]
+        public int RouteSegmentWithoutParam()
+        {
+            return 0;
+        }
+
+        public int RouteParamWithoutSegment([FromRoute]int b)
+        {
+            return 1 + b;
+        }
+
+        
     }
 
     public class FakeTwoModelOne

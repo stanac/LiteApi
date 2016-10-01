@@ -19,7 +19,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The name.
         /// </value>
-        public string Name => RouteSegments.FirstOrDefault(x => x.IsConstant)?.OriginalValue ?? "";
+        public string Name => RouteSegments.FirstOrDefault(x => x.IsConstant)?.OriginalValue?.ToLower() ?? "";
 
         /// <summary>
         /// Gets or sets the action parameters.
