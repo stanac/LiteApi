@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using LiteApi.Services.Discoverers;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;

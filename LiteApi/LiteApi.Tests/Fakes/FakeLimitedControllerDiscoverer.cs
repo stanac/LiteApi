@@ -5,6 +5,7 @@ using LiteApi.Services;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using LiteApi.Services.Discoverers;
 
 namespace LiteApi.Tests.Fakes
 {

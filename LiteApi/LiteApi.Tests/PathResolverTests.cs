@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using LiteApi.Services.Discoverers;
 using System.Linq;
 using System.Reflection;
 using Xunit;

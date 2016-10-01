@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Discoverers
 {
     /// <summary>
     /// Instance of this class is used for discovering controllers in given assembly

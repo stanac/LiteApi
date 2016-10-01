@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Discoverers
 {
     /// <summary>
     /// Class that is discovering actions in given <see cref="ControllerContext"/>

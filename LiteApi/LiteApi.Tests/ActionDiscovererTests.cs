@@ -1,4 +1,5 @@
 ﻿using LiteApi.Services;
+using LiteApi.Services.Discoverers;
 using Xunit;
 
 namespace LiteApi.Tests

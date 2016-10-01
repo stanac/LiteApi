@@ -11,6 +11,7 @@ using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Builder;
 using LiteApi.Services.ModelBinders;
 using LiteApi.Services.Validators;
+using LiteApi.Services.Discoverers;
 
 namespace LiteApi
 {
