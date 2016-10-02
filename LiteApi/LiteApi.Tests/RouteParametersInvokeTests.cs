@@ -93,11 +93,11 @@ namespace LiteApi.Tests
             await AssertCanInvokeActionWithRouteParamOfType<double>();
         }
 
-        //[Fact]
-        //public async Task Action_WithRouteParameterOfTypeDateTime_CanBeInvoked()
-        //{
-        //    await AssertCanInvokeActionWithRouteParamOfType<DateTime>();
-        //}
+        [Fact]
+        public async Task Action_WithRouteParameterOfTypeDateTime_CanBeInvoked()
+        {
+            await AssertCanInvokeActionWithRouteParamOfType<DateTime>();
+        }
 
         [Fact]
         public async Task Action_WithRouteParameterOfTypeGuid_CanBeInvoked()
@@ -105,7 +105,13 @@ namespace LiteApi.Tests
             await AssertCanInvokeActionWithRouteParamOfType<Guid>();
         }
 
-        private async Task AssertCanInvokeActionWithRouteParamOfType<T>()
+        [Fact]
+        public async Task Action_WithRouteParameterOfTypeDateOnly_CanBeInvoked()
+        {
+            await AssertCanInvokeActionWithRouteParamOfType<DateTime>(true);
+        }
+
+        private async Task AssertCanInvokeActionWithRouteParamOfType<T>(bool dateOnly = false)
         {
             Type type = typeof(T);
             
@@ -114,10 +120,14 @@ namespace LiteApi.Tests
             {
                 value = Activator.CreateInstance(type);
             }
-            //if (typeof(T) == typeof(DateTime))
-            //{
-            //    value = value.ToString().Replace("/", "-");
-            //}
+            if (typeof(T) == typeof(DateTime))
+            {
+                value = default(DateTime).ToString("yyyy-MM-dd HH:mm:ss");
+                if (dateOnly)
+                {
+                    value = default(DateTime).ToString("yyyy-MM-dd");
+                }
+            }
 
             string actionName = "Action_" + type.Name;
 
@@ -127,11 +137,14 @@ namespace LiteApi.Tests
             var serializer = new JsonSerializer();
             var invoker = new ActionInvoker(new ControllerBuilder(), new Services.ModelBinders.ModelBinderCollection(serializer));
             var httpCtx = new Fakes.FakeHttpContext();
-            httpCtx.Request.PathBase = "/RouteSupportedParameters/" + actionName + "/" + value;
-            httpCtx.Request.Path = httpCtx.Request.PathBase + $"?_t={Guid.NewGuid().ToString()}";
+            httpCtx.Request.Path = "/api/RouteSupportedParameters/" + actionName + "/" + value;
             await invoker.Invoke(httpCtx, action);
             string jsonResult = httpCtx.Response.ReadBody();
             object result = serializer.Deserialize(jsonResult, type);
+            if (typeof(T) == typeof(DateTime))
+            {
+                value = default(DateTime);
+            }
             Assert.Equal(value, result);
         }
     }

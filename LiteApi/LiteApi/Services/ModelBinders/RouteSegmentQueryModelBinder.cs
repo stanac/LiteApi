@@ -26,8 +26,13 @@ namespace LiteApi.Services.ModelBinders
             if (actionCtx == null) throw new System.ArgumentNullException(nameof(actionCtx));
             if (parameter.ParameterSource != ParameterSources.RouteSegment) throw new InvalidOperationException($"{nameof(RouteSegmentQueryModelBinder)} supports only parameters from route segment.");
 
-            string[] segments = request.PathBase.Value.Split('/');
+            string[] segments = request.Path.Value.TrimStart('/').TrimEnd('/').Split('/');
             segments = segments.Skip(actionCtx.ParentController.RouteSegments.Length).ToArray();
+            // handle empty string
+            if (segments.Length == actionCtx.RouteSegments.Length - 1 && request.Path.Value.EndsWith("/", StringComparison.Ordinal) && parameter.Type == typeof(string))
+            {
+                return "";
+            }
             string stringValue = null;
             string paramName = parameter.Name;
             for (int i = 0; i < actionCtx.RouteSegments.Length; i++)
@@ -35,6 +40,7 @@ namespace LiteApi.Services.ModelBinders
                 if (actionCtx.RouteSegments[i].IsParameter && actionCtx.RouteSegments[i].ParameterName == paramName)
                 {
                     stringValue = segments[i];
+                    break;
                 }
             }
             if (stringValue == null) throw new Exception("Route segment not found");
