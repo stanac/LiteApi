@@ -93,5 +93,3 @@ namespace MyApp
 
 ---
 
-There is a lot of documentation to be written about parameters and actions matching,
-also a lot of testing needs to be done before initial release.
