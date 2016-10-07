@@ -19,13 +19,45 @@ Super simple example of a controller:
 ``` cs
 public class TestController : LiteController
 {
-    // will respond to protocol://host:port/api/test/add?a=3&b=8
+    // will respond to /api/test/add?a=3&b=8
     public int Add(int a, int b)
     {
         return a + b;
     }
 }
 ``` 
+
+More complex examples:
+
+``` cs
+[ControllerRoute("/api/v2/ops")]
+public class OperationsController : LiteController
+{
+    // will respond to /api/v2/ops/3/plus/8
+    [ActionRoute("/{a}/plus/{b}")]
+    [HttpGet] // [HttpGet] is optional, by default it's GET, otherwise you can use [HttpPost], [HttpPut] or [HttpDelete]
+    public int Add(int a, int b) => a + b;
+    
+    // will respond to /api/v2/ops/sum?ints=3&ints=6&ints=4
+    public int Sum(IEnumerable<int> ints) => ints.Sum();
+    
+    // will respond to /api/v2/ops/join?a.1=one&a.3=three&b.2=two
+    public IDictionary<int, string> Join(IDictionary<int, string> a, Dictionary<int, string> b)
+    {
+        Dictionary<int, string> c = new Dictionary<int, string>();
+        foreach (var keyValue in a)
+        {
+            c[keyValue.Key] = keyValue.Value;
+        }
+        foreach (var keyValue in b)
+        {
+            c[keyValue.Key] = keyValue.Value;
+        }
+        return c;
+    }
+
+}
+```
 
 You can use attributes: HttpGetAttribute, HttpPostAttribute, HttpPutAttribute, 
 HttpDeleteAttribute, by default action is GET if no attribute is set.
@@ -34,8 +66,7 @@ For more info check [Wiki](https://github.com/stanac/LiteApi/wiki/URL-mappings-t
 
 ---
 
-For installation you need to build the middleware yourself (no nuget release at the moment)
-and use middleware in your startup class:
+For installation you can reference nuget package `LiteApi` and use it in your startup class:
 
 ``` cs
 using Microsoft.AspNetCore.Builder;
