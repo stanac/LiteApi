@@ -3,7 +3,7 @@
 ## MVC-style inspired .NET Core WEB API with JSON only support
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5crmsp0tfgduwcvo/branch/master?svg=true)] (https://ci.appveyor.com/project/stanac/liteapi/branch/master)
- (https://ci.appveyor.com/project/ProjectMona/liteapi) [![Coverage Status](https://img.shields.io/coveralls/stanac/LiteApi/master.svg?maxAge=900)](https://coveralls.io/github/stanac/LiteApi?&branch=master)
+ [![Coverage Status](https://img.shields.io/coveralls/stanac/LiteApi/master.svg?maxAge=900)](https://coveralls.io/github/stanac/LiteApi?&branch=master)
 
 LiteApi is .net core middleware inspired by MVC-style Controller/Action principles.
 It's still in beta and currently initial tests are showing that it can handle about 50%-90%
