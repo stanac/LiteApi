@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LiteApi;
 
-namespace LiteApi
+namespace Microsoft.AspNetCore.Builder
 {
     /// <summary>
     /// Extension for supporting fluent usage of the middleware
