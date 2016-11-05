@@ -48,12 +48,7 @@ namespace LiteApi.Attributes
             bool hasRoles = _roles.All(httpCtx.User.IsInRole);
             if (!hasRoles)
             {
-                result = new ApiFilterRunResult
-                {
-                    SetResponseCode = 403,
-                    ShouldContinue = false,
-                    SetResponseMessage = "User is not authorized to access this message"
-                };
+                result = ApiFilterRunResult.Unauthorized;
             }
             return result;
         }

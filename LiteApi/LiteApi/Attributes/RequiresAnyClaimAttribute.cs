@@ -49,12 +49,7 @@ namespace LiteApi.Attributes
             bool hasClaims = _claims.Any(x => httpCtx.User.Claims.Any(y => y.Type == x));
             if (!hasClaims)
             {
-                result = new ApiFilterRunResult
-                {
-                    SetResponseCode = 403,
-                    ShouldContinue = false,
-                    SetResponseMessage = "User is not authorized to access this message"
-                };
+                result = ApiFilterRunResult.Unauthorized;
             }
             return result;
         }

@@ -51,5 +51,45 @@ namespace LiteApi.Contracts.Abstractions
         /// The set response message.
         /// </value>
         public string SetResponseMessage { get; set; }
+
+        /// <summary>
+        /// Gets the unauthorized result.
+        /// </summary>
+        /// <value>
+        /// The unauthorized result.
+        /// </value>
+        public static ApiFilterRunResult Unauthorized
+            => new ApiFilterRunResult
+            {
+                ShouldContinue = false,
+                SetResponseCode = 403,
+                SetResponseMessage = "User is unauthorized to access the resource"
+            };
+
+        /// <summary>
+        /// Gets the continue true result.
+        /// </summary>
+        /// <value>
+        /// The continue true result.
+        /// </value>
+        public static ApiFilterRunResult Continue
+            => new ApiFilterRunResult
+            {
+                ShouldContinue = true
+            };
+
+        /// <summary>
+        /// Gets the unauthenticated result.
+        /// </summary>
+        /// <value>
+        /// The unauthenticated result.
+        /// </value>
+        public static ApiFilterRunResult Unauthenticated
+            => new ApiFilterRunResult
+            {
+                ShouldContinue = false,
+                SetResponseCode = 401,
+                SetResponseMessage = "User is unauthenticated"
+            };
     }
 }

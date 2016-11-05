@@ -22,17 +22,9 @@ namespace LiteApi.Attributes
         public virtual ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
         {
             var isAuthenticated = httpCtx?.User?.Identity?.IsAuthenticated ?? false;
-            var result = new ApiFilterRunResult
-            {
-                ShouldContinue = true
-            };
-            if (isAuthenticated)
-            {
-                result.ShouldContinue = false;
-                result.SetResponseCode = 401;
-                result.SetResponseMessage = "This resource requires authenticated user";
-            }
-            return result;
+            return isAuthenticated
+                ? ApiFilterRunResult.Continue
+                : ApiFilterRunResult.Unauthenticated;
         }
     }
 }

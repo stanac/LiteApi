@@ -107,7 +107,7 @@ namespace LiteApi.Tests
 
         private ClaimsPrincipal GetUser(params string[] roles)
         {
-            var claims = roles.Select(x => new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", x));
+            var claims = roles.Select(x => new Claim(ClaimTypes.Role, x));
             var user = new ClaimsPrincipal();
             user.AddIdentity(new ClaimsIdentity(claims, "test_auth"));
             
@@ -129,4 +129,5 @@ namespace LiteApi.Tests
         
         
     }
+    
 }
