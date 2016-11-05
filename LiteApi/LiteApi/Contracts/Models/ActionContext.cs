@@ -76,13 +76,13 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The filters.
         /// </value>
-        public IApiFilter[] Filters { get; set; } = null;
+        internal ApiFilterWrapper[] Filters { get; set; } = null;
 
         /// <summary>
         /// Gets or sets a value indicating whether to skip authentication.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipAuthenticationAttribute"/>.
+        ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipFiltersAttribute"/>.
         /// </value>
         public bool SkipAuth { get; set; }
 
@@ -109,14 +109,23 @@ namespace LiteApi.Contracts.Models
         {
             if (Filters == null)
             {
-                Filters = Method
+                var apiFilters = Method
                     .GetCustomAttributes()
                     .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilter>()
                     .ToArray();
+                var asyncFilters = Method
+                    .GetCustomAttributes()
+                    .Where(x => typeof(IApiFilterAsync).IsAssignableFrom(x.GetType()))
+                    .Cast<IApiFilterAsync>()
+                    .ToArray();
+                Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
+                    .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
+                    .ToArray();
+
                 SkipAuth = Method
                     .GetCustomAttributes()
-                    .Where(x => typeof(Attributes.SkipAuthenticationAttribute) == x.GetType())
+                    .Where(x => typeof(Attributes.SkipFiltersAttribute) == x.GetType())
                     .Count() > 0;
             }
         }

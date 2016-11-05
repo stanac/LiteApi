@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace LiteApi.Tests.Controllers
 {
-    [AuthorizeFilter]
+    [RequiresAuthentication]
     public class SecureController : LiteController
     {
         public int Get1()
@@ -15,54 +15,54 @@ namespace LiteApi.Tests.Controllers
             return 1;
         }
 
-        [AuthorizeFilter("role1", "role2")]
+        [RequiresRoles("role1", "role2")]
         public int Get2()
         {
             return 2;
         }
 
-        [AuthorizeFilter(':', "claimType1:true", "claimType2:true")]
+        [RequiresClaims("claimType1", "claimType2")]
         public int Get3()
         {
             return 3;
         }
 
-        [SkipAuthentication]
+        [SkipFilters]
         public int Get4()
         {
             return 4;
         }
 
-        [AuthorizeFilter(typeof(UserHasClaim1))]
-        public int Get5()
-        {
-            return 5;
-        }
+        //[AuthorizeFilter(typeof(UserHasClaim1))]
+        //public int Get5()
+        //{
+        //    return 5;
+        //}
 
-        [AuthorizeFilter(typeof(UserHasClaim2))]
-        public int Get6()
-        {
-            return 6;
-        }
+        //[AuthorizeFilter(typeof(UserHasClaim2))]
+        //public int Get6()
+        //{
+        //    return 6;
+        //}
     }
 
-    public class UserHasClaim1 : ICustomApiFilter
-    {
-        public bool IsAsync => false;
+    //public class UserHasClaim1 : ICustomApiFilter
+    //{
+    //    public bool IsAsync => false;
 
-        public Func<HttpContext, bool> ShouldContinue =>
-            httpCtx => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false;
+    //    public Func<HttpContext, bool> ShouldContinue =>
+    //        httpCtx => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false;
 
-        public Func<HttpContext, Task<bool>> ShouldContinueAsync => null;
-    }
+    //    public Func<HttpContext, Task<bool>> ShouldContinueAsync => null;
+    //}
 
-    public class UserHasClaim2 : ICustomApiFilter
-    {
-        public bool IsAsync => true;
+    //public class UserHasClaim2 : ICustomApiFilter
+    //{
+    //    public bool IsAsync => true;
 
-        public Func<HttpContext, bool> ShouldContinue => null;
+    //    public Func<HttpContext, bool> ShouldContinue => null;
 
-        public Func<HttpContext, Task<bool>> ShouldContinueAsync
-            => httpCtx => Task.Run(() => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false);
-    }
+    //    public Func<HttpContext, Task<bool>> ShouldContinueAsync
+    //        => httpCtx => Task.Run(() => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false);
+    //}
 }

@@ -1,0 +1,79 @@
+﻿<html>
+
+<head>
+    <title>Testing LiteApi</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        
+        button {
+            margin: 5px;
+        }
+        
+        pre {
+            background-color: #DDD;
+            overflow: auto;
+            max-height: 500px;
+        }
+
+        .code {
+            float: left;
+            width: 49%;
+            margin: 5px;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div>
+        <h3>Login/Logout</h3>
+        <div>
+            <button id="check">Get logged in user</button>
+            <button id="loginWithoutRolesOrClaims">Login without roles or claims</button>
+            <button id="loginWithRolesAndClaims">Login with roles and claims</button>
+            <button id="loginWithRolesOnly">Login with roles only</button>
+            <button id="loginWithClaimsOnly">Login with claims only</button>
+            <button id="logout">Logout</button>
+        </div>
+
+        <br />
+        <hr />
+
+        <h3>Invoke LiteController</h3>
+        <div>
+            <button id="public">Public, no login required</button>
+            <button id="protected1">Protected, without special roles or claims</button>
+            <button id="protected2">Protected, with special roles</button>
+            <button id="protected3">Protected, with special claims</button>
+            <button id="protected4">Protected, with special roles and claims</button>
+            <button id="protected5">Protected post request</button>
+        </div>
+
+
+        <br />
+        <hr />
+
+        <h3>Results</h3>
+        <div class='code'>
+            <strong>Request</strong>
+            <pre id="preRequest">// nothing for now</pre>
+        </div>
+        <div class='code'>
+            <strong>Response</strong>
+            <pre id="preResponse">// nothing for now</pre>
+        </div>
+        <div class='clear'></div>
+    </div>
+
+    <script src="/jquery-3.1.1.min.js"></script>
+    <script src="/index.js"></script>
+
+</body>
+
+</html>

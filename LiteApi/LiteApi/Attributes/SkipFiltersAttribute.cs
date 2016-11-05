@@ -7,7 +7,7 @@ namespace LiteApi.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Method)]
-    public class SkipAuthenticationAttribute : Attribute
+    public class SkipFiltersAttribute : Attribute
     {
     }
 }

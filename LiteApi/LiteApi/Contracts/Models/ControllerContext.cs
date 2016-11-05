@@ -70,7 +70,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The filters. Filters are used for filtering requests (e.g. for authentication/authorization)
         /// </value>
-        public IApiFilter[] Filters { get; set; }
+        internal ApiFilterWrapper[] Filters { get; set; }
 
         /// <summary>
         /// Initializes this instance.
@@ -79,11 +79,20 @@ namespace LiteApi.Contracts.Models
         {
             if (Filters == null)
             {
-                Filters = ControllerType
+                var apiFilters = ControllerType
                     .GetTypeInfo()
                     .GetCustomAttributes()
                     .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilter>()
+                    .ToArray();
+                var asyncFilters = ControllerType
+                    .GetTypeInfo()
+                    .GetCustomAttributes()
+                    .Where(x => typeof(IApiFilterAsync).IsAssignableFrom(x.GetType()))
+                    .Cast<IApiFilterAsync>()
+                    .ToArray();
+                Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
+                    .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
                     .ToArray();
                 foreach (var action in Actions)
                 {

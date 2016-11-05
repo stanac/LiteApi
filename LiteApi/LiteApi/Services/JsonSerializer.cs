@@ -13,7 +13,9 @@ namespace LiteApi.Services
     {
         private static JsonSerializerSettings _settings = new JsonSerializerSettings
         {
-            ContractResolver = new CamelCasePropertyNamesContractResolver()
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            PreserveReferencesHandling = PreserveReferencesHandling.None,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
 
         /// <summary>
