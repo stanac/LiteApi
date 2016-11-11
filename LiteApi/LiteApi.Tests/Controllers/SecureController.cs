@@ -1,4 +1,9 @@
 ﻿using LiteApi.Attributes;
+using LiteApi.Contracts.Abstractions;
+using System;
+using Microsoft.AspNetCore.Http;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LiteApi.Tests.Controllers
 {
@@ -45,6 +50,71 @@ namespace LiteApi.Tests.Controllers
         public int Get7()
         {
             return 7;
+        }
+
+        [UserHasAnyTwoClaimsFilter]
+        public int Get8()
+        {
+            return 8;
+        }
+
+        [SkipFilters]
+        public int Get9()
+        {
+            return 9;
+        }
+
+        [UserHasAnyTwoClaimsAsyncFilter]
+        public int Get10()
+        {
+            return 10;
+        }
+
+        [RequiresAnyRole("role1", "role2")]
+        public int Get11()
+        {
+            return 11;
+        }
+
+        [RequiresAnyClaim("claim1", "claim2")]
+        public int Get12()
+        {
+            return 12;
+        }
+
+        [RequiresClaimWithAnyValue("claim1", "value1", "value2")]
+        public int Get13()
+        {
+            return 13;
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        private class UserHasAnyTwoClaimsFilterAttribute : Attribute, IApiFilter
+        {
+            public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
+            {
+                var userIsAuthenticated = httpCtx?.User?.Identity.IsAuthenticated ?? false;
+                if (!userIsAuthenticated) return ApiFilterRunResult.Unauthenticated;
+
+                return httpCtx.User.Claims.Count() > 1
+                    ? ApiFilterRunResult.Continue
+                    : ApiFilterRunResult.Unauthorized;
+            }
+        }
+
+        [AttributeUsage(AttributeTargets.Method)]
+        private class UserHasAnyTwoClaimsAsyncFilterAttribute : Attribute, IApiFilterAsync
+        {
+            public Task<ApiFilterRunResult> ShouldContinueAsync(HttpContext httpCtx)
+            {
+                ApiFilterRunResult result = ApiFilterRunResult.Continue;
+                var userIsAuthenticated = httpCtx?.User?.Identity.IsAuthenticated ?? false;
+                if (!userIsAuthenticated) result = ApiFilterRunResult.Unauthenticated;
+                else result = httpCtx.User.Claims.Count() > 1
+                    ? ApiFilterRunResult.Continue
+                    : ApiFilterRunResult.Unauthorized;
+                return Task.FromResult(result);
+            }
         }
     }
 
