@@ -46,6 +46,13 @@ namespace LiteApi.Attributes
             _claimValues = claimValues;
         }
 
+        /// <summary>
+        /// Check if controller/action should be invoked or not. User must be and have claims with values in order for filter to pass.
+        /// </summary>
+        /// <param name="httpCtx">HTTP context</param>
+        /// <returns>
+        /// Should continue and if not which status code and message to set.
+        /// </returns>
         public override ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
         {
             var result = base.ShouldContinue(httpCtx);

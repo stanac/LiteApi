@@ -23,7 +23,15 @@ namespace LiteApi.Contracts.Models
         /// The URL start. Used to determine if request is matched to this controller.
         /// </value>
         internal string UrlStart { get; private set; }
-        
+
+        /// <summary>
+        /// Gets or sets the authentication policy store factory.
+        /// </summary>
+        /// <value>
+        /// The authentication policy store factory.
+        /// </value>
+        internal IAuthorizationPolicyStore AuthPolicyStore { get; set; } = LiteApiMiddleware.Options.AuthorizationPolicyStore;
+
         /// <summary>
         /// Gets or sets the route and name.
         /// </summary>
@@ -79,20 +87,22 @@ namespace LiteApi.Contracts.Models
         {
             if (Filters == null)
             {
-                var apiFilters = ControllerType
-                    .GetTypeInfo()
-                    .GetCustomAttributes()
+                var attributes = ControllerType.GetTypeInfo().GetCustomAttributes().ToArray();
+                var apiFilters = attributes
                     .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilter>()
                     .ToArray();
-                var asyncFilters = ControllerType
-                    .GetTypeInfo()
-                    .GetCustomAttributes()
+                var asyncFilters = attributes
                     .Where(x => typeof(IApiFilterAsync).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilterAsync>()
                     .ToArray();
+                var policyFilters = attributes
+                    .Where(x => typeof(IPolicyApiFilter).IsAssignableFrom(x.GetType()))
+                    .Cast<IPolicyApiFilter>()
+                    .ToArray();
                 Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
                     .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
+                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => AuthPolicyStore)))
                     .ToArray();
                 foreach (var action in Actions)
                 {

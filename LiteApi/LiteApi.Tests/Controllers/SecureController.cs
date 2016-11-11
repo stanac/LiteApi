@@ -1,9 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using LiteApi.Attributes;
-using LiteApi.Contracts.Abstractions;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
+﻿using LiteApi.Attributes;
 
 namespace LiteApi.Tests.Controllers
 {
@@ -33,36 +28,24 @@ namespace LiteApi.Tests.Controllers
             return 4;
         }
 
-        //[AuthorizeFilter(typeof(UserHasClaim1))]
-        //public int Get5()
-        //{
-        //    return 5;
-        //}
+        [RequiresAuthorizationPolicy("Over16")]
+        public int Get5()
+        {
+            return 5;
+        }
 
-        //[AuthorizeFilter(typeof(UserHasClaim2))]
-        //public int Get6()
-        //{
-        //    return 6;
-        //}
+        [RequiresAuthorizationPolicy("Over18")]
+        public int Get6()
+        {
+            return 6;
+        }
+
+        [RequiresClaimWithValues("claimType1", "true")]
+        [RequiresClaimWithValues("claimType2", "true")]
+        public int Get7()
+        {
+            return 7;
+        }
     }
 
-    //public class UserHasClaim1 : ICustomApiFilter
-    //{
-    //    public bool IsAsync => false;
-
-    //    public Func<HttpContext, bool> ShouldContinue =>
-    //        httpCtx => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false;
-
-    //    public Func<HttpContext, Task<bool>> ShouldContinueAsync => null;
-    //}
-
-    //public class UserHasClaim2 : ICustomApiFilter
-    //{
-    //    public bool IsAsync => true;
-
-    //    public Func<HttpContext, bool> ShouldContinue => null;
-
-    //    public Func<HttpContext, Task<bool>> ShouldContinueAsync
-    //        => httpCtx => Task.Run(() => httpCtx?.User?.Claims.Any(x => x.Type == "claimType1") ?? false);
-    //}
 }

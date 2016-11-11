@@ -1,8 +1,10 @@
-﻿using LiteApi.Services;
+﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
+using LiteApi.Services;
 using LiteApi.Services.ModelBinders;
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
@@ -48,7 +50,7 @@ namespace LiteApi.Tests
         public async Task SecureController_UserWithBothClaims_CanAccess()
         {
             var user = GetUserWithClaims("claimType1:true", "claimType2:true");
-            await AssertSecureControllerAccess(user, "Get3", 200);
+            await AssertSecureControllerAccess(user, "Get7", 200);
         }
 
         [Fact]
@@ -58,44 +60,53 @@ namespace LiteApi.Tests
         }
 
         [Fact]
-        public async Task SecureController_NoUser_CannotAccessActionWithCustomFilter()
+        public async Task SecureController_NoUser_CannotAccessActionWithCustomPolicy()
         {
-            await AssertSecureControllerAccess(null, "Get5", 401);
+            await AssertSecureControllerAccess(null, "Get6", 401);
         }
 
-        [Fact]
-        public async Task SecureController_NoUser_CannotAccessActionWithCustomAsyncFilter()
-        {
-            await AssertSecureControllerAccess(null, "Get5", 401);
-        }
-        
-        [Fact]
-        public async Task SecureController_UserWithoutClaims_CannotAccessActionWithCustomFilter()
-        {
-            await AssertSecureControllerAccess(GetUserWithClaims(), "Get5", 403);
-        }
+        //[Fact]
+        //public async Task SecureController_NoUser_CannotAccessActionWithCustomAsyncFilter()
+        //{
+        //    await AssertSecureControllerAccess(null, "Get5", 401);
+        //}
 
         [Fact]
-        public async Task SecureController_UserWithoutClaims_CannotAccessActionWithCustomAsyncFilter()
+        public async Task SecureController_UserWithoutClaims_CannotAccessActionWithCustomPolicy()
         {
-            await AssertSecureControllerAccess(GetUserWithClaims(), "Get5", 403);
+            await AssertSecureControllerAccess(GetUserWithClaims(), "Get5", 403, GetPolicyStore());
         }
 
-        [Fact]
-        public async Task SecureController_UserWithClaims_CannotAccessActionWithCustomFilter()
-        {
-            await AssertSecureControllerAccess(GetUserWithClaims("claimType1:true", "claimType2:true"), "Get5", 200);
-        }
+        //[Fact]
+        //public async Task SecureController_UserWithoutClaims_CannotAccessActionWithCustomAsyncFilter()
+        //{
+        //    await AssertSecureControllerAccess(GetUserWithClaims(), "Get5", 403);
+        //}
 
-        [Fact]
-        public async Task SecureController_UserWithClaims_CannotAccessActionWithCustomAsyncFilter()
-        {
-            await AssertSecureControllerAccess(GetUserWithClaims("claimType1:true", "claimType2:true"), "Get5", 200);
-        }
+        //[Fact]
+        //public async Task SecureController_UserWithClaims_CannotAccessActionWithCustomFilter()
+        //{
+        //    await AssertSecureControllerAccess(GetUserWithClaims("claimType1:true", "claimType2:true"), "Get5", 200);
+        //}
 
-        private async Task AssertSecureControllerAccess(ClaimsPrincipal user, string method, int expectedStatusCode)
+        //[Fact]
+        //public async Task SecureController_UserWithClaims_CannotAccessActionWithCustomAsyncFilter()
+        //{
+        //    await AssertSecureControllerAccess(GetUserWithClaims("claimType1:true", "claimType2:true"), "Get5", 200);
+        //}
+
+        private async Task AssertSecureControllerAccess(ClaimsPrincipal user, string method, int expectedStatusCode, IAuthorizationPolicyStore policyStore = null)
         {
             var ctrl = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.SecureController)).GetControllers(null).Single();
+            if (policyStore != null)
+            {
+                object[] methodCallProps = { policyStore };
+                typeof(ControllerContext)
+                    .GetTypeInfo()
+                    .GetProperty("AuthPolicyStore", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .SetMethod.Invoke(ctrl, methodCallProps);
+
+            }
             var actionCtx = ctrl.Actions.Single(x => string.Compare(method, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
             var invoker = new ActionInvoker(new ControllerBuilder(), new ModelBinderCollection(new JsonSerializer()));
             var httpCtx = new Fakes.FakeHttpContext();
@@ -127,7 +138,37 @@ namespace LiteApi.Tests
             return user;
         }
         
-        
+        private IAuthorizationPolicyStore GetPolicyStore()
+        {
+            IAuthorizationPolicyStore store = new AuthorizationPolicyStore();
+            store.SetPolicy("Over16", user =>
+            {
+                var claim = user.Claims.FirstOrDefault(x => x.Type == "age");
+                if (claim != null)
+                {
+                    int val;
+                    if (int.TryParse(claim.Value, out val))
+                    {
+                        return val >= 16;
+                    }
+                }
+                return false;
+            });
+            store.SetPolicy("Over16", user =>
+            {
+                var claim = user.Claims.FirstOrDefault(x => x.Type == "age");
+                if (claim != null)
+                {
+                    int val;
+                    if (int.TryParse(claim.Value, out val))
+                    {
+                        return val >= 16;
+                    }
+                }
+                return false;
+            });
+            return store;
+        }
     }
     
 }

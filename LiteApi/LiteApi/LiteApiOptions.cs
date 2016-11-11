@@ -1,7 +1,9 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace LiteApi
 {
@@ -10,7 +12,9 @@ namespace LiteApi
     /// </summary>
     public class LiteApiOptions
     {
-        internal List<IQueryModelBinder> AdditionalQueryModelBinders { get; private set; } = new List<IQueryModelBinder>();
+        internal List<IQueryModelBinder> AdditionalQueryModelBinders { get; } = new List<IQueryModelBinder>();
+
+        internal IAuthorizationPolicyStore AuthorizationPolicyStore = new AuthorizationPolicyStore();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.
@@ -91,12 +95,28 @@ namespace LiteApi
         /// Adds an additional query model binder.
         /// </summary>
         /// <param name="queryModelBinder">The query model binder.</param>
-        /// <returns></returns>
+        /// <returns>This instance</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
         public LiteApiOptions AddAdditionalQueryModelBinder(IQueryModelBinder queryModelBinder)
         {
             if (queryModelBinder == null) throw new System.ArgumentNullException(nameof(queryModelBinder));
             AdditionalQueryModelBinders.Add(queryModelBinder);
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the authorization policy.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="policy">The policy</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions AddAuthorizationPolicy(string name, Func<ClaimsPrincipal, bool> policy)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("name cannot be null or empty or whitespace");
+            if (policy == null) throw new ArgumentNullException(nameof(policy));
+
+            AuthorizationPolicyStore.SetPolicy(name, policy);
+
             return this;
         }
     }

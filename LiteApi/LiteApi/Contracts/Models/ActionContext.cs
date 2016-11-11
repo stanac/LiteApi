@@ -109,18 +109,23 @@ namespace LiteApi.Contracts.Models
         {
             if (Filters == null)
             {
-                var apiFilters = Method
-                    .GetCustomAttributes()
+                var attribs = Method.GetCustomAttributes().ToArray();
+                var apiFilters = attribs
                     .Where(x => typeof(IApiFilter).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilter>()
                     .ToArray();
-                var asyncFilters = Method
-                    .GetCustomAttributes()
+                var asyncFilters = attribs
                     .Where(x => typeof(IApiFilterAsync).IsAssignableFrom(x.GetType()))
                     .Cast<IApiFilterAsync>()
                     .ToArray();
+                var policyFilters = attribs
+                    .Where(x => typeof(IPolicyApiFilter).IsAssignableFrom(x.GetType()))
+                    .Cast<IPolicyApiFilter>()
+                    .ToArray();
+
                 Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
                     .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
+                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => ParentController.AuthPolicyStore)))
                     .ToArray();
 
                 SkipAuth = Method
