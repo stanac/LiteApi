@@ -1,0 +1,31 @@
+﻿body {
+    font-family: sans-serif;
+}
+
+button {
+    margin: 5px;
+}
+
+pre {
+    background-color: #DDD;
+    overflow: auto;
+    max-height: 500px;
+}
+
+.code {
+    float: left;
+    width: 49%;
+    margin: 5px;
+}
+
+.clear {
+    clear: both;
+}
+
+button {
+    background: darkcyan;
+    border-width: 0;
+    padding: 8px;
+    color: white;
+    cursor: pointer;
+}

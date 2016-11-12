@@ -196,13 +196,13 @@ namespace LiteApi.Tests
         [Fact]
         public async Task SecureController_UserWithClaimWithOneValue_CanAccessRequiresClaimWithAnyValue()
         {
-            await AssertSecureControllerAccess(GetUserWithClaims("claim1:value1"), "Get13", 200);
+            await AssertSecureControllerAccess(GetUserWithClaims("customClaim1:value1"), "Get13", 200);
         }
 
         [Fact]
         public async Task SecureController_UserWithClaimWithTwoValues_CanAccessRequiresClaimWithAnyValue()
         {
-            await AssertSecureControllerAccess(GetUserWithClaims("claim1:value1", "claim1:value2"), "Get13", 200);
+            await AssertSecureControllerAccess(GetUserWithClaims("customClaim1:value1", "claim1:value2"), "Get13", 200);
         }
 
         private async Task AssertSecureControllerAccess(ClaimsPrincipal user, string method, int expectedStatusCode, IAuthorizationPolicyStore policyStore = null)

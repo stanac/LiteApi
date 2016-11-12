@@ -45,6 +45,7 @@ namespace LiteApi.AuthSample.Controllers
         private ClaimsPrincipal GetUser(bool addClaims, bool addRoles)
         {
             List<Claim> claims = new List<Claim>();
+            claims.Add(new Claim("Age", "23"));
             claims.Add(new Claim(ClaimTypes.Name, "Asimov"));
             claims.Add(new Claim(ClaimTypes.Upn, "Asimov"));
             claims.Add(new Claim(ClaimTypes.Email, "asimov@example.com"));

@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.Text.Encodings.Web;
+using System.Linq;
 
 namespace LiteApi.AuthSample
 {
@@ -33,7 +34,13 @@ namespace LiteApi.AuthSample
 
             app.UseStaticFiles();
 
-            app.UseLiteApi();
+            app.UseLiteApi(LiteApiOptions.Default
+                .AddAuthorizationPolicy("AgeOver18", user =>
+                {
+                    // extension method, you would need to add "using LiteApi;" to use it.
+                    var value = user.Claims.GetFirstNullableInt("Age");
+                    return value.HasValue && value.Value >= 18;
+                }));
 
             app.Use(next => async context =>
             {

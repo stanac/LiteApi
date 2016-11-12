@@ -82,7 +82,7 @@ namespace LiteApi.Tests.Controllers
             return 12;
         }
 
-        [RequiresClaimWithAnyValue("claim1", "value1", "value2")]
+        [RequiresClaimWithAnyValue("customClaim1", "value1", "value2")]
         public int Get13()
         {
             return 13;

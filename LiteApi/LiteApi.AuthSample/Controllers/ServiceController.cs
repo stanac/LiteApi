@@ -1,12 +1,8 @@
 ﻿using LiteApi.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LiteApi.AuthSample.Controllers
 {
-    
+    [LiteApi.Attributes.RequiresAuthentication]
     public class ServiceController : LiteController
     {
         [LiteApi.Attributes.SkipFilters]
@@ -16,29 +12,34 @@ namespace LiteApi.AuthSample.Controllers
         }
         
         // authorized by controller filter
-        public string ProtectedWithoutSpecialRolesOrClaims()
+        public string ProtectedWithoutRolesOrClaims()
         {
-            return "Success: " + nameof(ProtectedWithoutSpecialRolesOrClaims);
+            return "Success: " + nameof(ProtectedWithoutRolesOrClaims);
         }
 
-        
-        public string ProtectedWithSpecialRoles()
+        [RequiresRoles("admin", "contentCreator")]
+        // [RequiresAnyRole("role1", "role2")]
+        public string ProtectedWithRoles()
         {
-            return "Success: " + nameof(ProtectedWithSpecialRoles);
+            return "Success: " + nameof(ProtectedWithRoles);
         }
 
-        
-        public string ProtectedWithSpecialClaims()
+        [RequiresClaims("customClaimType1", "customClaimType2")]
+        // [RequiresAnyClaim("claim1", "claim2")]
+        // [RequiresClaimWithAnyValue("claim1", "value1", "value2")]
+        // [RequiresClaimWithValues("claim1", "value1", "value2")]
+        public string ProtectedWithClaims()
         {
-            return "Success: " + nameof(ProtectedWithSpecialClaims);
+            return "Success: " + nameof(ProtectedWithClaims);
         }
 
-        public string ProtectedWithSpecialRolesAndClaims()
+        [RequiresAuthorizationPolicy("AgeOver18")] // policy is defined in Startup.cs
+        public string ProtectedWithCustomPolicy()
         {
-            return "Success: " + nameof(ProtectedWithSpecialRolesAndClaims);
+            return "Success: " + nameof(ProtectedWithCustomPolicy);
         }
 
-        [HttpPost]
+        [HttpPost] // authorized by controller filter
         public string ProtectedPostRequest()
         {
             return "Success: " + nameof(ProtectedPostRequest);

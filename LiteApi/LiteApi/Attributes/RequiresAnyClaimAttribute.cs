@@ -27,7 +27,7 @@ namespace LiteApi.Attributes
                 throw new ArgumentException("Claims cannot be null or empty or white space.");
             }
 
-            _claims = claims.Select(x => x.ToLower()).ToArray();
+            _claims = claims;
         }
 
 

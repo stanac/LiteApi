@@ -18,7 +18,10 @@ $(function () {
         catch (m) {
             json = xhr.responseText;
         }
-        $('#preResponse').text(json);
+        var text = 'status code: ' + xhr.status + '\n\n';
+        text += json || "undefined";
+
+        $('#preResponse').text(text);
     });
 
     function get(url) {
@@ -29,9 +32,13 @@ $(function () {
     }
 
     $('#public').click(function() {
-        get('/api/service/public')
+        get('/api/service/Public')
     });
 
+    $('#protected1').click(function () {
+        get('/api/service/ProtectedWithoutRolesOrClaims')
+    });
+    
     $('#check, #logout, [id^="login"]').each(function() {
         var el = $(this);
         el.click(function() {
@@ -39,4 +46,18 @@ $(function () {
         });
     });
 
+    $('#protected2, #protected3, #protected4').each(function () {
+        var el = $(this);
+        el.click(function () {
+            var url = '/api/service/' + el.text().replace(/\s/g, '');
+            get(url);
+        });
+    });
+
+    $('#post_protected').click(function () {
+        $.ajax({
+            url: '/api/service/ProtectedPostRequest',
+            type: 'POST'
+        });
+    });
 });

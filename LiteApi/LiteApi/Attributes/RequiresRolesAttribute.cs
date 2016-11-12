@@ -27,7 +27,7 @@ namespace LiteApi.Attributes
                 throw new ArgumentException("Role cannot be null or empty or white space.");
             }
 
-            _roles = roles.Select(x => x.ToLower()).ToArray();
+            _roles = roles;
         }
 
         /// <summary>
