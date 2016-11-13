@@ -22,6 +22,7 @@ namespace LiteApi.Tests.Controllers
             return 1;
         }
         
+        [RequiresAuthorizationPolicy("NonExistingPolicy")]
         [ActionRoute("{param1}/{param2}/{param3}")]
         public int NoConstantSegments(int param1, int param2, int param3)
         {
@@ -29,6 +30,7 @@ namespace LiteApi.Tests.Controllers
         }
     }
 
+    [RequiresAuthorizationPolicy("NonExistingPolicy2")]
     public class TwoController : LiteController
     {
         [HttpPost]

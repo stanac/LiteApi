@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
+using System.Reflection;
 
 namespace LiteApi.Services.Validators
 {
@@ -13,16 +14,20 @@ namespace LiteApi.Services.Validators
     public class ControllersValidator : IControllersValidator
     {
         private readonly IActionsValidator _actionValidator;
+        private readonly IAuthorizationPolicyStore _policyStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllersValidator"/> class.
         /// </summary>
         /// <param name="actionValidator">The action validator.</param>
+        /// <param name="policyStore">Authorization policy store.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ControllersValidator(IActionsValidator actionValidator)
+        public ControllersValidator(IActionsValidator actionValidator, IAuthorizationPolicyStore policyStore)
         {
+            if (policyStore == null) throw new ArgumentNullException(nameof(policyStore));
             if (actionValidator == null) throw new ArgumentNullException(nameof(actionValidator));
             _actionValidator = actionValidator;
+            _policyStore = policyStore;
         }
 
         /// <summary>
@@ -38,11 +43,26 @@ namespace LiteApi.Services.Validators
                 {
                     yield return $"There are more than one controller with matching name: {ctrl.RouteAndName}";
                 }
+                foreach (string missingPolicy in GetMissingAuthorizationPolicies(ctrl))
+                {
+                    yield return $"Authorization policy {missingPolicy} is defined on controller {ctrl.RouteAndName} but it's not registered within middleware."
+                        + " Use LiteApiOptions.AddAuthorizationPolicy to register authorization policy when registering middleware.";
+                }
                 foreach (string error in _actionValidator.GetValidationErrors(ctrl.Actions))
                 {
                     yield return error;
                 }
             }
+        }
+
+        private IEnumerable<string> GetMissingAuthorizationPolicies(ControllerContext ctrlCtx)
+        {
+            return ctrlCtx
+                .ControllerType
+                .GetTypeInfo()
+                .GetAttributesAs<IPolicyApiFilter>()
+                .Select(x => x.PolicyName)
+                .Where(x => _policyStore.GetPolicy(x) == null);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -24,6 +25,20 @@ namespace LiteApi
                 nullableArgument = info.GetGenericArguments().Single();
             }
             return isNullable;
+        }
+
+        /// <summary>
+        /// Gets custom attributes where T is assignable to the attribute and cast them to T.
+        /// </summary>
+        /// <typeparam name="T">They to check and cast</typeparam>
+        /// <param name="mi">Member info.</param>
+        /// <returns></returns>
+        public static IEnumerable<T> GetAttributesAs<T>(this MemberInfo mi)
+        {
+            return mi
+                .GetCustomAttributes()
+                .Where(x => typeof(T).IsAssignableFrom(x.GetType()))
+                .Cast<T>();
         }
     }
 }

@@ -127,7 +127,8 @@ namespace LiteApi
             
             _actionInvoker = new ActionInvoker(ctrlBuilder, modelBinder);
 
-            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var authPolicyStore = Options.AuthorizationPolicyStore;
+            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator(), authPolicyStore), authPolicyStore);
             var errors = validator.GetValidationErrors(ctrlContexts.ToArray()).ToArray();
             if (errors.Any())
             {

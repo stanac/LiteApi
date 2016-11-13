@@ -62,11 +62,23 @@ namespace LiteApi.Tests
         }
 
         [Fact]
+        public void Validators_ControllerWithNotRegisteredAuthPolicy_ReturnsError()
+        {
+            AssertErrorMessage("Authorization policy NonExistingPolicy2 is defined on controller api/two but");
+        }
+        
+        [Fact]
+        public void Validators_ActionWithNotRegisteredAuthPolicy_ReturnsError()
+        {
+            AssertErrorMessage("has defined authorization policy NonExistingPolicy which is not registered within middleware");
+        }
+
+        [Fact]
         public void Validators_GenericArrayAndListParameters_AreAcceptable()
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrls = discoverer.GetControllers(null);
-            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var validator = GetCtrlValidator();
             var errors = validator.GetValidationErrors(ctrls).ToArray();
             Assert.Empty(errors);
         }
@@ -76,7 +88,7 @@ namespace LiteApi.Tests
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.InvalidCollectionsController));
             var ctrls = discoverer.GetControllers(null);
-            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var validator = GetCtrlValidator();
             var errors = validator.GetValidationErrors(ctrls).ToArray();
             Assert.Equal(3, errors.Length);
             Assert.True(errors.Any(x => x.Contains("InvalidCollectionsGet1".ToLower())));
@@ -88,9 +100,17 @@ namespace LiteApi.Tests
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.Two), typeof(Controllers.TwoController));
             var ctrls = discoverer.GetControllers(null);
-            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator()));
+            var validator = GetCtrlValidator();
             var errors = validator.GetValidationErrors(ctrls).ToArray();
             Assert.True(errors.Any(x => x.Contains(errorMsg)));
+        }
+
+        private ControllersValidator GetCtrlValidator()
+        {
+            var store = new AuthorizationPolicyStore();
+            var paramValidator = new ParametersValidator();
+            var actionValidator = new ActionsValidator(paramValidator, store);
+            return new ControllersValidator(actionValidator, store);
         }
     }
 }

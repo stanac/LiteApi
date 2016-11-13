@@ -12,6 +12,14 @@ namespace LiteApi.Contracts.Abstractions
     public interface IPolicyApiFilter
     {
         /// <summary>
+        /// Gets the name of the policy.
+        /// </summary>
+        /// <value>
+        /// The name of the policy.
+        /// </value>
+        string PolicyName { get; }
+
+        /// <summary>
         /// Checks if user meets authorization policy
         /// </summary>
         /// <param name="user">The user.</param>
