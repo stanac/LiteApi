@@ -91,7 +91,7 @@ namespace LiteApi.Services.ModelBinders
             {
                 if (param.ParameterSource == ParameterSources.Query)
                 {
-                    var binder = _binders.First(x => x.DoesSupportType(param.Type));
+                    var binder = _binders.FirstOrDefault(x => x.DoesSupportType(param.Type));
                     if (binder != null)
                     {
                         args.Add(binder.ParseParameterValue(request, actionCtx, param));
