@@ -4,7 +4,8 @@
   "dependencies": {
     "LiteApi": "*",
     "NETStandard.Library": "1.6.0",
-    "xunit": "2.2.0-beta2-build3300"
+    "xunit": "2.2.0-beta2-build3300",
+    "Moq":  "4.6.38-alpha"
   },
   "tools": {
     "OpenCover": "4.6.519"
