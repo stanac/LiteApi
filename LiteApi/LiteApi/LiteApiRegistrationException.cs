@@ -16,7 +16,7 @@ namespace LiteApi
         /// <value>
         /// The errors.
         /// </value>
-        public string[] Errors { get; private set; }
+        public string[] Errors { get; private set; } = new string[0];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiRegistrationException"/> class.
