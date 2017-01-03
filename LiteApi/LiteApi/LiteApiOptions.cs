@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -31,15 +32,7 @@ namespace LiteApi
         /// The controller assemblies.
         /// </value>
         public List<Assembly> ControllerAssemblies { get; } = new List<Assembly>();
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to enable logging
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if logging should be enabled, otherwise <c>false</c>.
-        /// </value>
-        public bool EnableLogging { get; set; }
-
+        
         /// <summary>
         /// Gets the default.
         /// </summary>
@@ -55,6 +48,14 @@ namespace LiteApi
         /// The JSON serializer. Implementation of <see cref="IJsonSerializer"/>
         /// </value>
         public IJsonSerializer JsonSerializer { get; private set; } = new JsonSerializer();
+
+        /// <summary>
+        /// Gets the logger factory.
+        /// </summary>
+        /// <value>
+        /// The logger factory.
+        /// </value>
+        public ILoggerFactory LoggerFactory { get; private set; }
 
         /// <summary>
         /// Sets the JSON serializer.
@@ -79,18 +80,7 @@ namespace LiteApi
             ControllerAssemblies.AddRange(controllerAssemblies);
             return this;
         }
-
-        /// <summary>
-        /// Sets the enable logging.
-        /// </summary>
-        /// <param name="enabled">if set to <c>true</c> logging will be enabled.</param>
-        /// <returns>This instance</returns>
-        public LiteApiOptions SetEnableLogging(bool enabled)
-        {
-            EnableLogging = enabled;
-            return this;
-        }
-
+        
         /// <summary>
         /// Adds an additional query model binder.
         /// </summary>
@@ -117,6 +107,19 @@ namespace LiteApi
 
             AuthorizationPolicyStore.SetPolicy(name, policy);
 
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the logger factory.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException"></exception>
+        public LiteApiOptions SetLoggerFactory(ILoggerFactory loggerFactory)
+        {
+            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
+            LoggerFactory = loggerFactory;
             return this;
         }
     }

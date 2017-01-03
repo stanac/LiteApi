@@ -22,7 +22,7 @@ namespace LiteApi.Demo
             }
             app.UseStaticFiles();
 
-            app.UseLiteApi();
+            app.UseLiteApi(LiteApiOptions.Default.SetLoggerFactory(loggerFactory));
         }
     }
 }

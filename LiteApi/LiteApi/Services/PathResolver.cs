@@ -5,6 +5,7 @@ using LiteApi.Contracts.Models;
 using System.Collections.Generic;
 using System.Linq;
 using LiteApi.Contracts.Models.ActionMatchingByParameters;
+using Microsoft.Extensions.Logging;
 
 namespace LiteApi.Services
 {
@@ -25,6 +26,7 @@ namespace LiteApi.Services
         public PathResolver(ControllerContext[] controllers)
         {
             if (controllers == null) throw new ArgumentNullException(nameof(controllers));
+
             _controllerContrxts = controllers;
             foreach (var ctrl in _controllerContrxts)
             {
@@ -36,13 +38,19 @@ namespace LiteApi.Services
         /// Resolves which action (if any) should be invoked for given HTTP request.
         /// </summary>
         /// <param name="request">The HTTP request.</param>
+        /// <param name="logger">Logger to use, can be null</param>
         /// <returns>ActionContext that should be invoked.</returns>
-        public ActionContext ResolveAction(HttpRequest request)
+        public ActionContext ResolveAction(HttpRequest request, ILogger logger = null)
         {
-            var actions = GetActionsForPathAndMethod(request).ToArray();
-            if (actions.Length == 1) return actions[0];
+            logger?.LogInformation($"Resolving action for request");
+            ActionContext[] actions = GetActionsForPathAndMethod(request).ToArray();
+            if (actions.Length == 1)
+            {
+                logger?.LogInformation($"Single action found: {actions[0]}");
+                return actions[0];
+            }
             if (actions.Length == 0) return null;
-            return ResolveActionContextByQueryParameterTypes(request, actions);
+            return ResolveActionContextByQueryParameterTypes(request, actions, logger);
         }
 
         private IEnumerable<ActionContext> GetActionsForPathAndMethod(HttpRequest request)
@@ -60,13 +68,19 @@ namespace LiteApi.Services
             }
         }
         
-        private ActionContext ResolveActionContextByQueryParameterTypes(HttpRequest request, ActionContext[] actions)
+        private ActionContext ResolveActionContextByQueryParameterTypes(HttpRequest request, ActionContext[] actions, ILogger logger)
         {
+            logger?.LogInformation("Resolving action by parameters overload");
             PossibleParameterType[] paramTypes = request.GetPossibleParameterTypes().ToArray();
             var actionsWithWeight = actions.Select(action => ActionMatchingWeight.CalculateWeight(action, paramTypes))
                 .OrderByDescending(x => x.Weight)
                 .ToArray();
-            return actionsWithWeight.FirstOrDefault()?.ActionCtx;
+            var foundAction = actionsWithWeight.FirstOrDefault()?.ActionCtx;
+            if (foundAction != null)
+            {
+                logger?.LogInformation($"Found action by parameter overload: {foundAction}");
+            }
+            return foundAction;
         }
         
         private bool ActionMethodMatches(ActionContext action, HttpRequest request) 

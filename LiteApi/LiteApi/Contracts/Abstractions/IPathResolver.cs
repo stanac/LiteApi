@@ -1,5 +1,6 @@
 ﻿using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace LiteApi.Contracts.Abstractions
 {
@@ -12,7 +13,8 @@ namespace LiteApi.Contracts.Abstractions
         /// Resolves which action (if any) should be invoked for given HTTP request.
         /// </summary>
         /// <param name="request">The HTTP request.</param>
+        /// <param name="logger">Logger to use for logging</param>
         /// <returns>ActionContext that should be invoked.</returns>
-        ActionContext ResolveAction(HttpRequest request);
+        ActionContext ResolveAction(HttpRequest request, ILogger logger);
     }
 }

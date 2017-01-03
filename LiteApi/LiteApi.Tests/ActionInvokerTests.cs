@@ -67,13 +67,13 @@ namespace LiteApi.Tests
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
-            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"));
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"), null);
             string body = ctx.Response.ReadBody();
             Assert.Equal("\"ABC\"", body);
 
             ctx = new Fakes.FakeHttpContext();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "zxc");
-            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"));
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"), null);
             body = ctx.Response.ReadBody();
             Assert.Equal("\"ZXC\"", body);
         }
@@ -88,7 +88,7 @@ namespace LiteApi.Tests
                 );
             var ctx = new Fakes.FakeHttpContext();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
-            await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod));
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod), null);
             string body = ctx.Response.ReadBody();
             Assert.Equal(expectedResult, body);
         }
@@ -104,7 +104,7 @@ namespace LiteApi.Tests
             var ctx = new Fakes.FakeHttpContext();
             ctx.Request.Method = actionMethod.ToString().ToLower();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
-            await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod));
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod), null);
             Assert.Equal(expectedCode, ctx.Response.StatusCode);
         }
     }

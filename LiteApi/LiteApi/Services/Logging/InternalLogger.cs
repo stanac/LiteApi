@@ -13,6 +13,14 @@ namespace LiteApi.Services
         readonly ILogger _logger;
 
         /// <summary>
+        /// Gets a value indicating whether logging is enabled at middleware level.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance logging is enabled at middleware level; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEnabledForMiddleware { get { return _isEnabled; } }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="InternalLogger"/> class.
         /// </summary>
         /// <param name="isEnabled">if set to <c>true</c> logging is enabled.</param>
@@ -62,7 +70,7 @@ namespace LiteApi.Services
         /// <param name="state">The entry to be written. Can be also an object.</param>
         /// <param name="exception">The exception related to this entry.</param>
         /// <param name="formatter">Function to create a <c>string</c> message of the <paramref name="state" /> and <paramref name="exception" />.</param>
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public virtual void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (_isEnabled)
             {

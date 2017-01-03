@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -28,6 +29,7 @@ namespace LiteApi.Services
         /// </summary>
         /// <param name="controllerBuilder">The controller builder.</param>
         /// <param name="modelBinder">The model binder.</param>
+        
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
         public ActionInvoker(IControllerBuilder controllerBuilder, IModelBinder modelBinder)
@@ -43,35 +45,43 @@ namespace LiteApi.Services
         /// </summary>
         /// <param name="httpCtx">The HTTP context, set by the middleware.</param>
         /// <param name="actionCtx">The action context.</param>
+        /// <param name="logger">Logger to use, can be null</param>
         /// <returns></returns>
-        public virtual async Task Invoke(HttpContext httpCtx, ActionContext actionCtx)
+        public virtual async Task Invoke(HttpContext httpCtx, ActionContext actionCtx, ILogger logger = null)
         {
+            logger?.LogInformation("Checking filters");
             ApiFilterRunResult filterResult = await RunFiltersAndCheckIfShouldContinue(httpCtx, actionCtx);
+            logger?.LogInformation($"Checking filters completed, can invoke: {filterResult.ShouldContinue}");
 
             if (!filterResult.ShouldContinue)
             {
+                int failedStatusCode = 0;
                 if (filterResult.SetResponseCode.HasValue)
                 {
-                    httpCtx.Response.StatusCode = filterResult.SetResponseCode.Value;
+                    failedStatusCode = filterResult.SetResponseCode.Value;
                 }
                 else
                 {
                     bool isAuthenticated = httpCtx?.User?.Identity?.IsAuthenticated ?? false;
                     if (!isAuthenticated)
                     {
-                        httpCtx.Response.StatusCode = 401;
+                        failedStatusCode = 401;
                     }
                     else
                     {
-                        httpCtx.Response.StatusCode = 403;
+                        failedStatusCode = 403;
                     }
                 }
+                httpCtx.Response.StatusCode = failedStatusCode;
+                logger?.LogInformation($"returning response with status code: {failedStatusCode}");
                 return;
             }
 
+            logger?.LogInformation($"Building controller: {actionCtx.ParentController}");
             LiteController ctrl = _controllerBuilder.Build(actionCtx.ParentController, httpCtx);
             object[] paramValues = _modelBinder.GetParameterValues(httpCtx.Request, actionCtx);
-
+            logger?.LogInformation($"Building controller succeeded: {actionCtx.ParentController}");
+            logger?.LogInformation($"Invoking action: {actionCtx}");
             object result = null;
             bool isVoid = true;
             if (actionCtx.Method.ReturnType == typeof(void))
@@ -107,8 +117,13 @@ namespace LiteApi.Services
             httpCtx.Response.StatusCode = statusCode;
             if (!isVoid)
             {
+                logger?.LogInformation("Serializing result from invoked action");
                 httpCtx.Response.ContentType = "application/json";
                 await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+            }
+            else
+            {
+                logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
             }
         }
 
