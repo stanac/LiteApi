@@ -17,7 +17,7 @@ namespace LiteApi
         /// <returns>value if found and parsed otherwise null</returns>
         public static int? GetFirstNullableInt(this IEnumerable<Claim> claims, string claimType)
         {
-            var claim = claims.First(x => x.Type == claimType);
+            var claim = claims.FirstOrDefault(x => x.Type == claimType);
             if (claim != null)
             {
                 int val;
@@ -37,7 +37,7 @@ namespace LiteApi
         /// <returns>value if found otherwise null</returns>
         public static string GetFirstAsString(this IEnumerable<Claim> claims, string claimType)
         {
-            var claim = claims.First(x => x.Type == claimType);
+            var claim = claims.FirstOrDefault(x => x.Type == claimType);
             if (claim != null)
             {
                 return claim.Value;
