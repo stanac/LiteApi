@@ -15,7 +15,7 @@ namespace LiteApi
     {
         internal List<IQueryModelBinder> AdditionalQueryModelBinders { get; } = new List<IQueryModelBinder>();
 
-        internal IAuthorizationPolicyStore AuthorizationPolicyStore = new AuthorizationPolicyStore();
+        internal IAuthorizationPolicyStore AuthorizationPolicyStore { get; } = new AuthorizationPolicyStore();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.
