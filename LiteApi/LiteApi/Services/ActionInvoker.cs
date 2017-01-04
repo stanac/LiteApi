@@ -63,13 +63,13 @@ namespace LiteApi.Services
                 else
                 {
                     bool isAuthenticated = httpCtx?.User?.Identity?.IsAuthenticated ?? false;
-                    if (!isAuthenticated)
+                    if (isAuthenticated)
                     {
-                        failedStatusCode = 401;
+                        failedStatusCode = 403;
                     }
                     else
                     {
-                        failedStatusCode = 403;
+                        failedStatusCode = 401;
                     }
                 }
                 httpCtx.Response.StatusCode = failedStatusCode;
@@ -115,15 +115,15 @@ namespace LiteApi.Services
 
             }
             httpCtx.Response.StatusCode = statusCode;
-            if (!isVoid)
+            if (isVoid)
+            {
+                logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
+            }
+            else
             {
                 logger?.LogInformation("Serializing result from invoked action");
                 httpCtx.Response.ContentType = "application/json";
                 await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
-            }
-            else
-            {
-                logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
             }
         }
 

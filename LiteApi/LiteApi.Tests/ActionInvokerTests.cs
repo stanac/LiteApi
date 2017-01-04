@@ -1,7 +1,10 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
 using LiteApi.Services.ModelBinders;
+using LiteApi.Tests.ModelSetup;
+using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -9,6 +12,45 @@ namespace LiteApi.Tests
 {
     public class ActionInvokerTests
     {
+        [Fact]
+        public void ActionInvoker_NullArguments_ThrowException()
+        {
+            bool error = false;
+            try
+            {
+
+                var a = new ActionInvoker(null, new ModelBinderCollection(new JsonSerializer()));
+            }
+            catch (ArgumentNullException)
+            {
+                error = true;
+            }
+            Assert.True(error);
+
+            error = false;
+            try
+            {
+                var a = new ActionInvoker(new ControllerBuilder(), null);
+            }
+            catch (ArgumentNullException)
+            {
+                error = true;
+            }
+            Assert.True(error);
+        }
+
+        [Fact]
+        public async Task ActionInvoker_UnautheticatedUser_CanSetMissingStatusCode()
+        {
+            await AssertNotSetResponseCode(new ClaimsPrincipal(), ApiFilterRunResult.Unauthenticated.SetResponseCode.Value);
+        }
+
+        [Fact]
+        public async Task ActionInvoker_UnauthorizedUser_CanSetMissingStatusCode()
+        {
+            await AssertNotSetResponseCode(UserSetup.GetUser(), ApiFilterRunResult.Unauthorized.SetResponseCode.Value);
+        }
+
         [Fact]
         public async Task ActionInvoker_GetMethod_ReturnsResult()
         {
@@ -78,6 +120,45 @@ namespace LiteApi.Tests
             Assert.Equal("\"ZXC\"", body);
         }
 
+        [Fact]
+        public async Task ActionInvoker_InvokeVoid_CanInvoke()
+        {
+            await AssertResponseBody("VoidAction", "");
+        }
+
+        [Fact]
+        public async Task ActionInvoker_InvokeTask_CanInvoke()
+        {
+            await AssertResponseBody("TaskAction", "");
+        }
+
+        [Fact]
+        public async Task ActionInvoker_InvokeIntTask_CanInvoke()
+        {
+            await AssertResponseBody("IntTaskAction", "1");
+        }
+
+        [Fact]
+        public async Task ActionInvoker_InvokeInt_CanInvoke()
+        {
+            await AssertResponseBody("IntAction", "1");
+        }
+
+        private async Task AssertResponseBody(string actionName, string expectedResult)
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentMethodTypesController));
+            var controller = discoverer.GetControllers(null).Single();
+            IActionInvoker invoker = new ActionInvoker(
+                new ControllerBuilder(),
+                new ModelBinderCollection(new JsonSerializer())
+                );
+            var ctx = new Fakes.FakeHttpContext();
+            (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
+            await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == actionName.ToLower()), null);
+            string body = ctx.Response.ReadBody();
+            Assert.Equal(expectedResult, body);
+        }
+
         private async Task AssertResponseBody(Contracts.Models.SupportedHttpMethods actionMethod, string expectedResult)
         {
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentHttpMethodsController));
@@ -106,6 +187,22 @@ namespace LiteApi.Tests
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
             await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod), null);
             Assert.Equal(expectedCode, ctx.Response.StatusCode);
+        }
+
+        private async Task AssertNotSetResponseCode(ClaimsPrincipal user, int expectedStatusCode)
+        {
+            IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.SecureController2));
+            var controller = discoverer.GetControllers(null).Single();
+            IActionInvoker invoker = new ActionInvoker(
+                new ControllerBuilder(),
+                new ModelBinderCollection(new JsonSerializer())
+                );
+            var httpCtx = new Fakes.FakeHttpContext();
+            httpCtx.User = user;
+            var action = controller.Actions.First(x => x.Name == "get14");
+            await invoker.Invoke(httpCtx, action, null);
+            int statusCode = httpCtx.Response.StatusCode;
+            Assert.Equal(expectedStatusCode, statusCode);
         }
     }
 }

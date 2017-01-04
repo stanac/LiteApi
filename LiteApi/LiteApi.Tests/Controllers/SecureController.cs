@@ -87,7 +87,7 @@ namespace LiteApi.Tests.Controllers
         {
             return 13;
         }
-
+        
         [AttributeUsage(AttributeTargets.Method)]
         private class UserHasAnyTwoClaimsFilterAttribute : Attribute, IApiFilter
         {
