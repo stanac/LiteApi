@@ -17,15 +17,7 @@ namespace LiteApi.Contracts.Models
         internal Type _type;
         private static Type[] _supportedTypesFromUrl;
         private static readonly ModelBinderCollection _modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
-
-        /// <summary>
-        /// Gets or sets the JSON serializer factory.
-        /// </summary>
-        /// <value>
-        /// The JSON serializer factory.
-        /// </value>
-        public static Func<IJsonSerializer> ResolveJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameter"/> class.
         /// </summary>
@@ -125,19 +117,6 @@ namespace LiteApi.Contracts.Models
                 return !_modelBinder.DoesSupportType(Type, ParameterSources.Query);
             }
         }
-        
-        /// <summary>
-        /// Gets the supported types.
-        /// </summary>
-        /// <returns>Collection of supported <see cref="Type"/> from URL</returns>
-        public static IEnumerable<Type> GetSupportedTypesFromUrl()
-        {
-            if (_supportedTypesFromUrl == null)
-            {
-                _supportedTypesFromUrl = new ModelBinderCollection(new Services.JsonSerializer()).GetSupportedTypesFromUrl().ToArray();
-            }
-            return _supportedTypesFromUrl.Select(x => x);
-        }
-        
+                
     }
 }
