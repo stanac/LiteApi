@@ -22,6 +22,7 @@ namespace LiteApi.Attributes
         public RequiresClaimsAttribute(params string[] claims)
         {
             if (claims == null) throw new ArgumentNullException(nameof(claims));
+            if (claims.Length == 0) throw new ArgumentException("Claims array is empty.");
             if (claims.Any(string.IsNullOrWhiteSpace))
             {
                 throw new ArgumentException("Claims cannot be null or empty or white space.");

@@ -79,6 +79,7 @@ namespace LiteApi.Tests.FilterTests
             var user = new ClaimsPrincipal();
             var policyStore = UserSetup.GetPolicyStore();
             var shouldContinue = attr.ShouldContinue(user, () => policyStore);
+            Assert.False(shouldContinue.ShouldContinue);
             Assert.Equal(ApiFilterRunResult.Unauthenticated.SetResponseCode, shouldContinue.SetResponseCode);
         }
 
@@ -90,6 +91,7 @@ namespace LiteApi.Tests.FilterTests
             var policyStore = UserSetup.GetPolicyStore();
             policyStore.SetPolicy("policy", u => false);
             var shouldContinue = attr.ShouldContinue(user, () => policyStore);
+            Assert.False(shouldContinue.ShouldContinue);
             Assert.Equal(ApiFilterRunResult.Unauthorized.SetResponseCode, shouldContinue.SetResponseCode);
         }
         
