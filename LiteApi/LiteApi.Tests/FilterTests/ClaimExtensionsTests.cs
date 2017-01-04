@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using Xunit;
 
-namespace LiteApi.Tests
+namespace LiteApi.Tests.FilterTests
 {
     public class ClaimExtensionsTests
     {

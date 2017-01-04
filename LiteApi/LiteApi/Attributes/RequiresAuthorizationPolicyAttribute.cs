@@ -47,6 +47,10 @@ namespace LiteApi.Attributes
                 return ApiFilterRunResult.Unauthenticated;
             }
             var policy = policyStoreFactory().GetPolicy(PolicyName);
+            if (policy == null)
+            {
+                throw new Exception($"Policy with name {PolicyName} not found");
+            }
             return policy(user)
                 ? ApiFilterRunResult.Continue
                 : ApiFilterRunResult.Unauthorized;
