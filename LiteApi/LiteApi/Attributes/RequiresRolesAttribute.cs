@@ -22,7 +22,7 @@ namespace LiteApi.Attributes
         public RequiresRolesAttribute(params string[] roles)
         {
             if (roles == null) throw new ArgumentNullException(nameof(roles));
-            if (roles.Any(string.IsNullOrWhiteSpace))
+            if (roles.Any(string.IsNullOrWhiteSpace) || roles.Length == 0)
             {
                 throw new ArgumentException("Role cannot be null or empty or white space.");
             }
