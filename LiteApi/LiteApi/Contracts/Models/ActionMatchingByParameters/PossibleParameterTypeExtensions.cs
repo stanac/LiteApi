@@ -170,17 +170,5 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
         /// <returns>True is match is found</returns>
         public static bool IsMatchedByName(this PossibleParameterType possibleParam, ActionParameter actionParam)
             => actionParam.Name == possibleParam.Name;
-
-        /// <summary>
-        /// Gets the parameter matching weight.
-        /// </summary>
-        /// <param name="possibleParam">The possible parameter.</param>
-        /// <param name="actionParam">The action parameter.</param>
-        /// <returns>Weight from <see cref="PossibleParameterType"/></returns>
-        public static int GetParameterMatchingWeight(this PossibleParameterType possibleParam, ActionParameter actionParam)
-        {
-            var matchingType = possibleParam.GetNotNullableType(actionParam.Type);
-            return new TypeWithPriority(matchingType).TypePriority;
-        }
     }
 }
