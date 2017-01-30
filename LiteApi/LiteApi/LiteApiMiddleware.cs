@@ -1,18 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
+using LiteApi.Services;
+using LiteApi.Services.Discoverers;
+using LiteApi.Services.Logging;
+using LiteApi.Services.ModelBinders;
+using LiteApi.Services.Validators;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Reflection;
-using System.Linq;
 using System.Collections.Generic;
-using LiteApi.Contracts.Abstractions;
-using LiteApi.Services;
-using LiteApi.Contracts.Models;
-using Microsoft.AspNetCore.Builder;
-using LiteApi.Services.ModelBinders;
-using LiteApi.Services.Validators;
-using LiteApi.Services.Discoverers;
-using LiteApi.Services.Logging;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LiteApi
 {
@@ -29,7 +29,6 @@ namespace LiteApi
 
         internal static LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
         internal static bool IsRegistered { get; private set; }
-        internal static IServiceProvider Services { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiMiddleware"/> class.
@@ -59,11 +58,11 @@ namespace LiteApi
             {
                 _logger = new InternalLogger(false, null);
             }
-            Services = services;
+            // Services = services;
             _next = next;
             IsRegistered = true;            
             
-            Initialize();
+            Initialize(services);
         }
 
         /// <summary>
@@ -114,7 +113,7 @@ namespace LiteApi
             }
         }
 
-        private void Initialize()
+        private void Initialize(IServiceProvider services)
         {
             _logger.LogInformation("LiteApi middleware initialization started");
             IParametersDiscoverer parameterDiscoverer = new ParametersDiscoverer();
@@ -132,7 +131,7 @@ namespace LiteApi
 
             _pathResolver = new PathResolver(ctrlContexts.ToArray());
 
-            IControllerBuilder ctrlBuilder = new ControllerBuilder();
+            IControllerBuilder ctrlBuilder = new ControllerBuilder(services);
             ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer);
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {

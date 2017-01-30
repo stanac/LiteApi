@@ -30,7 +30,7 @@ namespace LiteApi.Tests
             error = false;
             try
             {
-                var a = new ActionInvoker(new ControllerBuilder(), null);
+                var a = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), null);
             }
             catch (ArgumentNullException)
             {
@@ -105,7 +105,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ParametersController));
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
-                new ControllerBuilder(),
+                new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
@@ -149,7 +149,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentMethodTypesController));
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
-                new ControllerBuilder(),
+                new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
@@ -164,7 +164,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentHttpMethodsController));
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
-                new ControllerBuilder(),
+                new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
@@ -179,7 +179,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.DifferentHttpMethodsController));
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
-                new ControllerBuilder(),
+                new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var ctx = new Fakes.FakeHttpContext();
@@ -194,7 +194,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.SecureController2));
             var controller = discoverer.GetControllers(null).Single();
             IActionInvoker invoker = new ActionInvoker(
-                new ControllerBuilder(),
+                new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer())
                 );
             var httpCtx = new Fakes.FakeHttpContext();

@@ -7,7 +7,7 @@ namespace LiteApi.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Constructor)]
-    public class ApiConstructorAttribute : Attribute
+    public class PrimaryConstructorAttribute : Attribute
     {
     }
 }

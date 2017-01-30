@@ -12,7 +12,7 @@ namespace LiteApi.Tests
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ComplexRootController));
             var ctrlCtx = discoverer.GetControllers(null).Single();
-            var builder = new ControllerBuilder();
+            var builder = new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object);
             var ctrl = builder.Build(ctrlCtx, new Fakes.FakeHttpContext());
             Assert.Null(ctrl.User);
         }

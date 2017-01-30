@@ -1,4 +1,5 @@
-﻿using LiteApi.Contracts.Abstractions;
+﻿using System;
+using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 
@@ -10,6 +11,14 @@ namespace LiteApi.Services
     /// <seealso cref="IControllerBuilder" />
     public class ControllerBuilder : ObjectBuilder, IControllerBuilder
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ControllerBuilder"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        public ControllerBuilder(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
         /// <summary>
         /// Builds the specified controller from controller context and HTTP context.
         /// </summary>

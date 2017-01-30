@@ -15,6 +15,18 @@ namespace LiteApi.Services
         private static readonly IDictionary<string, ConstructorInfo> Constructors = new ConcurrentDictionary<string, ConstructorInfo>();
         private static readonly IDictionary<string, ParameterInfo[]> ConstructorParameterTypes = new ConcurrentDictionary<string, ParameterInfo[]>();
 
+        private readonly IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ObjectBuilder"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        public ObjectBuilder(IServiceProvider serviceProvider)
+        {
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
+            _serviceProvider = serviceProvider;
+        }
+
         /// <summary>
         /// Builds the object.
         /// </summary>
@@ -52,7 +64,7 @@ namespace LiteApi.Services
             var constructors = objectType.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
             if (constructors.Length > 1)
             {
-                constructors = constructors.Where(x => x.GetCustomAttribute<ApiConstructorAttribute>() != null).ToArray();
+                constructors = constructors.Where(x => x.GetCustomAttribute<PrimaryConstructorAttribute>() != null).ToArray();
             }
 
             if (constructors.Length != 1)
@@ -83,7 +95,7 @@ namespace LiteApi.Services
             object[] values = new object[parameters.Length];
             for (int i = 0; i < values.Length; i++)
             {
-                values[i] = LiteApiMiddleware.Services.GetService(parameters[i].ParameterType);
+                values[i] = _serviceProvider.GetService(parameters[i].ParameterType);
             }
             return values;
         }

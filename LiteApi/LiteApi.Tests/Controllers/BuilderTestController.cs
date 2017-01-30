@@ -6,7 +6,7 @@ namespace LiteApi.Tests.Controllers
     {
         public string StrVal { get; set; }
 
-        [ApiConstructor]
+        [PrimaryConstructor]
         public BuilderTestController()
         {
             StrVal = "default";

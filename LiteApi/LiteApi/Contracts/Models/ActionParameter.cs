@@ -15,7 +15,6 @@ namespace LiteApi.Contracts.Models
     {
         internal bool _isTypeNullable;
         internal Type _type;
-        private static Type[] _supportedTypesFromUrl;
         private static readonly ModelBinderCollection _modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
         
         /// <summary>
@@ -105,7 +104,7 @@ namespace LiteApi.Contracts.Models
         public bool IsNullable => _isTypeNullable;
 
         /// <summary>
-        /// Gets a value indicating whether the parameter is complex (not in <see cref="GetSupportedTypesFromUrl"/>).
+        /// Gets a value indicating whether the parameter is complex).
         /// </summary>
         /// <value>
         /// <c>true</c> if the parameter is complex; otherwise, <c>false</c>.
