@@ -17,18 +17,14 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
         /// <returns>Possible parameter types</returns>
         public static IEnumerable<PossibleParameterType> GetPossibleParameterTypes(this HttpRequest request)
         {
-            var httpMethod = request.Method.ToLower();
-            if (httpMethod == "post" || httpMethod == "put")
+            if (request.HasBody())
             {
-                if (request.Body.Length > 0)
+                yield return new PossibleParameterType
                 {
-                    yield return new PossibleParameterType
-                    {
-                        Source = ParameterSources.Body,
-                        HasValue = true,
-                        OrderId = 0
-                    };
-                }
+                    Source = ParameterSources.Body,
+                    HasValue = true,
+                    OrderId = 0
+                };
             }
             int queryOrder = 0;
             foreach (var param in request.Query)
@@ -85,52 +81,40 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             }
             else
             {
-                if (decimal.TryParse(value, out tempDecimal))
-                {
-                    yield return typeof(decimal);
-                    yield return typeof(double);
-                    yield return typeof(float);
-                }
-                else if (double.TryParse(value, out tempDouble))
-                {
-                    yield return typeof(double);
-                    yield return typeof(float);
-                }
-                else if (float.TryParse(value, out tempFloat))
-                {
-                    yield return typeof(float);
-                }
+                if (float.TryParse(value, out tempFloat)) yield return typeof(float);
+                if (decimal.TryParse(value, out tempDecimal)) yield return typeof(decimal);
+                if (double.TryParse(value, out tempDouble)) yield return typeof(double);
 
-                if (UInt64.TryParse(value, out tempUInt64))
+                if (UInt16.TryParse(value, out tempUInt16))
                 {
-                    yield return typeof(UInt64);
-                    yield return typeof(UInt32);
                     yield return typeof(UInt16);
+                    yield return typeof(UInt32);
+                    yield return typeof(UInt64);
                 }
                 else if (UInt32.TryParse(value, out tempUInt32))
                 {
                     yield return typeof(UInt32);
-                    yield return typeof(UInt16);
+                    yield return typeof(UInt64);
                 }
-                else if (UInt16.TryParse(value, out tempUInt16))
+                else if (UInt64.TryParse(value, out tempUInt64))
                 {
-                    yield return typeof(UInt16);
+                    yield return typeof(UInt64);
                 }
 
-                if (Int64.TryParse(value, out tempInt64))
+                if (Int16.TryParse(value, out tempInt16))
                 {
-                    yield return typeof(Int64);
-                    yield return typeof(Int32);
                     yield return typeof(Int16);
+                    yield return typeof(Int32);
+                    yield return typeof(Int64);
                 }
                 else if (Int32.TryParse(value, out tempInt32))
                 {
                     yield return typeof(Int32);
-                    yield return typeof(Int16);
+                    yield return typeof(Int64);
                 }
-                else if (Int16.TryParse(value, out tempInt16))
+                else if (Int64.TryParse(value, out tempInt64))
                 {
-                    yield return typeof(Int16);
+                    yield return typeof(Int64);
                 }
 
                 if (Byte.TryParse(value, out tempByte))

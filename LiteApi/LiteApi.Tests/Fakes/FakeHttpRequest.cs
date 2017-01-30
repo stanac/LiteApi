@@ -96,6 +96,7 @@ namespace LiteApi.Tests.Fakes
             writer.Write(body);
             writer.Flush();
             Body.Position = 0;
+            ContentLength = Body.Length;
             return this;
         }
     }
