@@ -5,6 +5,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/5crmsp0tfgduwcvo/branch/master?svg=true)] (https://ci.appveyor.com/project/stanac/liteapi/branch/master)
  [![Coverage Status](https://img.shields.io/coveralls/stanac/LiteApi/master.svg?maxAge=900)](https://coveralls.io/github/stanac/LiteApi?&branch=master)
  [![NuGet](https://img.shields.io/nuget/v/LiteApi.svg)](https://www.nuget.org/packages/LiteApi)
+ [![license](https://img.shields.io/github/license/stanac/liteapi.svg)]()
 
 LiteApi is .net core middleware inspired by MVC-style Controller/Action principles.
 It's still in beta and currently initial tests are showing that it can handle about 50%-90%
