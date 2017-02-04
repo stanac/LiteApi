@@ -26,8 +26,7 @@ namespace LiteApi.Demo.Controllers
         {
             return ints.Sum();
         }
-
-        // will never be called, always DoIt(int[] i) will be called
+        
         public int Action1(int i)
         {
             return i;
@@ -37,8 +36,7 @@ namespace LiteApi.Demo.Controllers
         {
             return i.Sum();
         }
-
-        // will never be called, always DoIt(int? i) will be called
+        
         public int Action2(int i)
         {
             return i;
