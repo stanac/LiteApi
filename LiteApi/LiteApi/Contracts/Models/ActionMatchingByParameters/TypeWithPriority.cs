@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -45,9 +46,23 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
         public static int GetTypePriority(Type type)
         {
             var info = type.GetTypeInfo();
-            if (info.IsGenericType)
+            Type typeArg;
+            if (info.IsNullable(out typeArg))
             {
-                type = info.GetGenericArguments().Single();
+                type = typeArg;
+            }
+            else if (type.IsArray)
+            {
+                type = type.GetElementType();
+                Type temp;
+                if (type.IsNullable(out temp))
+                {
+                    type = temp;
+                }
+            }
+            else if (info.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type))
+            {
+                type = type.GetGenericArguments().First();
             }
             return new TypeWithPriority(type).TypePriority;
         }
@@ -75,9 +90,7 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             else if (Type == typeof(DateTime)) TypePriority = 120;
             else if (Type == typeof(char)) TypePriority = 200;
             else if (Type == typeof(string)) TypePriority = 250;
-#pragma warning disable RECS0143 // Cannot resolve symbol in text argument
-            else throw new ArgumentOutOfRangeException("Type", "Failed to set type priority");
-#pragma warning restore RECS0143 // Cannot resolve symbol in text argument
+            else TypePriority = 999;
         }
     }
 }

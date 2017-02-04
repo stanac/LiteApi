@@ -13,8 +13,12 @@ namespace LiteApi.Contracts.Models
     /// </summary>
     public class ActionParameter : AdditionalData
     {
-        internal bool _isTypeNullable;
-        internal Type _type;
+        private Type _type;
+        private Type _originalType;
+        private Type _collectionElementType;
+        private bool _isTypeNullable;
+        private bool _isTypeCollection;
+        private bool _isCollectionElementTypeNullable;
         private static readonly ModelBinderCollection _modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
         
         /// <summary>
@@ -85,12 +89,35 @@ namespace LiteApi.Contracts.Models
             get { return _type; }
             set
             {
+                _originalType = value;
                 _type = value;
                 TypeInfo info = value.GetTypeInfo();
                 Type nullableArgument;
                 if (_isTypeNullable = info.IsNullable(out nullableArgument))
                 {
                     _type = nullableArgument;
+                }
+                else if (value.IsArray)
+                {
+                    _isTypeCollection = true;
+                    _collectionElementType = value.GetElementType();
+                    Type temp;
+                    if (_collectionElementType.IsNullable(out temp))
+                    {
+                        _isCollectionElementTypeNullable = true;
+                        _collectionElementType = temp;
+                    }
+                }
+                else if (info.IsGenericType && typeof(IEnumerable).IsAssignableFrom(value))
+                {
+                    _isTypeCollection = true;
+                    _collectionElementType = info.GetGenericArguments().First();
+                    Type temp;
+                    if (_collectionElementType.IsNullable(out temp))
+                    {
+                        _isCollectionElementTypeNullable = true;
+                        _collectionElementType = temp;
+                    }
                 }
             }
         }
@@ -102,6 +129,30 @@ namespace LiteApi.Contracts.Models
         /// <c>true</c> if this action parameter is nullable; otherwise, <c>false</c>.
         /// </value>
         public bool IsNullable => _isTypeNullable;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is collection element type nullable.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is collection element type nullable; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCollectionElementTypeNullable => _isCollectionElementTypeNullable;
+
+        /// <summary>
+        /// Gets a value indicating whether this action parameter is collection.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this action parameter is collection; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCollection => _isTypeCollection;
+
+        /// <summary>
+        /// Gets the type of the collection element.
+        /// </summary>
+        /// <value>
+        /// The type of the collection element.
+        /// </value>
+        public Type CollectionElementType => _collectionElementType;
 
         /// <summary>
         /// Gets a value indicating whether the parameter is complex).
@@ -116,6 +167,17 @@ namespace LiteApi.Contracts.Models
                 return !_modelBinder.DoesSupportType(Type, ParameterSources.Query);
             }
         }
-                
+
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return $"{_originalType.GetFriendlyName()} {Name}";
+        }
+
     }
 }

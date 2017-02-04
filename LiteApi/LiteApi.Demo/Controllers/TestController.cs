@@ -27,6 +27,38 @@ namespace LiteApi.Demo.Controllers
             return ints.Sum();
         }
 
+        // will never be called, always DoIt(int[] i) will be called
+        public int Action1(int i)
+        {
+            return i;
+        }
+
+        public int Action1(int[] i)
+        {
+            return i.Sum();
+        }
+
+        // will never be called, always DoIt(int? i) will be called
+        public int Action2(int i)
+        {
+            return i;
+        }
+
+        public int Action2(int? i)
+        {
+            return i ?? 0;
+        }
+
+        public int Action2(int[] i)
+        {
+            return i.Sum();
+        }
+
+        public int Action2(int?[] i)
+        {
+            return i.Select(x => x ?? -0).Sum();
+        }
+
         public object SumNotNullable(List<int?> ints)
         {
             bool hasNulls = ints.Any(x => !x.HasValue);

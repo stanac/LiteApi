@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Linq;
 
 namespace LiteApi.Contracts.Models.ActionMatchingByParameters
@@ -91,10 +92,27 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             {
                 ActionParameter actionParam = ActionCtx.Parameters.First(x => x.IsMatchedByName(param));
                 int matchingWeight = weightConst - TypeWithPriority.GetTypePriority(actionParam.Type);
-                if (!param.CanHandleType(actionParam.Type))
+                if (actionParam.IsNullable || actionParam.IsCollectionElementTypeNullable) matchingWeight += 2;
+                if (actionParam.IsCollection) matchingWeight += 1;
+                Type t = actionParam.Type;
+                if (actionParam.IsCollection)
+                {
+                    t = actionParam.CollectionElementType;
+                    Type temp;
+                    if (t.IsNullable(out temp))
+                    {
+                        t = temp;
+                    }
+                }
+                if (!param.CanHandleType(t))
                 {
                     matchingWeight = matchingWeight * -1;
                 }
+                // if (param.HasMultipleValues)
+                // {
+                //     if (actionParam.IsCollection) matchingWeight += 500;
+                //     else matchingWeight -= 500;
+                // }
                 weight += matchingWeight;
             }
 

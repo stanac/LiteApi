@@ -100,7 +100,7 @@ namespace LiteApi.Contracts.Models
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString() => 
-            $"{ParentController.ControllerType.Name}.{Method.Name}({string.Join(", ", Parameters.Select(x => x.Type.Name + " " + x.Name))})";
+            $"{ParentController.ControllerType.Name}.{Method.Name}({string.Join(", ", Parameters.Select(x => x.ToString()))})";
 
         /// <summary>
         /// Initializes filters and possibly other stuff

@@ -34,7 +34,9 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
                     Source = ParameterSources.Query,
                     Name = param.Key,
                     OrderId = queryOrder,
-                    QueryValues = param.Value
+                    QueryValues = param.Value,
+                    HasNonEmptyValue = param.Value.Count > 0 && param.Value.Any(x => x.Length > 0),
+                    HasMultipleValues = param.Value.Count > 1
                 };
 
                 if (possibleType.QueryValues.Any())
