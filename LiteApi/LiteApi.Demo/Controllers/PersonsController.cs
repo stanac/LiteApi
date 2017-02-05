@@ -17,7 +17,7 @@ namespace LiteApi.Demo.Controllers
         [HttpGet] // will respond to /api/persons?id={someGuid}
         public PersonModel ById(Guid id) => _dataAccess.Get(id);
 
-        [HttpGet, ActionRoute("/{id}")] // will respond to /api/persons?id={someGuid}
+        [HttpGet, ActionRoute("/{id}")] // will respond to /api/persons/{someGuid}
         public PersonModel ByIdFromRoute([FromRoute]Guid id) => _dataAccess.Get(id);
 
         [HttpGet] // will respond to /api/persons
