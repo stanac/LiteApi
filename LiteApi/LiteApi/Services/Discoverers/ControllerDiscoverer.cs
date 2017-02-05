@@ -45,6 +45,7 @@ namespace LiteApi.Services.Discoverers
                     {
                         ControllerType = types[i],
                         RouteAndName = GetControllerRute(types[i]),
+                        IsRestful = types[i].GetTypeInfo().GetCustomAttributes<RestfulLinksAttribute>().Any()
                     };
                     ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
                     ctrls[i].Init();

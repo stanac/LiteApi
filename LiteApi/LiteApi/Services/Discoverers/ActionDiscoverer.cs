@@ -59,7 +59,11 @@ namespace LiteApi.Services.Discoverers
         {
             string methodName = method.Name.ToLowerInvariant();
             var segmentsAttr = method.GetCustomAttribute<ActionRouteAttribute>();
-            RouteSegment[] segments = { new RouteSegment(methodName) };
+            RouteSegment[] segments = new RouteSegment[0] ;
+            if (!ctrlCtx.IsRestful)
+            {
+                segments = new [] { new RouteSegment(methodName) };
+            }
             if (segmentsAttr != null)
             {
                 segments = segmentsAttr.RouteSegments.ToArray();

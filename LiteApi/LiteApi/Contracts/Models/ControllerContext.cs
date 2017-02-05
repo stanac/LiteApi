@@ -49,6 +49,14 @@ namespace LiteApi.Contracts.Models
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this controller is restful.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this controller is restful; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsRestful { get; set; }
+
+        /// <summary>
         /// Gets the route segments.
         /// </summary>
         /// <value>

@@ -12,7 +12,8 @@ namespace LiteApi.Contracts.Abstractions
         /// Gets the validation errors.
         /// </summary>
         /// <param name="actionCtxs">The action context.</param>
+        /// <param name="isControllerRestful">True if parent controller is restful (has RestfulLinksAttribute)</param>
         /// <returns>Collection of strings that contains errors, if not empty an exception should be raised.</returns>
-        IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs);
+        IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs, bool isControllerRestful);
     }
 }

@@ -48,7 +48,7 @@ namespace LiteApi.Services.Validators
                     yield return $"Authorization policy {missingPolicy} is defined on controller {ctrl.RouteAndName} but it's not registered within middleware."
                         + " Use LiteApiOptions.AddAuthorizationPolicy to register authorization policy when registering middleware.";
                 }
-                foreach (string error in _actionValidator.GetValidationErrors(ctrl.Actions))
+                foreach (string error in _actionValidator.GetValidationErrors(ctrl.Actions, ctrl.IsRestful))
                 {
                     yield return error;
                 }

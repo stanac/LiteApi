@@ -10,6 +10,7 @@ namespace LiteApi.Demo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDemoService, DemoService>();
+            services.AddSingleton<IPersonDataAccess, PersonDataAccess>();
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

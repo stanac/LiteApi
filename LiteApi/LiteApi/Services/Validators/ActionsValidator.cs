@@ -33,12 +33,13 @@ namespace LiteApi.Services.Validators
         /// Gets the validation errors.
         /// </summary>
         /// <param name="actionCtxs">The action context.</param>
+        /// <param name="isControllerRestful">True if parent controller is restful (has RestfulLinksAttribute)</param>
         /// <returns>Collection of strings that contains errors, if not empty an exception should be raised.</returns>
-        public IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs)
+        public IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs, bool isControllerRestful)
         {
             foreach (var action in actionCtxs)
             {
-                foreach (var error in ActionSegmentsValidator.GetRouteSegmentsErrors(action))
+                foreach (var error in ActionSegmentsValidator.GetRouteSegmentsErrors(action, isControllerRestful))
                 {
                     yield return error;
                 }
