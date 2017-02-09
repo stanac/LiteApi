@@ -128,3 +128,36 @@ namespace MyApp
 
 ---
 
+## Roadmap
+
+### 1.3
+- [ ] Support for other document formats (XML out of the box, extensibility points for other types)
+
+### 1.2
+- [ ] Performance testing, performance improvements with Roslyn code generators
+
+### 1.1
+- [ ] Support for generating OpenAPI documentation (Swagger)
+
+### 1.0 Feature complete (stable)
+- [ ] Stabilization, more testing
+
+### 0.9 Feature complete (RC)
+- [ ] Documentation and website
+
+### 0.8
+- [ ] Extensibility point to enable replacing any internal service in the middleware
+
+### 0.7
+- [ ] Support for file uploading (streams)
+- [ ] Support for action parameters from service resolver (dependency injection on action level)
+
+### Previous
+- [x] Extensibility points for model binders and filters
+- [x] Authorization
+- [x] Restful links
+- [x] Actions overloading
+- [x] Dictionary from query
+- [x] Collections from query
+- [x] Default parameters
+- [x] Proof of concept
