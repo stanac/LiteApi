@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>upload</title>
+    <style>
+        body {
+            font-family: sans-serif
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+    <!-- 
+        I KNOW CODE IN THIS FILE IS AWFUL, it's not the point
+    -->
+    <h2>Test file upload with ajax</h2>
+    <br />
+    <input type="file" id="file" />
+    <br />
+    <br/>
+    <button id="uploadButton">Upload</button>
+    <script>
+        $(function () {
+            $('#uploadButton').click(function () {
+                var formData = new FormData();
+                var fileInput = $('#file');
+                if (fileInput[0].files.length === 0) {
+                    alert('select a file first');
+                    return;
+                }
+                formData.append('file', fileInput[0].files[0]);
+
+                $.ajax({
+                    data: formData,
+                    url: '/api/file',
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        alert(result);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
