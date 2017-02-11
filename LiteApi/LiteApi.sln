@@ -9,7 +9,14 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LiteApi.Demo", "LiteApi.Dem
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{793B4EAB-5EA2-4DB4-8501-3810C4661EEA}"
 	ProjectSection(SolutionItems) = preProject
+		..\appveyor.yml = ..\appveyor.yml
+		..\buildnupkg.ps1 = ..\buildnupkg.ps1
+		..\changes.md = ..\changes.md
 		global.json = global.json
+		..\license = ..\license
+		..\LiteApi.nuspec = ..\LiteApi.nuspec
+		..\README.md = ..\README.md
+		..\runtests.ps1 = ..\runtests.ps1
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LiteApi.Tests", "LiteApi.Tests\LiteApi.Tests.xproj", "{33CF330F-00F1-456C-84F9-B41277C34909}"

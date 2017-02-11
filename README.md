@@ -144,12 +144,13 @@ namespace MyApp
 
 ### 0.9 Feature complete (RC)
 - [ ] Documentation and website
+- [ ] File download ??? (maybe)
 
 ### 0.8
 - [ ] Extensibility point to enable replacing any internal service in the middleware
 
 ### 0.7
-- [ ] Support for file uploading (streams)
+- [x] Support for file uploading (streams)
 - [ ] Support for action parameters from service resolver (dependency injection on action level)
 
 ### Previous
