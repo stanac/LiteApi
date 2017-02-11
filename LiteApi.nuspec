@@ -8,11 +8,11 @@
         <projectUrl>https://github.com/stanac/LiteApi</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>LiteApi is alternative WEB API .NET Core middleware</description>
-        <tags>ASPCore Middleware WebApi aspnetcore</tags>
+        <tags>ASPCore Middleware WebApi aspnetcore web-api</tags>
         <dependencies>
-            <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="1.0.0" />
-            <dependency id="Microsoft.Extensions.Logging.Abstractions" version="1.0.0" />
-            <dependency id="NETStandard.Library" version="1.6.0" />
+            <dependency id="Microsoft.AspNetCore.Http.Abstractions" version="1.1.0" />
+            <dependency id="Microsoft.Extensions.Logging.Abstractions" version="1.1.0" />
+            <dependency id="NETStandard.Library" version="1.6.1" />
             <dependency id="Newtonsoft.Json" version="9.0.1" />
         </dependencies>
     </metadata>

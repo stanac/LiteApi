@@ -1,31 +1,37 @@
 {
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "version": "1.0.0",
-      "type": "platform"
-    },
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
-    "Microsoft.Extensions.Logging.Console": "1.0.0",
-    "Microsoft.AspNetCore.StaticFiles": "1.0.0",
-    "StackifyMiddleware": "1.4.1",
-    "Microsoft.Extensions.Logging.Debug": "1.0.0",
     "LiteApi": "*",
-    "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0"
+    "Microsoft.AspNetCore.Authentication.Cookies": "1.1.0",
+    "Microsoft.AspNetCore.Diagnostics": "1.1.0",
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
+    "Microsoft.AspNetCore.StaticFiles": "1.1.0",
+    "Microsoft.Extensions.Logging.Console": "1.1.0",
+    "Microsoft.Extensions.Logging.Debug": "1.1.0",
+    "Microsoft.NETCore.App": "1.1.0",
+    "StackifyMiddleware": "2.0.3"
   },
 
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
   },
+  
+  "Microsoft.NETCore.App": {
+    "type": "platform",
+    "version": "1.1.0"
+  },
 
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": [
         "dotnet5.6",
         "portable-net45+win8"
       ]
     }
+  },
+
+  "runtimes": {
+    "win8-x64": {}
   },
 
   "buildOptions": {
@@ -48,5 +54,6 @@
 
   "scripts": {
     "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
-  }
+  },
+  "userSecretsId": "aspnet-LiteApi.AuthSample-20170211071945"
 }
