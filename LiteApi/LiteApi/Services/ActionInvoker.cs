@@ -11,7 +11,7 @@ namespace LiteApi.Services
     /// Class that is used for invoking actions
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionInvoker" />
-    public class ActionInvoker : IActionInvoker
+    internal class ActionInvoker : IActionInvoker
     {
         /// <summary>
         /// Gets or sets JSON serializer.

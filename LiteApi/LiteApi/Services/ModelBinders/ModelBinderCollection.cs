@@ -13,7 +13,7 @@ namespace LiteApi.Services.ModelBinders
     /// Collection of all in use model binders, this should be the entry point for all other model binders
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
-    public class ModelBinderCollection : IModelBinder
+    internal class ModelBinderCollection : IModelBinder
     {
         private List<IQueryModelBinder> _queryBinders = new List<IQueryModelBinder>();
         private List<IBodyModelBinder> _bodyBinders = new List<IBodyModelBinder>();

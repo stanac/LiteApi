@@ -13,7 +13,7 @@ namespace LiteApi.Services
     /// Class for resolving which action (if any) should be invoked for the HTTP request.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IPathResolver" />
-    public class PathResolver : IPathResolver
+    internal class PathResolver : IPathResolver
     {
         private readonly ControllerContext[] _controllerContrxts;
         private static readonly char[] _separator = { '/' };

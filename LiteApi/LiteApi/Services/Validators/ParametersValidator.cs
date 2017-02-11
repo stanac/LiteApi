@@ -11,7 +11,7 @@ namespace LiteApi.Services.Validators
     /// Class for validating action parameters.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersValidator" />
-    public class ParametersValidator : IParametersValidator
+    internal class ParametersValidator : IParametersValidator
     {
         /// <summary>
         /// Gets the parameters errors.

@@ -11,7 +11,7 @@ namespace LiteApi.Services.ModelBinders
     /// Class for resolving parameter values for given <see cref="ActionContext"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
-    public class BasicQueryModelBinder : IQueryModelBinder
+    internal class BasicQueryModelBinder : IQueryModelBinder
     {
         #region _supportedTypes
 

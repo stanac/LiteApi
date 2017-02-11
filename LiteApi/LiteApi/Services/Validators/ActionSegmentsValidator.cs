@@ -8,7 +8,7 @@ namespace LiteApi.Services.Validators
     /// <summary>
     /// Validator for action segments
     /// </summary>
-    public static class ActionSegmentsValidator
+    internal static class ActionSegmentsValidator
     {
         /// <summary>
         /// Gets the route segments errors if any.

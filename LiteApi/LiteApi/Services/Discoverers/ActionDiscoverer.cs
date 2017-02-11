@@ -12,7 +12,7 @@ namespace LiteApi.Services.Discoverers
     /// Class that is discovering actions in given <see cref="ControllerContext"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionDiscoverer" />
-    public class ActionDiscoverer : IActionDiscoverer
+    internal class ActionDiscoverer : IActionDiscoverer
     {
         private readonly IParametersDiscoverer _parameterDiscoverer;
 

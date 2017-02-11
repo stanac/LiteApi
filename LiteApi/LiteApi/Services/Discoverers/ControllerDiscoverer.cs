@@ -11,7 +11,7 @@ namespace LiteApi.Services.Discoverers
     /// Instance of this class is used for discovering controllers in given assembly
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IControllerDiscoverer" />
-    public class ControllerDiscoverer : IControllerDiscoverer
+    internal class ControllerDiscoverer : IControllerDiscoverer
     {
         private readonly IActionDiscoverer _actionDiscoverer;
 

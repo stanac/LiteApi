@@ -10,7 +10,7 @@ namespace LiteApi.Services.Discoverers
     /// Class for resolving parameters metadata in an action
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersDiscoverer" />
-    public class ParametersDiscoverer : IParametersDiscoverer
+    internal class ParametersDiscoverer : IParametersDiscoverer
     {
         /// <summary>
         /// Gets the action parameters metadata for the given action context.

@@ -9,7 +9,7 @@ namespace LiteApi.Services.Logging
     /// </summary>
     /// <seealso cref="LiteApi.Services.InternalLogger" />
     /// <seealso cref="LiteApi.Contracts.Abstractions.IContextAwareLogger" />
-    public class ContextAwareLogger : InternalLogger, IContextAwareLogger
+    internal class ContextAwareLogger : InternalLogger, IContextAwareLogger
     {
         private readonly string _traceId;
 

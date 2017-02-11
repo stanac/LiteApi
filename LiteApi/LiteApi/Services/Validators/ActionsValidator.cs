@@ -10,7 +10,7 @@ namespace LiteApi.Services.Validators
     /// Class that validates actions before first request is received.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionsValidator" />
-    public class ActionsValidator : IActionsValidator
+    internal class ActionsValidator : IActionsValidator
     {
         private readonly IParametersValidator _paramsValidator;
         private readonly IAuthorizationPolicyStore _policyStore;

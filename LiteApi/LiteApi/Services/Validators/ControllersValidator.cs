@@ -11,7 +11,7 @@ namespace LiteApi.Services.Validators
     /// Class that validates controllers before first request is received.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IControllersValidator" />
-    public class ControllersValidator : IControllersValidator
+    internal class ControllersValidator : IControllersValidator
     {
         private readonly IActionsValidator _actionValidator;
         private readonly IAuthorizationPolicyStore _policyStore;

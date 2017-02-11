@@ -8,7 +8,7 @@ namespace LiteApi.Services.ModelBinders
     /// <summary>
     /// Class for parsing parameter values from route segment
     /// </summary>
-    public static class RouteSegmentQueryModelBinder
+    internal static class RouteSegmentQueryModelBinder
     {
         /// <summary>
         /// Gets the parameter value, parameter must be from route segment.
