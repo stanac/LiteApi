@@ -15,7 +15,7 @@
     -->
     <h2>Test file upload with ajax</h2>
     <br />
-    <input type="file" id="file" />
+    <input type="file" id="file" multiple="multiple" />
     <br />
     <br/>
     <button id="uploadButton">Upload</button>
@@ -28,7 +28,9 @@
                     alert('select a file first');
                     return;
                 }
-                formData.append('file', fileInput[0].files[0]);
+                for (var i = 0; i < fileInput[0].files.length; i++) {
+                    formData.append('file' + i, fileInput[0].files[i]);
+                }
 
                 $.ajax({
                     data: formData,
@@ -38,6 +40,11 @@
                     processData: false,
                     success: function (result) {
                         alert(result);
+                    },
+                    error: function (e) {
+                        console.error(e);
+                        console.error(e.responseText);
+                        alert(e);
                     }
                 });
             });

@@ -15,7 +15,8 @@ namespace LiteApi.Services.ModelBinders
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
     public class ModelBinderCollection : IModelBinder
     {
-        private List<IQueryModelBinder> _binders = new List<IQueryModelBinder>();
+        private List<IQueryModelBinder> _queryBinders = new List<IQueryModelBinder>();
+        private List<IBodyModelBinder> _bodyBinders = new List<IBodyModelBinder>();
         private readonly IJsonSerializer _jsonSerializer;
         private Type[] _supportedTypesFromUrl;
         
@@ -29,9 +30,11 @@ namespace LiteApi.Services.ModelBinders
             if (jsonSerializer == null) throw new ArgumentNullException(nameof(jsonSerializer));
             _jsonSerializer = jsonSerializer;
             
-            _binders.Add(new BasicQueryModelBinder());
-            _binders.Add(new CollectionsQueryModelBinder());
-            _binders.Add(new DictionaryQueryModelBinder());
+            _queryBinders.Add(new BasicQueryModelBinder());
+            _queryBinders.Add(new CollectionsQueryModelBinder());
+            _queryBinders.Add(new DictionaryQueryModelBinder());
+
+            _bodyBinders.Add(new FormFileBodyBinder());
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace LiteApi.Services.ModelBinders
         public void AddAdditionalQueryModelBinder(IQueryModelBinder queryModelBinder)
         {
             if (queryModelBinder == null) throw new ArgumentNullException(nameof(queryModelBinder));
-            _binders.Add(queryModelBinder);
+            _queryBinders.Add(queryModelBinder);
         }
         
         /// <summary>
@@ -57,7 +60,7 @@ namespace LiteApi.Services.ModelBinders
         {
             if (source == ParameterSources.Query)
             {
-                foreach (var b in _binders)
+                foreach (var b in _queryBinders)
                 {
                     if (b.DoesSupportType(type))
                     {
@@ -91,7 +94,7 @@ namespace LiteApi.Services.ModelBinders
             {
                 if (param.ParameterSource == ParameterSources.Query)
                 {
-                    var binder = _binders.FirstOrDefault(x => x.DoesSupportType(param.Type));
+                    var binder = _queryBinders.FirstOrDefault(x => x.DoesSupportType(param.Type));
                     if (binder != null)
                     {
                         args.Add(binder.ParseParameterValue(request, actionCtx, param));
@@ -103,6 +106,12 @@ namespace LiteApi.Services.ModelBinders
                 }
                 else if (param.ParameterSource == ParameterSources.Body)
                 {
+                    IBodyModelBinder bodyBinder;
+                    if ((bodyBinder = _bodyBinders.FirstOrDefault(x => x.CanHandleType(param.Type))) != null)
+                    {
+                        args.Add(bodyBinder.CreateParameter(request));
+                        continue;
+                    }
                     using (TextReader reader = new StreamReader(request.Body))
                     {
                         string json = reader.ReadToEnd();
@@ -132,7 +141,7 @@ namespace LiteApi.Services.ModelBinders
         {
             if (_supportedTypesFromUrl == null)
             {
-                _supportedTypesFromUrl = _binders
+                _supportedTypesFromUrl = _queryBinders
                     .SelectMany(x => x.SupportedTypes)
                     .Distinct()
                     .ToArray();

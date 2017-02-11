@@ -8,19 +8,19 @@ namespace LiteApi.Demo.Controllers
     public class FileController: LiteController
     {
         [HttpPost]
-        public async Task<int> Upload()
+        public async Task<long> Upload(FormFileCollection fileCollection)
         {
-            using (Stream memStream = new MemoryStream())
+            long bytesUploaded = 0;
+            foreach (var file in fileCollection.Files)
             {
-                Microsoft.AspNetCore.Http.IFormCollection f = await HttpContext.Request.ReadFormAsync();
-                Microsoft.AspNetCore.Http.IFormFile f0 = f.Files[0];
-                using (Stream readS = f0.OpenReadStream())
-                using (Stream writeS = new FileStream("d:/" + f0.FileName, FileMode.Create, FileAccess.Write))
+                using (Stream fileStream = new FileStream("d:\\" + file.FileName, FileMode.Create))
                 {
-                    readS.CopyTo(writeS);
+                    bytesUploaded += file.Length;
+                    await file.CopyToAsync(fileStream);
                 }
             }
-            return 1;
+
+            return bytesUploaded;
         }
     }
 }
