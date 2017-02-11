@@ -22,7 +22,7 @@ namespace LiteApi.Tests.Fakes
 
         public override IRequestCookieCollection Cookies { get; set; }
 
-        public override IFormCollection Form { get; set; }
+        public override IFormCollection Form { get; set; } = new FakeFormCollection();
 
         public override bool HasFormContentType { get; }
 

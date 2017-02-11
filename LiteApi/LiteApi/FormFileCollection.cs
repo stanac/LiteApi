@@ -11,7 +11,6 @@ namespace LiteApi
     public class FormFileCollection
     {
         private HttpRequest _request;
-        private int _fileCount;
         private IFormFileCollection _files;
 
         /// <summary>
@@ -40,7 +39,7 @@ namespace LiteApi
         /// <value>
         /// <c>true</c> if request has files from form; otherwise, <c>false</c>.
         /// </value>
-        public bool HasFiles => _fileCount > 0;
+        public bool HasFiles => FileCount > 0;
 
         /// <summary>
         /// Gets the file count.
@@ -48,7 +47,7 @@ namespace LiteApi
         /// <value>
         /// The file count.
         /// </value>
-        public int FileCount => _fileCount;
+        public int FileCount => _files.Count;
 
         /// <summary>
         /// Gets the files.
@@ -80,7 +79,7 @@ namespace LiteApi
 
             public IEnumerator<IFormFile> GetEnumerator()
             {
-                if (Count > 0) yield return null;
+                yield break;
             }
 
             public IFormFile GetFile(string name)
