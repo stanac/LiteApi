@@ -151,7 +151,7 @@ namespace MyApp
 ### 0.7
 - [x] Support for file uploading (streams)
 - [x] Support for file download (streams and byte arrays)
-- [ ] Support for action parameters from service resolver (dependency injection on action level)
+- [x] Support for action parameters from IServiceProvider (dependency injection on action level)
 
 ### Previous
 - [x] Extensibility points for model binders and filters
