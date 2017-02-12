@@ -151,6 +151,7 @@ namespace MyApp
 
 ### 0.7
 - [x] Support for file uploading (streams)
+- [x] Support for file download (streams and byte arrays)
 - [ ] Support for action parameters from service resolver (dependency injection on action level)
 
 ### Previous
