@@ -122,13 +122,13 @@ namespace LiteApi.Services
             else
             {
                 logger?.LogInformation("Serializing result from invoked action");
-                httpCtx.Response.ContentType = "application/json";
                 if (actionCtx.IsReturningLiteActionResult)
                 {
                     await (result as ILiteActionResult).WriteResponse(httpCtx, actionCtx);
                 }
                 else
                 {
+                    httpCtx.Response.ContentType = "application/json";
                     await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
                 }
             }
