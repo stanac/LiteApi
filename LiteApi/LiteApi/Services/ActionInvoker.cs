@@ -123,7 +123,14 @@ namespace LiteApi.Services
             {
                 logger?.LogInformation("Serializing result from invoked action");
                 httpCtx.Response.ContentType = "application/json";
-                await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+                if (actionCtx.IsReturningLiteActionResult)
+                {
+                    await (result as ILiteActionResult).WriteResponse(httpCtx, actionCtx);
+                }
+                else
+                {
+                    await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+                }
             }
         }
 
