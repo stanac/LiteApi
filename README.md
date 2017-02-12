@@ -144,7 +144,6 @@ namespace MyApp
 
 ### 0.9 Feature complete (RC)
 - [ ] Documentation and website
-- [ ] File download ??? (maybe)
 
 ### 0.8
 - [ ] Extensibility point to enable replacing any internal service in the middleware
