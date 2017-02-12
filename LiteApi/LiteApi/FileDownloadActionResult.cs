@@ -55,6 +55,7 @@ namespace LiteApi
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileDownloadActionResult"/> class.
+        /// Provided Stream will not be disposed, you need to do it yourself.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <param name="contentType">Content type header value.</param>

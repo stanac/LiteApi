@@ -1,5 +1,6 @@
 ﻿using LiteApi.Attributes;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LiteApi.Demo.Controllers
@@ -21,6 +22,16 @@ namespace LiteApi.Demo.Controllers
             }
 
             return bytesUploaded;
+        }
+
+        [HttpGet]
+        public ILiteActionResult Download()
+        {
+            byte[] data = Encoding.UTF8.GetBytes("hello from LiteApi"); // can be Stream or byte[]
+            string contentType = "text/plain";
+            string fileName = "hello.txt";
+
+            return FileDownload(data, contentType, fileName);
         }
     }
 }
