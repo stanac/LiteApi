@@ -149,15 +149,15 @@ namespace MyApp
 - [ ] Extensibility point to enable replacing any internal service in the middleware
 
 ### 0.7
-- [x] Support for file uploading (streams)
-- [x] Support for file download (streams and byte arrays)
-- [x] Support for action parameters from IServiceProvider (dependency injection on action level)
+- [x] Support for file uploading (streams) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#fileupload)
+- [x] Support for file download (streams and byte arrays) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#filedownload)
+- [x] Support for action parameters from IServiceProvider (dependency injection on action level) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#dependencyinjectiononactionlevel)
 
 ### Previous
 - [x] Extensibility points for model binders and filters
 - [x] Authorization
-- [x] Restful links
-- [x] Actions overloading
+- [x] Restful links [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#restfullinks)
+- [x] Actions overloading [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#actionoverloadingrules)
 - [x] Dictionary from query
 - [x] Collections from query
 - [x] Default parameters
