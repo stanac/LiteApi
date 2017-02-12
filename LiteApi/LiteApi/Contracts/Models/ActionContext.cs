@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
 {
@@ -12,6 +13,15 @@ namespace LiteApi.Contracts.Models
     {
         private SupportedHttpMethods _httpMethod;
         private string _httpMethodString;
+        private MethodInfo _method;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is returning lite action result.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is returning lite action result; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsReturningLiteActionResult { get; private set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -59,8 +69,18 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The reflected method.
         /// </value>
-        /// 
-        public MethodInfo Method { get; set; }
+        public MethodInfo Method
+        {
+            get { return _method; }
+            set
+            {
+                _method = value;
+                IsReturningLiteActionResult = value == null
+                    ? false
+                    : value.ReturnParameter.ParameterType == typeof(ILiteActionResult)
+                        || value.ReturnParameter.ParameterType == typeof(Task<ILiteActionResult>);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the parent controller.

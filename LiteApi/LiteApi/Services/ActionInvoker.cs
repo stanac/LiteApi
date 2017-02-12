@@ -115,6 +115,7 @@ namespace LiteApi.Services
 
             }
             httpCtx.Response.StatusCode = statusCode;
+            httpCtx.Response.Headers.Add("X-Powered-By-Middleware", "LiteApi");
             if (isVoid)
             {
                 logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
@@ -122,8 +123,15 @@ namespace LiteApi.Services
             else
             {
                 logger?.LogInformation("Serializing result from invoked action");
-                httpCtx.Response.ContentType = "application/json";
-                await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+                if (actionCtx.IsReturningLiteActionResult)
+                {
+                    await (result as ILiteActionResult).WriteResponse(httpCtx, actionCtx);
+                }
+                else
+                {
+                    httpCtx.Response.ContentType = "application/json";
+                    await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+                }
             }
         }
 

@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
+using Moq;
 
 namespace LiteApi.Tests.Fakes
 {
     public class FakeHttpResponse : HttpResponse, IDisposable
     {
         internal IResponseCookies cookies = null;
-        internal IHeaderDictionary headers = null;
+        internal IHeaderDictionary headers = new Mock<IHeaderDictionary>().Object;
         internal HttpContext httpContext = null;
         internal bool hasStarted = false;
 
