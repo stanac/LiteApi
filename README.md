@@ -155,7 +155,7 @@ namespace MyApp
 
 ### Previous
 - [x] Extensibility points for model binders and filters
-- [x] Authorization
+- [x] Authorization [wiki](https://github.com/stanac/LiteApi/wiki/Authorization)
 - [x] Restful links [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#restfullinks)
 - [x] Actions overloading [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#actionoverloadingrules)
 - [x] Dictionary from query
