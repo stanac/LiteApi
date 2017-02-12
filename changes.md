@@ -1,3 +1,8 @@
+0.7.0
+- Support for action parameters from IServiceProvider (dependency injection on action level)
+- Support for file uploading (streams)
+- Support for file download (streams and byte arrays)
+
 0.6.0 
 - Fixed issues with overloading actions with nullable arguments and generics
 - Added support for restful links (RestfulLinksAttribute on controller level)
