@@ -17,7 +17,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get1");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "1", "2", "5678", "abcd");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -32,7 +32,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get2");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "1", "2", "5678");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -47,7 +47,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get3");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "1", "", "1", "2", "5678");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -62,7 +62,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get4");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "b5477041395b47e8ad52605a42462936", "", "{aa2ec3ca-c3e7-4695-be0c-0c33e527515b}", "d29f0102-2c99-4033-ad65-672f6db25a23");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -84,7 +84,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get5");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data", "a", "b", "c", "d", "e");
             object[] parameters = mb.GetParameterValues(request, action);
@@ -99,7 +99,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "get6");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithGetMethod()
                 .AddQuery("data.1", "a")
                 .AddQuery("data.2", "b")
@@ -121,7 +121,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.CollectionController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "post7");
-            var mb = new ModelBinderCollection(new JsonSerializer());
+            var mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             var request = Fakes.FakeHttpRequest.WithPostMethod()
                 .WriteBody(@"
 [
@@ -353,7 +353,7 @@ namespace LiteApi.Tests
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == actionName.ToLower());
 
-            ModelBinderCollection mb = new ModelBinderCollection(new JsonSerializer());
+            ModelBinderCollection mb = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
             object[] parameters = mb.GetParameterValues(request, action);
             Assert.Equal(value, parameters.Single());
         }

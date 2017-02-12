@@ -17,19 +17,23 @@ namespace LiteApi.Services.ModelBinders
     {
         private List<IQueryModelBinder> _queryBinders = new List<IQueryModelBinder>();
         private List<IBodyModelBinder> _bodyBinders = new List<IBodyModelBinder>();
-        private readonly IJsonSerializer _jsonSerializer;
         private Type[] _supportedTypesFromUrl;
-        
+        private readonly IJsonSerializer _jsonSerializer;
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelBinderCollection"/> class.
         /// </summary>
         /// <param name="jsonSerializer">The json serialize.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ModelBinderCollection(IJsonSerializer jsonSerializer)
+        public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider)
         {
             if (jsonSerializer == null) throw new ArgumentNullException(nameof(jsonSerializer));
+            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
             _jsonSerializer = jsonSerializer;
-            
+            _serviceProvider = serviceProvider;
+
             _queryBinders.Add(new BasicQueryModelBinder());
             _queryBinders.Add(new CollectionsQueryModelBinder());
             _queryBinders.Add(new DictionaryQueryModelBinder());
@@ -118,6 +122,10 @@ namespace LiteApi.Services.ModelBinders
                         args.Add(_jsonSerializer.Deserialize(json, param.Type));
                     }
                     request.Body.Dispose();
+                }
+                else if (param.ParameterSource == ParameterSources.Service)
+                {
+                    args.Add(_serviceProvider.GetService(param.Type));
                 }
                 else if (param.ParameterSource == ParameterSources.RouteSegment)
                 {

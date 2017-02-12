@@ -3,6 +3,7 @@ using LiteApi.Attributes;
 using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using System.Linq;
+using System;
 
 namespace LiteApi.Services.Discoverers
 {
@@ -12,6 +13,18 @@ namespace LiteApi.Services.Discoverers
     /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersDiscoverer" />
     internal class ParametersDiscoverer : IParametersDiscoverer
     {
+        private readonly IServiceProvider _services;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ParametersDiscoverer"/> class.
+        /// </summary>
+        /// <param name="services">The service provider.</param>
+        public ParametersDiscoverer(IServiceProvider services)
+        {
+            if (services == null) throw new ArgumentNullException(nameof(services));
+            _services = services;
+        }
+
         /// <summary>
         /// Gets the action parameters metadata for the given action context.
         /// </summary>
@@ -24,16 +37,30 @@ namespace LiteApi.Services.Discoverers
             for (int i = 0; i < methodParams.Length; i++)
             {
                 var param = actionCtx.Method.GetParameters()[i];
-                bool isFromQuery = param.GetCustomAttribute<FromUrlAttribute>() != null;
-                bool isFromBody = param.GetCustomAttribute<FromBodyAttribute>() != null;
-                bool isFromRoute = param.GetCustomAttribute<FromRouteAttribute>() != null;
-                
+                bool isFromQuery = false;
+                bool isFromBody = false;
+                bool isFromRoute = false;
+                bool isFromService = false;
+
+                if (param.GetCustomAttribute<FromServicesAttribute>() != null)
+                {
+                    isFromService = true;
+                }
+                else
+                {
+                    isFromQuery = param.GetCustomAttribute<FromUrlAttribute>() != null;
+                    isFromBody = param.GetCustomAttribute<FromBodyAttribute>() != null;
+                    isFromRoute = param.GetCustomAttribute<FromRouteAttribute>() != null;
+                }
+
                 ParameterSources source = ParameterSources.Unknown;
-                if (isFromQuery && !isFromBody && !isFromRoute) source = ParameterSources.Query;
+
+                if (isFromService) source = ParameterSources.Service;
+                else if (isFromQuery && !isFromBody && !isFromRoute) source = ParameterSources.Query;
                 else if (!isFromQuery && isFromBody && !isFromRoute) source = ParameterSources.Body;
                 else if (!isFromQuery && !isFromBody && isFromRoute) source = ParameterSources.RouteSegment;
 
-                parameters[i] = new ActionParameter(actionCtx)
+                parameters[i] = new ActionParameter(actionCtx, new ModelBinders.ModelBinderCollection(new JsonSerializer(), _services))
                 {
                     Name = param.Name.ToLower(),
                     DefaultValue = param.DefaultValue,

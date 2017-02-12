@@ -11,7 +11,7 @@ namespace LiteApi.Tests.Fakes
 {
     public class FakeLimitedControllerDiscoverer : IControllerDiscoverer
     {
-        private readonly IControllerDiscoverer _impl = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer()));
+        private readonly IControllerDiscoverer _impl = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object)));
         private Type[] _controllersToDiscover;
 
         public FakeLimitedControllerDiscoverer(params Type[] controllersToDiscover)

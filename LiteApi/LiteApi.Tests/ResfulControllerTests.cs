@@ -74,7 +74,7 @@ namespace LiteApi.Tests
             }
 
             var action = pathResolver.ResolveAction(httpCtx.Request);
-            var actionInvoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new ModelBinderCollection(new JsonSerializer()));
+            var actionInvoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object));
             await actionInvoker.Invoke(httpCtx, action);
             string result = httpCtx.Response.ReadBody();
 
@@ -85,7 +85,7 @@ namespace LiteApi.Tests
         {
             return new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
-                new ModelBinderCollection(new JsonSerializer())
+                new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
                 );
         }
     }

@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Models;
 using LiteApi.Services;
 using LiteApi.Services.Discoverers;
+using System;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -88,7 +89,7 @@ namespace LiteApi.Tests
         [Fact]
         public void PathResolver_DifferentOrNoRootController_CanResolveDifferentOrNoRootAction()
         {
-            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer()))
+            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object)))
                 .GetControllers(typeof(Controllers.NoRootController).GetTypeInfo().Assembly);
 
             var resolver = new PathResolver(ctrlCtx);

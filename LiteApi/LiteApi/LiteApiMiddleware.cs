@@ -116,7 +116,7 @@ namespace LiteApi
         private void Initialize(IServiceProvider services)
         {
             _logger.LogInformation("LiteApi middleware initialization started");
-            IParametersDiscoverer parameterDiscoverer = new ParametersDiscoverer();
+            IParametersDiscoverer parameterDiscoverer = new ParametersDiscoverer(services);
             IActionDiscoverer actionDiscoverer = new ActionDiscoverer(parameterDiscoverer);
             IControllerDiscoverer ctrlDiscoverer = new ControllerDiscoverer(actionDiscoverer);
 
@@ -132,7 +132,7 @@ namespace LiteApi
             _pathResolver = new PathResolver(ctrlContexts.ToArray());
 
             IControllerBuilder ctrlBuilder = new ControllerBuilder(services);
-            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer);
+            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer, services);
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {
                 modelBinder.AddAdditionalQueryModelBinder(qmb);

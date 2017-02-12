@@ -34,7 +34,7 @@ namespace LiteApi.Tests
                 ControllerType = type,
                 RouteAndName = GetControllerName(type)
             };
-            var ad = new ActionDiscoverer(new ParametersDiscoverer());
+            var ad = new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object));
             context.Actions = ad.GetActions(context);
 
             return context;

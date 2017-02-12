@@ -21,6 +21,11 @@
         RouteSegment,
 
         /// <summary>
+        /// Source is dependency injection container
+        /// </summary>
+        Service,
+
+        /// <summary>
         /// Source is unknown
         /// </summary>
         Unknown

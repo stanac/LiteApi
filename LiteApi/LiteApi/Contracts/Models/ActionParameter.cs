@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using LiteApi.Contracts.Abstractions;
 using System.Reflection;
 using System.Collections;
-using LiteApi.Services.ModelBinders;
 
 namespace LiteApi.Contracts.Models
 {
@@ -19,17 +17,20 @@ namespace LiteApi.Contracts.Models
         private bool _isTypeNullable;
         private bool _isTypeCollection;
         private bool _isCollectionElementTypeNullable;
-        private static readonly ModelBinderCollection _modelBinder = new ModelBinderCollection(new Services.JsonSerializer());
-        
+        private readonly IModelBinder _modelBinders;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionParameter"/> class.
         /// </summary>
-        /// <param name="parentActionCtx">The parent action CTX.</param>
+        /// <param name="parentActionCtx">The parent action context.</param>
+        /// <param name="modelBinders">Model binders.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ActionParameter(ActionContext parentActionCtx)
+        public ActionParameter(ActionContext parentActionCtx, IModelBinder modelBinders)
         {
             if (parentActionCtx == null) throw new ArgumentNullException(nameof(parentActionCtx));
+            if (modelBinders == null) throw new ArgumentNullException(nameof(modelBinders));
             ParentActionCtx = parentActionCtx;
+            _modelBinders = modelBinders;
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace LiteApi.Contracts.Models
         {
             get
             {
-                return !_modelBinder.DoesSupportType(Type, ParameterSources.Query);
+                return !_modelBinders.DoesSupportType(Type, ParameterSources.Query);
             }
         }
 

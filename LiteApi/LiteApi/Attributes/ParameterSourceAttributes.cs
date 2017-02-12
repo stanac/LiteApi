@@ -28,4 +28,13 @@ namespace LiteApi.Attributes
     public class FromBodyAttribute : Attribute
     {
     }
+
+    /// <summary>
+    /// Tells the middleware that parameter should be retrieved from dependency injection container
+    /// </summary>
+    /// <seealso cref="System.Attribute" />
+    [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+    public class FromServicesAttribute : Attribute
+    {
+    }
 }
