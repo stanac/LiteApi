@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using LiteApi.Attributes;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace LiteApi.Demo.Controllers
@@ -55,6 +56,11 @@ namespace LiteApi.Demo.Controllers
         public int Action2(int?[] i)
         {
             return i.Select(x => x ?? -0).Sum();
+        }
+
+        public int Action3(int a, int b, [FromServices]IDemoService theService)
+        {
+            return theService.Add(a, b);
         }
 
         public object SumNotNullable(List<int?> ints)
