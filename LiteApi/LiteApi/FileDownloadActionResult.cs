@@ -40,8 +40,10 @@ namespace LiteApi
         /// Initializes a new instance of the <see cref="FileDownloadActionResult"/> class.
         /// </summary>
         /// <param name="data">The data.</param>
-        /// <param name="mimeType">Content type header value.</param>
+        /// <param name="contentType">Content type header value.</param>
         /// <param name="fileName">Name of the file.</param>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public FileDownloadActionResult(byte[] data, string contentType, string fileName)
         {
             if (fileName == null) throw new ArgumentNullException(nameof(fileName));
@@ -68,8 +70,11 @@ namespace LiteApi
             if (contentType == null) throw new ArgumentNullException(nameof(contentType));
             if (data == null) throw new ArgumentNullException(nameof(data));
 
+            long currentPosition = data.Position;
+            data.Position = 0;
             Data = new byte[data.Length];
             data.Read(Data, 0, Data.Length);
+            data.Position = currentPosition;
             ContentType = contentType;
             FileName = fileName;
         }
@@ -82,6 +87,8 @@ namespace LiteApi
         /// <returns>
         /// Task to await
         /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// </exception>
         public Task WriteResponse(HttpContext httpCtx, ActionContext actionCtx)
         {
             if (httpCtx == null) throw new ArgumentNullException(nameof(httpCtx));

@@ -115,6 +115,7 @@ namespace LiteApi.Services
 
             }
             httpCtx.Response.StatusCode = statusCode;
+            httpCtx.Response.Headers.Add("X-Powered-By-Middleware", "LiteApi");
             if (isVoid)
             {
                 logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
