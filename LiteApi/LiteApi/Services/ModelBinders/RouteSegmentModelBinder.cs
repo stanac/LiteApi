@@ -8,7 +8,7 @@ namespace LiteApi.Services.ModelBinders
     /// <summary>
     /// Class for parsing parameter values from route segment
     /// </summary>
-    internal static class RouteSegmentQueryModelBinder
+    internal static class RouteSegmentModelBinder
     {
         /// <summary>
         /// Gets the parameter value, parameter must be from route segment.
@@ -24,7 +24,7 @@ namespace LiteApi.Services.ModelBinders
             if (request == null) throw new System.ArgumentNullException(nameof(request));
             if (parameter == null) throw new System.ArgumentNullException(nameof(parameter));
             if (actionCtx == null) throw new System.ArgumentNullException(nameof(actionCtx));
-            if (parameter.ParameterSource != ParameterSources.RouteSegment) throw new InvalidOperationException($"{nameof(RouteSegmentQueryModelBinder)} supports only parameters from route segment.");
+            if (parameter.ParameterSource != ParameterSources.RouteSegment) throw new InvalidOperationException($"{nameof(RouteSegmentModelBinder)} supports only parameters from route segment.");
 
             string[] segments = request.Path.Value.TrimStart('/').TrimEnd('/').Split('/');
             segments = segments.Skip(actionCtx.ParentController.RouteSegments.Length).ToArray();
@@ -39,11 +39,19 @@ namespace LiteApi.Services.ModelBinders
             {
                 if (actionCtx.RouteSegments[i].IsParameter && actionCtx.RouteSegments[i].ParameterName == paramName)
                 {
-                    stringValue = segments[i];
-                    break;
+                    if (i >= segments.Length)
+                    {
+                        throw new Exception($"Route segment for parameter {parameter} in action {actionCtx} not found");
+                    }
+                    else
+                    {
+                        stringValue = segments[i];
+                        break;
+                    }
                 }
             }
-            if (stringValue == null) throw new Exception("Route segment not found");
+            // shouldn't reach stringValue == null
+            if (stringValue == null) throw new Exception($"Route segment for parameter {parameter} in action {actionCtx} not found");
             return BasicQueryModelBinder.ParseSingleQueryValue(stringValue, parameter.Type, false, parameter.Name);
         }
     }
