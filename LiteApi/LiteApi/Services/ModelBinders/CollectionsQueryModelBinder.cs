@@ -1,5 +1,4 @@
-﻿using LiteApi.Contracts.Abstractions;
-using System;
+﻿using System;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -158,22 +157,10 @@ namespace LiteApi.Services.ModelBinders
         {
             CollectionsQueryModelParameterDetails details = GetDetailsForActionParameter(parameter);
             var key = request.Query.Keys.FirstOrDefault(x => x.ToLower() == parameter.Name);
-            if (key == null)
+            string[] values = new string[0];
+            if (key != null)
             {
-                if (parameter.IsNullable)
-                {
-                    return null;
-                }
-                throw new Exception($"Non nullable parameter {parameter.Name} is missing from query");
-            }
-            string[] values = request.Query[key];
-            if (values?.Length == 0)
-            {
-                if (parameter.IsNullable)
-                {
-                    return null;
-                }
-                throw new Exception($"Non nullable parameter {parameter.Name} is missing from query");
+                values = request.Query[key];
             }
 
             if (details.IsArray || details.IsIEnumerable)
@@ -194,7 +181,8 @@ namespace LiteApi.Services.ModelBinders
                 }
                 return parsedValues;
             }
-            throw new Exception($"Parameter is not array, list or IEnumerable.");
+            
+            throw new Exception($"Parameter {parameter} in action {actionCtx} is not array, list or IEnumerable.");
         }
 
         private CollectionsQueryModelParameterDetails GetDetailsForActionParameter(ActionParameter actionParam)
@@ -230,24 +218,29 @@ namespace LiteApi.Services.ModelBinders
                 else
                 {
                     IsList = info.IsGenericType && info.GetGenericTypeDefinition() == typeof(List<>);
-                    CollectionElementType = info.GenericTypeArguments.Single();
+                    if (IsList)
+                    {
+                        CollectionElementType = info.GenericTypeArguments.Single();
+                    }
                 }
                 if (!IsArray && !IsList)
                 {
                     IsIEnumerable = info.IsGenericType && info.GetGenericTypeDefinition() == typeof(IEnumerable<>);
-                    CollectionElementType = info.GenericTypeArguments.Single();
+                    if (IsIEnumerable)
+                    {
+                        CollectionElementType = info.GenericTypeArguments.Single();
+                    }
                 }
 
-                if (!IsArray && !IsList && !IsIEnumerable)
+                if (IsArray || IsList || IsIEnumerable)
                 {
-                    throw new Exception($"Parameter is not array, list or IEnumerable.");
-                }
-                OriginalCollectionElementType = CollectionElementType;
-                Type nullableArgument;
-                if (CollectionElementType.GetTypeInfo().IsNullable(out nullableArgument))
-                {
-                    IsCollectionElementTypeNullable = true;
-                    CollectionElementType = nullableArgument;
+                    OriginalCollectionElementType = CollectionElementType;
+                    Type nullableArgument;
+                    if (CollectionElementType.GetTypeInfo().IsNullable(out nullableArgument))
+                    {
+                        IsCollectionElementTypeNullable = true;
+                        CollectionElementType = nullableArgument;
+                    }
                 }
             }
         }
