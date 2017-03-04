@@ -1,3 +1,9 @@
+0.7.1
+- Fixes in
+  - Route segment binder
+  - Collection query binder
+  - Action overloading
+
 0.7.0
 - Support for action parameters from IServiceProvider (dependency injection on action level)
 - Support for file uploading (streams)
