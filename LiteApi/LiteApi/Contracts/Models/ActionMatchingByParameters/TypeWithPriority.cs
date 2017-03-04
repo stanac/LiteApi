@@ -63,6 +63,11 @@ namespace LiteApi.Contracts.Models.ActionMatchingByParameters
             else if (info.IsGenericType && typeof(IEnumerable).IsAssignableFrom(type))
             {
                 type = type.GetGenericArguments().First();
+                Type temp;
+                if (type.IsNullable(out temp))
+                {
+                    type = temp;
+                }
             }
             return new TypeWithPriority(type).TypePriority;
         }
