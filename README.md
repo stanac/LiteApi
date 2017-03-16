@@ -2,7 +2,7 @@
 
 ## MVC-style inspired .NET Core WEB API with JSON only support
 
-[![Build status](https://ci.appveyor.com/api/projects/status/5crmsp0tfgduwcvo/branch/master?svg=true)] (https://ci.appveyor.com/project/stanac/liteapi/branch/master)
+ [![AppVeyor branch](https://img.shields.io/appveyor/ci/stanac/liteapi/master.svg)]()
  [![Coverage Status](https://img.shields.io/coveralls/stanac/LiteApi/master.svg?maxAge=900)](https://coveralls.io/github/stanac/LiteApi?&branch=master)
  [![NuGet](https://img.shields.io/nuget/v/LiteApi.svg)](https://www.nuget.org/packages/LiteApi)
  [![license](https://img.shields.io/github/license/stanac/liteapi.svg)]()
