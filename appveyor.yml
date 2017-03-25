@@ -5,7 +5,7 @@ before_build:
 
     dotnet restore
 build:
-  project: LiteApi.sln
+  project: LiteApi/LiteApi.sln
   verbosity: minimal
 test_script:
 - cmd: >-
