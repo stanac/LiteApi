@@ -26,6 +26,11 @@
         Service,
 
         /// <summary>
+        /// Source us HTTP header in request
+        /// </summary>
+        Header,
+
+        /// <summary>
         /// Source is unknown
         /// </summary>
         Unknown

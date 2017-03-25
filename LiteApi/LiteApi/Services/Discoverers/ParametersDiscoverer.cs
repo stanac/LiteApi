@@ -41,7 +41,10 @@ namespace LiteApi.Services.Discoverers
                 bool isFromBody = false;
                 bool isFromRoute = false;
                 bool isFromService = false;
+                bool isFromHeader = false;
+                string overridenName = null;
 
+                // todo: refactor with attribute inheritance
                 if (param.GetCustomAttribute<FromServicesAttribute>() != null)
                 {
                     isFromService = true;
@@ -51,11 +54,18 @@ namespace LiteApi.Services.Discoverers
                     isFromQuery = param.GetCustomAttribute<FromUrlAttribute>() != null;
                     isFromBody = param.GetCustomAttribute<FromBodyAttribute>() != null;
                     isFromRoute = param.GetCustomAttribute<FromRouteAttribute>() != null;
+                    var headerAttrib = param.GetCustomAttribute<FromHeaderAttribute>();
+                    if (headerAttrib != null)
+                    {
+                        isFromHeader = true;
+                        overridenName = headerAttrib.HeaderName;
+                    }
                 }
 
                 ParameterSources source = ParameterSources.Unknown;
 
                 if (isFromService) source = ParameterSources.Service;
+                else if (isFromHeader) source = ParameterSources.Header;
                 else if (isFromQuery && !isFromBody && !isFromRoute) source = ParameterSources.Query;
                 else if (!isFromQuery && isFromBody && !isFromRoute) source = ParameterSources.Body;
                 else if (!isFromQuery && !isFromBody && isFromRoute) source = ParameterSources.RouteSegment;
@@ -66,7 +76,8 @@ namespace LiteApi.Services.Discoverers
                     DefaultValue = param.DefaultValue,
                     HasDefaultValue = param.HasDefaultValue,
                     Type = param.ParameterType,
-                    ParameterSource = source
+                    ParameterSource = source,
+                    OverridenName = overridenName
                 };
 
                 if (parameters[i].ParameterSource == ParameterSources.Unknown)

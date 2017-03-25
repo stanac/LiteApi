@@ -29,17 +29,17 @@ namespace LiteApi.Contracts.Models
         {
             if (parentActionCtx == null) throw new ArgumentNullException(nameof(parentActionCtx));
             if (modelBinders == null) throw new ArgumentNullException(nameof(modelBinders));
-            ParentActionCtx = parentActionCtx;
+            ParentActionContext = parentActionCtx;
             _modelBinders = modelBinders;
         }
 
         /// <summary>
-        /// Gets or sets the parent action CTX.
+        /// Gets or sets the parent action context.
         /// </summary>
         /// <value>
-        /// The parent action CTX.
+        /// The parent action context.
         /// </value>
-        public ActionContext ParentActionCtx { get; set; }
+        public ActionContext ParentActionContext { get; set; }
 
         internal bool IsTypeSupportedFromRoute()
         {
@@ -165,9 +165,18 @@ namespace LiteApi.Contracts.Models
         {
             get
             {
+                // todo: remove this from model class
                 return !_modelBinders.DoesSupportType(Type, ParameterSources.Query);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the overriden parameter name (Used only for header parameters for now).
+        /// </summary>
+        /// <value>
+        /// The overriden parameter name.
+        /// </value>
+        public string OverridenName { get; set; }
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.

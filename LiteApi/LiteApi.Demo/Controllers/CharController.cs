@@ -11,5 +11,10 @@ namespace LiteApi.Demo.Controllers
         {
             return new string(c.ToArray());
         }
+
+        public string SumChars2(char[] c)
+        {
+            return new string(c);
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace LiteApi
         public ClaimsPrincipal User => HttpContext?.User;
 
         /// <summary>
-        /// Write response of file download.
+        /// Writes response of file download.
         /// </summary>
         /// <param name="data">The data to download.</param>
         /// <param name="contentType">Content type header value.</param>

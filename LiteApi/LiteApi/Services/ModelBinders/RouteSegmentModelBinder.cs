@@ -21,9 +21,9 @@ namespace LiteApi.Services.ModelBinders
         /// <exception cref="System.InvalidOperationException">RouteSegmentQueryModelBinder supports only parameters from route segment.</exception>
         public static object GetParameterValue(ActionContext actionCtx, ActionParameter parameter, HttpRequest request)
         {
-            if (request == null) throw new System.ArgumentNullException(nameof(request));
-            if (parameter == null) throw new System.ArgumentNullException(nameof(parameter));
-            if (actionCtx == null) throw new System.ArgumentNullException(nameof(actionCtx));
+            if (request == null) throw new ArgumentNullException(nameof(request));
+            if (parameter == null) throw new ArgumentNullException(nameof(parameter));
+            if (actionCtx == null) throw new ArgumentNullException(nameof(actionCtx));
             if (parameter.ParameterSource != ParameterSources.RouteSegment) throw new InvalidOperationException($"{nameof(RouteSegmentModelBinder)} supports only parameters from route segment.");
 
             string[] segments = request.Path.Value.TrimStart('/').TrimEnd('/').Split('/');
@@ -52,7 +52,7 @@ namespace LiteApi.Services.ModelBinders
             }
             // shouldn't reach stringValue == null
             if (stringValue == null) throw new Exception($"Route segment for parameter {parameter} in action {actionCtx} not found");
-            return BasicQueryModelBinder.ParseSingleQueryValue(stringValue, parameter.Type, false, parameter.Name);
+            return BasicQueryModelBinder.ParseSingleQueryValue(stringValue, parameter.Type, false, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
         }
     }
 }

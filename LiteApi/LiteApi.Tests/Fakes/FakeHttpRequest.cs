@@ -26,7 +26,7 @@ namespace LiteApi.Tests.Fakes
 
         public override bool HasFormContentType { get; }
 
-        public override IHeaderDictionary Headers { get; }
+        public override IHeaderDictionary Headers { get; } = new FakeHeaderDictionary();
 
         public override HostString Host { get; set; }
 

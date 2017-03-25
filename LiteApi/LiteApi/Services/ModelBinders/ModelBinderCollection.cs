@@ -29,10 +29,8 @@ namespace LiteApi.Services.ModelBinders
         /// <exception cref="System.ArgumentNullException"></exception>
         public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider)
         {
-            if (jsonSerializer == null) throw new ArgumentNullException(nameof(jsonSerializer));
-            if (serviceProvider == null) throw new ArgumentNullException(nameof(serviceProvider));
-            _jsonSerializer = jsonSerializer;
-            _serviceProvider = serviceProvider;
+            _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
             _queryBinders.Add(new BasicQueryModelBinder());
             _queryBinders.Add(new CollectionsQueryModelBinder());
@@ -62,7 +60,7 @@ namespace LiteApi.Services.ModelBinders
         /// </returns>
         public bool DoesSupportType(Type type, ParameterSources source)
         {
-            if (source == ParameterSources.Query)
+            if (source == ParameterSources.Query || source == ParameterSources.Header)
             {
                 foreach (var b in _queryBinders)
                 {
@@ -77,7 +75,7 @@ namespace LiteApi.Services.ModelBinders
             {
                 return true;
             }
-            throw new Exception("Error in ModelBinderCollection.DoesSupportType Parameter source needs to be set to Body or Query");
+            throw new Exception("Error in ModelBinderCollection.DoesSupportType Parameter source needs to be set to Body, Query or Header");
         }
 
         /// <summary>
@@ -96,7 +94,7 @@ namespace LiteApi.Services.ModelBinders
             List<object> args = new List<object>();
             foreach (var param in actionCtx.Parameters)
             {
-                if (param.ParameterSource == ParameterSources.Query)
+                if (param.ParameterSource == ParameterSources.Query || param.ParameterSource == ParameterSources.Header)
                 {
                     var binder = _queryBinders.FirstOrDefault(x => x.DoesSupportType(param.Type));
                     if (binder != null)

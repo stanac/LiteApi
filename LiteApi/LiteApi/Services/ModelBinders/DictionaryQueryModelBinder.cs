@@ -62,6 +62,7 @@ namespace LiteApi.Services.ModelBinders
         /// <exception cref="System.NotImplementedException"></exception>
         public override object ParseParameterValue(HttpRequest request, ActionContext actionCtx, ActionParameter parameter)
         {
+            // todo: support for header parameters
             char[] split = { '.' };
             var details = GetActionParameterDictionaryDetails(parameter);
             var queryKeys = request.Query.Where(x => x.Key.StartsWith(parameter.Name, StringComparison.OrdinalIgnoreCase) && x.Key.Contains("."));
@@ -72,9 +73,9 @@ namespace LiteApi.Services.ModelBinders
             foreach (var queryKeyValues in queryKeys)
             {
                 object key = getDictionaryKey(queryKeyValues.Key);
-                key = ParseSingleQueryValue(key as string, details.KeyType, details.IsKeyTypeNullable, parameter.Name);
+                key = ParseSingleQueryValue(key as string, details.KeyType, details.IsKeyTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
                 object value = queryKeyValues.Value.Last();
-                value = ParseSingleQueryValue(value as string, details.ValueType, details.IsValueTypeNullable, parameter.Name);
+                value = ParseSingleQueryValue(value as string, details.ValueType, details.IsValueTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
                 dictionary.Add(key, value);
             }
             return dictionary;

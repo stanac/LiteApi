@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,17 +85,35 @@ namespace LiteApi.Services.ModelBinders
         /// <exception cref="System.NotImplementedException"></exception>
         public virtual object ParseParameterValue(HttpRequest request, ActionContext actionCtx, ActionParameter parameter)
         {
-            var paramName = parameter.Name.ToLower();
-            if (request.Query.Keys.All(x => x != paramName))
+            // todo: refactor so we don't check all keys
+            string value = null;
+            var paramName = parameter.Name;
+            if (!string.IsNullOrWhiteSpace(parameter.OverridenName)) paramName = parameter.OverridenName;
+
+            IEnumerable<KeyValuePair<string, StringValues>> source = null;
+            if (parameter.ParameterSource == ParameterSources.Query) source = request.Query;
+            else source = request.Headers;
+            
+            var keyValue = source.LastOrDefault(x => paramName.Equals(x.Key, StringComparison.OrdinalIgnoreCase));
+
+            if (keyValue.Key != null)
             {
-                if (parameter.HasDefaultValue)
-                {
-                    return parameter.DefaultValue;
-                }
-                throw new Exception($"Parameter {parameter.Name} from query does not have default value and query does not contain value.");
+                value = keyValue.Value.LastOrDefault();
             }
-            var value = request.Query.Where(x => x.Key == paramName).Last().Value.Last();
-            return ParseSingleQueryValue(value, parameter.Type, parameter.IsNullable, parameter.Name);
+
+            if (keyValue.Key == null)
+            {
+                if (parameter.HasDefaultValue) return parameter.DefaultValue;
+                string message =
+                    $"Parameter '{parameter.Name}' from {parameter.ParameterSource.ToString().ToLower()} " +
+                    $"(action: '{parameter.ParentActionContext}') does not have default value and " +
+                    $"{parameter.ParameterSource.ToString().ToLower()} does not contain value.";
+                throw new Exception(message);
+            }
+
+            if (parameter.HasDefaultValue && parameter.Type != typeof(string) && string.IsNullOrEmpty(value)) return parameter.DefaultValue;
+            
+            return ParseSingleQueryValue(value, parameter.Type, parameter.IsNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
         }
 
         /// <summary>
@@ -104,10 +123,11 @@ namespace LiteApi.Services.ModelBinders
         /// <param name="type">The type.</param>
         /// <param name="isNullable">if set to <c>true</c> parameter is nullable, as in int? or Nullable&lt;bool&gt;.</param>
         /// <param name="parameterName">Name of the parameter.</param>
+        /// <param name="actionNameRetriever">Resolves name of the action in lazy manner</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        internal static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName)
+        internal static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName, Lazy<string> actionNameRetriever)
         {
             if (type == typeof(string))
             {
@@ -120,9 +140,9 @@ namespace LiteApi.Services.ModelBinders
                 {
                     return null;
                 }
-                throw new ArgumentException($"Value is not provided for parameter: {parameterName}");
+                throw new ArgumentException($"Value is not provided for parameter: '{parameterName}' in action '{actionNameRetriever.Value}'");
             }
-
+            // todo: check if using swith with Type.GUID.ToString() would be faster
             if (type == typeof(bool)) return bool.Parse(value);
             if (type == typeof(char)) return char.Parse(value);
             if (type == typeof(Guid)) return Guid.Parse(value);

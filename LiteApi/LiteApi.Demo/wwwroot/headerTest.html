@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>header test</title>
+    <style>
+        body {
+            font-family: sans-serif
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+    <input type="number" id="i" placeholder="first value" value="123" /> <br/>
+    <input type="number" id="j" placeholder="second value" value="11" /> <br />
+    <strong>result:</strong> <span id="result"></span> <br/>
+    <button id="add">add</button>
+
+<script>
+    $(function () {
+        $('#add').click(function () {
+            var i = +($('#i').val());
+            var j = +($('#j').val());
+            if (i == NaN || j == NaN) {
+                alert('set bot values');
+                return;
+            }
+
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("i", i);
+                    request.setRequestHeader("x-overriden-param-name-j", j);
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/Add',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

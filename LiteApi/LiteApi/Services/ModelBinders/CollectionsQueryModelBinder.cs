@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Collections;
+using Microsoft.Extensions.Primitives;
 
 namespace LiteApi.Services.ModelBinders
 {
@@ -156,7 +157,22 @@ namespace LiteApi.Services.ModelBinders
         public override object ParseParameterValue(HttpRequest request, ActionContext actionCtx, ActionParameter parameter)
         {
             CollectionsQueryModelParameterDetails details = GetDetailsForActionParameter(parameter);
-            var key = request.Query.Keys.FirstOrDefault(x => x.ToLower() == parameter.Name);
+            string key = null;
+            IEnumerable<KeyValuePair<string, StringValues>> source = null;
+            if (parameter.ParameterSource == ParameterSources.Query)
+            {
+                source = request.Query;
+            }
+            else if (parameter.ParameterSource == ParameterSources.Header)
+            {
+                source = request.Headers;
+            }
+
+            if (source != null)
+            {
+                key = source.FirstOrDefault(x => x.Key.ToLower() == parameter.Name).Key;
+            }
+
             string[] values = new string[0];
             if (key != null)
             {
@@ -168,7 +184,7 @@ namespace LiteApi.Services.ModelBinders
                 Array a = Array.CreateInstance(details.OriginalCollectionElementType, values.Length);
                 for (int i = 0; i < values.Length; i++)
                 {
-                    a.SetValue(ParseSingleQueryValue(values[i], details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name), i);
+                    a.SetValue(ParseSingleQueryValue(values[i], details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString())), i);
                 }
                 return a;
             }
@@ -177,7 +193,7 @@ namespace LiteApi.Services.ModelBinders
                 IList parsedValues = Activator.CreateInstance(parameter.Type) as IList;
                 foreach (var value in values)
                 {
-                    parsedValues.Add(ParseSingleQueryValue(value, details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name));
+                    parsedValues.Add(ParseSingleQueryValue(value, details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString())));
                 }
                 return parsedValues;
             }
