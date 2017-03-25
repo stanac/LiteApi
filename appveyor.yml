@@ -1,11 +1,15 @@
-version: 0.7.0.{build}
+version: 0.1.1.{build}
 before_build:
-- cmd: dotnet restore
+- ps: >-
+    cd ./LiteApi
+
+    dotnet restore
 build:
   verbosity: minimal
-environment:
-  COVERALL_TOKEN:
-    secure: Xldcm2fCjAGzhwY/OF7sBXiuamRWDD6H7icrLQHRL+DmyJgdOoPMryBfEgvJai3Q
 test_script:
-- ps: >-
-    .\runtests.ps1
+- cmd: >-
+    cd LiteApi
+
+    cd LiteApi.Tests
+
+    dotnet test
