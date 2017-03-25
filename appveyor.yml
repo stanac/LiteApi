@@ -5,9 +5,5 @@ build_script:
 
     dotnet build LiteApi/LiteApi.sln
 test_script:
-- cmd: >-
-    cd LiteApi
-
-    cd LiteApi.Tests
-
-    dotnet test
+- ps: >-
+    .\runtests.ps1
