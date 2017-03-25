@@ -1,10 +1,11 @@
-version: 0.1.1.{build}
+version: 0.7.2.{build}
 before_build:
 - ps: >-
     cd ./LiteApi
 
     dotnet restore
 build:
+  project: LiteApi.sln
   verbosity: minimal
 test_script:
 - cmd: >-
