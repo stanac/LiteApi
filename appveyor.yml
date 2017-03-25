@@ -1,12 +1,9 @@
 version: 0.7.2.{build}
-before_build:
+build_script:
 - ps: >-
-    cd ./LiteApi
+    dotnet restore LiteApi/LiteApi.sln
 
-    dotnet restore
-build:
-  project: LiteApi/LiteApi.sln
-  verbosity: minimal
+    dotnet build LiteApi/LiteApi.sln
 test_script:
 - cmd: >-
     cd LiteApi
