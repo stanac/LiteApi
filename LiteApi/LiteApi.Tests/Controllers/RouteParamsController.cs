@@ -17,6 +17,8 @@ namespace LiteApi.Tests.Controllers
             return a + b + c;
         }
 
-
+        [ActionRoute("{valueAa}/Plus3/{valueBb}")]
+        public int Sum3(int valueAa, int valueBb)
+            => valueAa + valueBb;
     }
 }

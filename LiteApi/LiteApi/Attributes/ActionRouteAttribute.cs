@@ -48,7 +48,7 @@ namespace LiteApi.Attributes
             _originalValue = route;
             _segments = route
                 .Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => new RouteSegment(x))
+                .Select(x => new RouteSegment(x.ToLower()))
                 .ToArray();
         }
         

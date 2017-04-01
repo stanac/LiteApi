@@ -22,8 +22,7 @@ namespace LiteApi.Services.Discoverers
         /// <exception cref="System.ArgumentNullException"></exception>
         public ControllerDiscoverer(IActionDiscoverer actionDiscoverer)
         {
-            if (actionDiscoverer == null) throw new ArgumentNullException(nameof(actionDiscoverer));
-            _actionDiscoverer = actionDiscoverer;
+            _actionDiscoverer = actionDiscoverer ?? throw new ArgumentNullException(nameof(actionDiscoverer));
         }
 
         /// <summary>

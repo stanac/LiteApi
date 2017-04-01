@@ -150,7 +150,8 @@ namespace LiteApi
                 {
                     _logger.LogError(error);
                 }
-                throw new LiteApiRegistrationException($"Failed to initialize {nameof(LiteApiMiddleware)}, see property Errors or log if enabled.", errors);
+                string allErrors = "\n\n --------- \n\n" + string.Join("\n\n --------- \n\n", errors);
+                throw new LiteApiRegistrationException($"Failed to initialize {nameof(LiteApiMiddleware)}, see property Errors, log if enabled, or check erros listed below." + allErrors, errors);
             }
         }
     }

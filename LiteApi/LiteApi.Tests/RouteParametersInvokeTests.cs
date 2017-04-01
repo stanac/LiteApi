@@ -111,6 +111,22 @@ namespace LiteApi.Tests
             await AssertCanInvokeActionWithRouteParamOfType<DateTime>(true);
         }
 
+        [Fact]
+        public async Task Action_WithRouteParametersWithCapitalLetters_CanBeInvoked()
+        {
+            var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.RouteParamsController));
+            var ctrl = discoverer.GetControllers(null).Single();
+            var action = ctrl.Actions.Single(x => x.Name == "plus3");
+            var serializer = new JsonSerializer();
+            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new Services.ModelBinders.ModelBinderCollection(serializer, new Moq.Mock<IServiceProvider>().Object));
+            var httpCtx = new Fakes.FakeHttpContext();
+            httpCtx.Request.Path = "/api/v2/route/2/Plus3/4";
+            await invoker.Invoke(httpCtx, action);
+            string jsonResult = httpCtx.Response.ReadBody();
+            object result = serializer.Deserialize(jsonResult, typeof(int));
+            Assert.Equal(6, result);
+        }
+
         private async Task AssertCanInvokeActionWithRouteParamOfType<T>(bool dateOnly = false)
         {
             Type type = typeof(T);

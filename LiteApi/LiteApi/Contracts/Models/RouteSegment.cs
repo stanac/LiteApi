@@ -60,7 +60,7 @@ namespace LiteApi.Contracts.Models
             IsConstant = !(OriginalValue.StartsWith("{", StringComparison.Ordinal) && OriginalValue.EndsWith("}", StringComparison.Ordinal));
             if (!IsConstant)
             {
-                ParameterName = OriginalValue.TrimStart('{').TrimEnd('}');
+                ParameterName = OriginalValue.TrimStart('{').TrimEnd('}').ToLower();
             }
             else
             {
