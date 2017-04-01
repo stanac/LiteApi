@@ -1,3 +1,8 @@
+0.7.2
+- Fixes
+  - Route parameters are not suppose to be case sensitive
+  - When initialization fails it's not possible to see what happen on deceloper exception page
+
 0.7.1
 - Fixes in
   - Route segment binder

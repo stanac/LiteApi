@@ -10,8 +10,6 @@ namespace LiteApi
     /// </summary>
     public abstract class LiteController
     {
-        private HttpContext _httpContext;
-
         /// <summary>
         /// Gets the HTTP context.
         /// </summary>

@@ -22,6 +22,8 @@ If (Test-Path "obj"){
     Remove-Item "obj" -recurse
 }
 
+dotnet restore
+
 dotnet build -c Release -o "..\..\BuildOutput\netstandard1.6" -f "netstandard1.6"
 
 cd ..
