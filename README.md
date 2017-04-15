@@ -147,7 +147,8 @@ namespace MyApp
 
 ### 0.8
 - [ ] Extensibility point to enable replacing any internal service in the middleware
-- [ ] Support action parameters from request header
+- [ ] Force HTTPS attribute and global config
+- [x] Support action parameters from request header (in 0.7.2)
 
 ### 0.7
 - [x] Support for file uploading (streams) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#fileupload)
