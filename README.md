@@ -134,7 +134,7 @@ namespace MyApp
 - [ ] Support for other document formats (XML out of the box, extensibility points for other types)
 
 ### 1.3
-- [ ] Support for versioning
+- [ ] Support for versioning using request header value, versioning using routes is supported with `ControllerRouteAttribute`
 
 ### 1.2
 - [ ] Performance testing, performance improvements with Roslyn code generators
