@@ -130,8 +130,11 @@ namespace MyApp
 
 ## Roadmap
 
-### 1.3
+### 1.4
 - [ ] Support for other document formats (XML out of the box, extensibility points for other types)
+
+### 1.3
+- [ ] Support for versioning
 
 ### 1.2
 - [ ] Performance testing, performance improvements with Roslyn code generators
