@@ -10,7 +10,7 @@ namespace LiteApi.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class RestfulLinksAttribute: Attribute
+    public class RestfulAttribute: Attribute
     {
     }
 }

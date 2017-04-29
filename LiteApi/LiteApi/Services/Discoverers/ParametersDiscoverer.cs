@@ -51,7 +51,7 @@ namespace LiteApi.Services.Discoverers
                 }
                 else
                 {
-                    isFromQuery = param.GetCustomAttribute<FromUrlAttribute>() != null;
+                    isFromQuery = param.GetCustomAttribute<FromQueryAttribute>() != null;
                     isFromBody = param.GetCustomAttribute<FromBodyAttribute>() != null;
                     isFromRoute = param.GetCustomAttribute<FromRouteAttribute>() != null;
                     var headerAttrib = param.GetCustomAttribute<FromHeaderAttribute>();

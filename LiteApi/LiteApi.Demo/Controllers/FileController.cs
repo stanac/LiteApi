@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LiteApi.Demo.Controllers
 {
-    [RestfulLinks]
+    [Restful]
     public class FileController: LiteController
     {
         [HttpPost]

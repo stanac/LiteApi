@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LiteApi.Tests.Controllers
 {
-    [RestfulLinks]
+    [Restful]
     public class RestfulController: LiteController
     {
         [HttpGet]

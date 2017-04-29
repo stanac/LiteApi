@@ -1,3 +1,9 @@
+0.7.3
+- Changes
+  - Update Json.NET dependency to 10.0.2
+  - Rename RestfulLinksAttribute to RestfulAttribute
+  - Rename FromUrlAttribute to FromQueryAttribute
+
 0.7.2
 - Fixes
   - Route parameters are not suppose to be case sensitive

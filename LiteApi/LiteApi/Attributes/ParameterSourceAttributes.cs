@@ -10,7 +10,7 @@ namespace LiteApi.Attributes
     /// </summary>
     /// <seealso cref="System.Attribute" />
     [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-    public class FromUrlAttribute : Attribute
+    public class FromQueryAttribute : Attribute
     {
     }
 

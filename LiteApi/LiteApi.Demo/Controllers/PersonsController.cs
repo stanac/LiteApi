@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace LiteApi.Demo.Controllers
 {
-    [RestfulLinks]
+    [Restful]
     public class PersonsController: LiteController
     {
         private readonly IPersonDataAccess _dataAccess;
