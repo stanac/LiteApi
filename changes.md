@@ -1,3 +1,7 @@
+0.7.4
+- Fixes
+  - Fix .nuspec
+
 0.7.3
 - Changes
   - Update Json.NET dependency to 10.0.2
