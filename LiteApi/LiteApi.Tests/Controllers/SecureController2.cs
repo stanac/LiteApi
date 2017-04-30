@@ -15,6 +15,8 @@ namespace LiteApi.Tests.Controllers
         [AttributeUsage(AttributeTargets.Method)]
         private class BadFilterAttribute : Attribute, IApiFilter
         {
+            public bool IgnoreSkipFilters { get; set; } = false;
+
             public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
             {
                 // filter is not setting status code or message, it's used to check if 

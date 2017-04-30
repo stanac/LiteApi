@@ -13,6 +13,14 @@ namespace LiteApi.Attributes
     public class RequiresAuthenticationAttribute : Attribute, IApiFilter
     {
         /// <summary>
+        /// Gets a value indicating whether <see cref="T:LiteApi.Attributes.SkipFiltersAttribute" /> should be ignored.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if SkipFiltersAttribute should be ignored; otherwise, <c>false</c>.
+        /// </value>
+        public bool IgnoreSkipFilters => false;
+
+        /// <summary>
         /// Check if controller/action should be invoked or not. User must be authenticated in order for filter to pass.
         /// </summary>
         /// <param name="httpCtx">HTTP context</param>

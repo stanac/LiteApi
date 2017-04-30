@@ -91,6 +91,8 @@ namespace LiteApi.Tests.Controllers
         [AttributeUsage(AttributeTargets.Method)]
         private class UserHasAnyTwoClaimsFilterAttribute : Attribute, IApiFilter
         {
+            public bool IgnoreSkipFilters { get; set; } = false;
+
             public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
             {
                 var userIsAuthenticated = httpCtx?.User?.Identity.IsAuthenticated ?? false;
@@ -105,6 +107,8 @@ namespace LiteApi.Tests.Controllers
         [AttributeUsage(AttributeTargets.Method)]
         private class UserHasAnyTwoClaimsAsyncFilterAttribute : Attribute, IApiFilterAsync
         {
+            public bool IgnoreSkipFilters { get; set; } = false;
+
             public Task<ApiFilterRunResult> ShouldContinueAsync(HttpContext httpCtx)
             {
                 ApiFilterRunResult result = ApiFilterRunResult.Continue;

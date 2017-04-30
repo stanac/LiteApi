@@ -10,6 +10,15 @@ namespace LiteApi.Contracts.Models
         public IApiFilter ApiFilter { get; private set; }
         public IApiFilterAsync ApiFilterAsync { get; private set; }
         
+        public bool IgnoreSkipFilter
+        {
+            get
+            {
+                if (ApiFilterAsync != null) return ApiFilterAsync.IgnoreSkipFilters;
+                return ApiFilter.IgnoreSkipFilters;
+            }
+        }
+
         public ApiFilterWrapper(IApiFilter apiFilter)
         {
             if (apiFilter == null) throw new ArgumentNullException(nameof(apiFilter));
@@ -26,7 +35,7 @@ namespace LiteApi.Contracts.Models
         {
             ApiFilter = new PolicyFilter(policyFilter, policyStoreFactory);
         }
-
+        
         public async Task<ApiFilterRunResult> ShouldContinueAsync(HttpContext httpCtx)
         {
             if (ApiFilterAsync != null)
@@ -51,6 +60,8 @@ namespace LiteApi.Contracts.Models
                 _policyStoreFactory = policyStoreFactory;
                 _policyFilter = policyFilter;
             }
+
+            public bool IgnoreSkipFilters => false;
 
             public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
                 => _policyFilter.ShouldContinue(httpCtx.User, _policyStoreFactory);

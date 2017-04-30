@@ -9,6 +9,14 @@ namespace LiteApi.Contracts.Abstractions
     public interface IApiFilter
     {
         /// <summary>
+        /// Gets a value indicating whether <see cref="LiteApi.Attributes.SkipFiltersAttribute "/> should be ignored.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if SkipFiltersAttribute should be ignored; otherwise, <c>false</c>.
+        /// </value>
+        bool IgnoreSkipFilters { get; }
+
+        /// <summary>
         /// When implemented can be called to check if controller/action should be invoked or not (e.g. for authorization/authentication)
         /// </summary>
         /// <param name="httpCtx">HTTP context</param>
@@ -21,6 +29,14 @@ namespace LiteApi.Contracts.Abstractions
     /// </summary>
     public interface IApiFilterAsync
     {
+        /// <summary>
+        /// Gets a value indicating whether <see cref="LiteApi.Attributes.SkipFiltersAttribute "/> should be ignored.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if SkipFiltersAttribute should be ignored; otherwise, <c>false</c>.
+        /// </value>
+        bool IgnoreSkipFilters { get; }
+
         /// <summary>
         /// When implemented can be called to check if controller/action should be invoked or not (e.g. for authorization/authentication) in async fashion
         /// </summary>

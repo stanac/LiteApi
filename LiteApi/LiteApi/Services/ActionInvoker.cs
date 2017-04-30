@@ -3,6 +3,7 @@ using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LiteApi.Services
@@ -34,10 +35,8 @@ namespace LiteApi.Services
         /// </exception>
         public ActionInvoker(IControllerBuilder controllerBuilder, IModelBinder modelBinder)
         {
-            if (controllerBuilder == null) throw new ArgumentNullException(nameof(controllerBuilder));
-            if (modelBinder == null) throw new ArgumentNullException(nameof(modelBinder));
-            _controllerBuilder = controllerBuilder;
-            _modelBinder = modelBinder;
+            _controllerBuilder = controllerBuilder ?? throw new ArgumentNullException(nameof(controllerBuilder));
+            _modelBinder = modelBinder ?? throw new ArgumentNullException(nameof(modelBinder));
         }
 
         /// <summary>
@@ -135,9 +134,21 @@ namespace LiteApi.Services
             }
         }
 
-        private static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
+        internal static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
         {
-            if (action.SkipAuth) return new ApiFilterRunResult { ShouldContinue = true };
+            if (action.SkipAuth)
+            {
+                var nonSkipable = action.ParentController.Filters.Where(x => x.IgnoreSkipFilter);
+                foreach (var filter in nonSkipable)
+                {
+                    var shouldContinue = await filter.ShouldContinueAsync(httpCtx);
+                    if (!shouldContinue.ShouldContinue)
+                    {
+                        return shouldContinue;
+                    }
+                }
+                return new ApiFilterRunResult { ShouldContinue = true };
+            }
 
             ApiFilterRunResult result = await action.ParentController.ValidateFilters(httpCtx);
             if (!result.ShouldContinue)
