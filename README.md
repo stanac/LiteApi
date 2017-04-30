@@ -147,6 +147,8 @@ namespace MyApp
 
 ### 0.9 Feature complete (RC)
 - [ ] Documentation and website
+- [ ] Global filters
+- [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
 - [ ] Extensibility point to enable replacing any internal service in the middleware
