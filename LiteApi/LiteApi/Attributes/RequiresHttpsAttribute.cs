@@ -11,7 +11,7 @@ namespace LiteApi.Attributes
     /// <seealso cref="System.Attribute" />
     /// <seealso cref="LiteApi.Contracts.Abstractions.IApiFilter" />
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
-    class RequiresHttpsAttribute : Attribute, IApiFilter
+    public class RequiresHttpsAttribute : Attribute, IApiFilter
     {
         /// <summary>
         /// Gets a value indicating whether <see cref="T:LiteApi.Attributes.SkipFiltersAttribute" /> should be ignored.
@@ -31,7 +31,7 @@ namespace LiteApi.Attributes
         /// <exception cref="System.NotImplementedException"></exception>
         public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
         {
-            if (httpCtx.Request.Protocol.ToLower() == "https") return ApiFilterRunResult.Continue;
+            if (httpCtx.Request.IsHttps) return ApiFilterRunResult.Continue;
 
             return new ApiFilterRunResult
             {

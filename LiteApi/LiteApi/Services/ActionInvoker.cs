@@ -72,6 +72,7 @@ namespace LiteApi.Services
                     }
                 }
                 httpCtx.Response.StatusCode = failedStatusCode;
+                await httpCtx.Response.WriteAsync(filterResult.SetResponseMessage ?? "request rejected");
                 logger?.LogInformation($"returning response with status code: {failedStatusCode}");
                 return;
             }
@@ -111,7 +112,6 @@ namespace LiteApi.Services
                 case "POST": statusCode = 201; break;
                 case "PUT": statusCode = 201; break;
                 case "DELETE": statusCode = 204; break;
-
             }
             httpCtx.Response.StatusCode = statusCode;
             httpCtx.Response.Headers.Add("X-Powered-By-Middleware", "LiteApi");

@@ -133,8 +133,7 @@ namespace LiteApi.Tests.FilterTests
             var action = ctrl.Actions.Single(x => x.Name == actionName);
             
             var ctx = new Fakes.FakeHttpContext();
-            if (useHttps) ctx.Request.Protocol = "HTTPS";
-            else ctx.Request.Protocol = "HTTP";
+            if (useHttps) ctx.Request.IsHttps = true;
 
             var result = await ActionInvoker.RunFiltersAndCheckIfShouldContinue(ctx, action);
 

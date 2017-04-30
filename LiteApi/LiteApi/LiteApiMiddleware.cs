@@ -91,8 +91,17 @@ namespace LiteApi
             }
             else
             {
-                await _actionInvoker.Invoke(context, action, log);
-                log.LogInformation("Action is invoked");
+                if (Options.RequiresHttps && !context.Request.IsHttps)
+                {
+                    log.LogInformation("LiteApi options are set to require HTTPS, request rejected because request is HTTP");
+                    context.Response.StatusCode = 400;
+                    await context.Response.WriteAsync("Bad request, HTTPS request was expected.");
+                }
+                else
+                {
+                    await _actionInvoker.Invoke(context, action, log);
+                    log.LogInformation("Action is invoked");
+                }
             }
             log.LogInformation("Request is processed");
         }

@@ -50,6 +50,14 @@ namespace LiteApi
         public IJsonSerializer JsonSerializer { get; private set; } = new JsonSerializer();
 
         /// <summary>
+        /// Gets a value indicating whether middleware should reject all non HTTPS requests.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if middleware requires HTTPS; otherwise, <c>false</c>.
+        /// </value>
+        public bool RequiresHttps { get; private set; } = false;
+
+        /// <summary>
         /// Gets the logger factory.
         /// </summary>
         /// <value>
@@ -114,12 +122,22 @@ namespace LiteApi
         /// Sets the logger factory.
         /// </summary>
         /// <param name="loggerFactory">The logger factory.</param>
-        /// <returns></returns>
+        /// <returns>This instance</returns>
         /// <exception cref="System.ArgumentNullException"></exception>
         public LiteApiOptions SetLoggerFactory(ILoggerFactory loggerFactory)
         {
-            if (loggerFactory == null) throw new ArgumentNullException(nameof(loggerFactory));
-            LoggerFactory = loggerFactory;
+            LoggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the value indicating if middleware should reject all non HTTPS requests.
+        /// </summary>
+        /// <param name="requiresHttps">if set to <c>true</c> requires HTTPS.</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetRequiresHttps(bool requiresHttps)
+        {
+            RequiresHttps = requiresHttps;
             return this;
         }
     }
