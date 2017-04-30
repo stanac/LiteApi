@@ -150,7 +150,7 @@ namespace MyApp
 
 ### 0.8
 - [ ] Extensibility point to enable replacing any internal service in the middleware
-- [ ] Force HTTPS attribute and global config
+- [x] Force HTTPS attribute and global config
 - [x] Support action parameters from request header (in 0.7.2)
 
 ### 0.7
