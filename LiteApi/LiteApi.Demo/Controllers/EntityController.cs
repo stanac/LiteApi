@@ -14,5 +14,7 @@ namespace LiteApi.Demo.Controllers
                 Id = idValue
             };
         }
+
+        public bool IsNull(int? id) => !id.HasValue;
     }
 }

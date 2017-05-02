@@ -33,5 +33,8 @@ namespace LiteApi.Demo.Controllers
 
             return FileDownload(data, contentType, fileName);
         }
+
+        [HttpPost, ActionRoute("/IsNull")]
+        public bool IsNull([FromBody] string value) => value == null;
     }
 }

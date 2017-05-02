@@ -14,6 +14,18 @@
     <input type="number" id="j" placeholder="second value" value="11" /> <br />
     <strong>result:</strong> <span id="result"></span> <br/>
     <button id="add">add</button>
+    <br />
+    <br />
+    <button id="testSum">Sum</button>
+    <button id="isNullNull">IsNull (is null)</button>
+    <button id="isNullNotNull">IsNull (is null)</button>
+
+    <br />
+    <br />
+
+    <button id="isStringNullEmpty">Is string null (is empty)</button>
+    <button id="isStringNullMissing">Is string null (missing header)</button>
+    <button id="isStringNullSet">Is string null (set value)</button>
 
 <script>
     $(function () {
@@ -37,6 +49,88 @@
                 }
             });
         });
+
+        $('#testSum').click(function () {
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("i", "2,4,6,8");
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/Sum',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+
+        $('#isNullNull').click(function () {
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("i", "");
+                    // request.setRequestHeader("i", "5");
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/isNull',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+
+        $('#isNullNotNull').click(function () {
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("i", "5");
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/isNull',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+
+        $('#isStringNullEmpty').click(function () {
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("s", "");
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/stringlength',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+        
+        $('#isStringNullMissing').click(function () {
+            $.ajax({
+                // beforeSend: function (request) {
+                //     request.setRequestHeader("s", "");
+                // },
+                type: 'GET',
+                url: '/api/HeaderParameters/stringlength',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+        
+        $('#isStringNullSet').click(function () {
+            $.ajax({
+                beforeSend: function (request) {
+                    request.setRequestHeader("s", "123");
+                },
+                type: 'GET',
+                url: '/api/HeaderParameters/stringlength',
+                success: function (result) {
+                    $('#result').html(result);
+                }
+            });
+        });
+
+
+        
     });
 </script>
 

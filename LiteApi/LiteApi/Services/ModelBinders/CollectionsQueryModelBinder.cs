@@ -176,7 +176,8 @@ namespace LiteApi.Services.ModelBinders
             string[] values = new string[0];
             if (key != null)
             {
-                values = request.Query[key];
+                values = source.FirstOrDefault(x => x.Key == key).Value;
+                if (values == null) values = new string[0];
             }
 
             if (details.IsArray || details.IsIEnumerable)
