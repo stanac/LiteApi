@@ -12,7 +12,7 @@ namespace LiteApi.Services.ModelBinders
     /// Class for resolving parameter values for given <see cref="ActionContext"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
-    internal class BasicQueryModelBinder : IQueryModelBinder
+    public class BasicQueryModelBinder : IQueryModelBinder
     {
         #region _supportedTypes
 
@@ -127,7 +127,7 @@ namespace LiteApi.Services.ModelBinders
         /// <returns></returns>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        internal static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName, Lazy<string> actionNameRetriever)
+        public static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName, Lazy<string> actionNameRetriever)
         {
             if (type == typeof(string))
             {

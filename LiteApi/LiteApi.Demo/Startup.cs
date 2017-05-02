@@ -26,7 +26,7 @@ namespace LiteApi.Demo
             app.UseLiteApi(
                 LiteApiOptions.Default
                     .SetLoggerFactory(loggerFactory)
-                 //   .SetRequiresHttps(true)
+                    .AddAdditionalQueryModelBinder(new StackQueryBinder())
                     );
         }
     }
