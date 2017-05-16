@@ -97,7 +97,7 @@ public class OperationsController : LiteController
 You can use attributes: HttpGetAttribute, HttpPostAttribute, HttpPutAttribute, 
 HttpDeleteAttribute, by default action is GET if no attribute is set.
 
-For more info check [Wiki](https://github.com/stanac/LiteApi/wiki/URL-mappings-to-controllers,-actions-and-parameters).
+For more info check [Docs](http://liteapi.net/docs).
 
 ---
 
@@ -151,20 +151,21 @@ namespace MyApp
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
+- [ ] Option to return raw JSON content from string
 - [ ] Extensibility point to enable replacing any internal service in the middleware
 - [x] Force HTTPS attribute and global config
 - [x] Support action parameters from request header (in 0.7.2)
 
 ### 0.7
-- [x] Support for file uploading (streams) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#fileupload)
-- [x] Support for file download (streams and byte arrays) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#filedownload)
-- [x] Support for action parameters from IServiceProvider (dependency injection on action level) [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#dependencyinjectiononactionlevel)
+- [x] Support for file uploading (streams) [link](http://liteapi.net/docs/files-upload-and-download)
+- [x] Support for file download (streams and byte arrays) [link](http://liteapi.net/docs/files-upload-and-download)
+- [x] Support for action parameters from IServiceProvider (dependency injection on action level) [link](http://liteapi.net/docs/parameter-retrieving-from-service-provider)
 
 ### Previous
 - [x] Extensibility points for model binders and filters
-- [x] Authorization [wiki](https://github.com/stanac/LiteApi/wiki/Authorization)
-- [x] Restful links [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#restfullinks)
-- [x] Actions overloading [link](http://stanacev.com/2017/02/12/whats-new-in-liteapi-v0-7-0/#actionoverloadingrules)
+- [x] Authorization [link](http://liteapi.net/docs/authorization)
+- [x] Restful links [link](http://liteapi.net/docs/action-matching)
+- [x] Actions overloading [link](http://liteapi.net/docs/action-overloading)
 - [x] Dictionary from query
 - [x] Collections from query
 - [x] Default parameters
