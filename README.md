@@ -33,7 +33,7 @@ public class TestController : LiteController
 Restful controller:
 
 ``` cs
-[RestfulLinks]
+[Restful]
 public class PersonsController: LiteController
 {
     private readonly IPersonDataAccess _dataAccess;
@@ -146,7 +146,7 @@ namespace MyApp
 - [ ] Stabilization, more testing
 
 ### 0.9 Feature complete (RC)
-- [ ] Documentation and website
+- [x] Documentation and website [liteapi.net](http://liteapi.net)
 - [ ] Global filters
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
