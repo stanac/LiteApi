@@ -152,7 +152,7 @@ namespace MyApp
 
 ### 0.8
 - [ ] Option to return raw JSON content from string and to set response code
-- [ ] Extensibility point to enable replacing any internal service in the middleware
+- [x] Extensibility point to enable replacing any internal service in the middleware
 - [x] Force HTTPS attribute and global config
 - [x] Support action parameters from request header (in 0.7.2)
 
