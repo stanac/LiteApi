@@ -46,13 +46,9 @@ namespace LiteApi
         /// </exception>
         public FileDownloadActionResult(byte[] data, string contentType, string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
-            if (data == null) throw new ArgumentNullException(nameof(data));
-
-            Data = data;
-            ContentType = contentType;
-            FileName = fileName;
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+            ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
+            FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
         }
 
         /// <summary>
@@ -66,17 +62,16 @@ namespace LiteApi
         /// </exception>
         public FileDownloadActionResult(Stream data, string contentType, string fileName)
         {
-            if (fileName == null) throw new ArgumentNullException(nameof(fileName));
-            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
             if (data == null) throw new ArgumentNullException(nameof(data));
+
+            ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
+            FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
 
             long currentPosition = data.Position;
             data.Position = 0;
             Data = new byte[data.Length];
             data.Read(Data, 0, Data.Length);
             data.Position = currentPosition;
-            ContentType = contentType;
-            FileName = fileName;
         }
 
         /// <summary>

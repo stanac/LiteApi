@@ -22,8 +22,6 @@ namespace LiteApi
     public class LiteApiMiddleware
     {
         private RequestDelegate _next;
-        private IPathResolver _pathResolver;
-        private IActionInvoker _actionInvoker;
         private ILogger _logger;
         private bool _isLoggingEnabled;
 
@@ -44,6 +42,9 @@ namespace LiteApi
             if (IsRegistered) throw new Exception("Middleware is already registered.");
 
             if (options == null) throw new ArgumentNullException(nameof(options));
+
+            if (options.InternalServiceResolver == null) options.InternalServiceResolver = new LiteApiServiceResolver(services);
+
             if (options.ControllerAssemblies?.Count == 0)
             {
                 throw new ArgumentException("Assemblies with controllers is not passed to the LiteApiMiddleware");
@@ -74,7 +75,8 @@ namespace LiteApi
         {
             ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, context.TraceIdentifier);
             log.LogInformation($"Received request: {context.Request.Path} with query: {context.Request.QueryString.ToString() ?? ""}");
-            ActionContext action = _pathResolver.ResolveAction(context.Request, log);
+            IPathResolver pathResolver = Options.InternalServiceResolver.GetPathResolver();
+            ActionContext action = pathResolver.ResolveAction(context.Request, log);
             if (action == null)
             {
                 log.LogInformation("Request is skipped to next middleware");
@@ -99,7 +101,8 @@ namespace LiteApi
                 }
                 else
                 {
-                    await _actionInvoker.Invoke(context, action, log);
+                    var actionInvoker = Options.InternalServiceResolver.GetActionInvoker();
+                    await actionInvoker.Invoke(context, action, log);
                     log.LogInformation("Action is invoked");
                 }
             }
@@ -125,9 +128,9 @@ namespace LiteApi
         private void Initialize(IServiceProvider services)
         {
             _logger.LogInformation("LiteApi middleware initialization started");
-            IParametersDiscoverer parameterDiscoverer = new ParametersDiscoverer(services);
-            IActionDiscoverer actionDiscoverer = new ActionDiscoverer(parameterDiscoverer);
-            IControllerDiscoverer ctrlDiscoverer = new ControllerDiscoverer(actionDiscoverer);
+            Options.InternalServiceResolver.RegisterInstance<IAuthorizationPolicyStore>(Options.AuthorizationPolicyStore);
+
+            IControllerDiscoverer ctrlDiscoverer = Options.InternalServiceResolver.GetControllerDiscoverer();
 
             List<ControllerContext> ctrlContexts = new List<ControllerContext>();
 
@@ -138,19 +141,15 @@ namespace LiteApi
 
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
 
-            _pathResolver = new PathResolver(ctrlContexts.ToArray());
-
-            IControllerBuilder ctrlBuilder = new ControllerBuilder(services);
+            IControllerBuilder ctrlBuilder = Options.InternalServiceResolver.GetControllerBuilder();
             ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer, services);
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {
                 modelBinder.AddAdditionalQueryModelBinder(qmb);
             }
             
-            _actionInvoker = new ActionInvoker(ctrlBuilder, modelBinder);
-
             var authPolicyStore = Options.AuthorizationPolicyStore;
-            var validator = new ControllersValidator(new ActionsValidator(new ParametersValidator(), authPolicyStore), authPolicyStore);
+            IControllersValidator validator = Options.InternalServiceResolver.GetControllerValidator();
             var errors = validator.GetValidationErrors(ctrlContexts.ToArray()).ToArray();
             if (errors.Any())
             {
@@ -162,6 +161,12 @@ namespace LiteApi
                 string allErrors = "\n\n --------- \n\n" + string.Join("\n\n --------- \n\n", errors);
                 throw new LiteApiRegistrationException($"Failed to initialize {nameof(LiteApiMiddleware)}, see property Errors, log if enabled, or check erros listed below." + allErrors, errors);
             }
+
+            // TODO: maybe replace with factory for IPathResolver
+            Options.InternalServiceResolver.RegisterInstance<ControllerContext[]>(ctrlContexts.ToArray());
+            // TODO: move JsonSerializer out of options into InternalServiceResolver
+            Options.InternalServiceResolver.RegisterInstance<IJsonSerializer>(Options.JsonSerializer);
+            Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);
         }
     }
 }

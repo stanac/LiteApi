@@ -18,6 +18,14 @@ namespace LiteApi
         internal IAuthorizationPolicyStore AuthorizationPolicyStore { get; } = new AuthorizationPolicyStore();
 
         /// <summary>
+        /// Gets the internal service resolver.
+        /// </summary>
+        /// <value>
+        /// The internal service resolver.
+        /// </value>
+        public ILiteApiServiceResolver InternalServiceResolver { get; internal set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.
         /// </summary>
         public LiteApiOptions()
@@ -138,6 +146,17 @@ namespace LiteApi
         public LiteApiOptions SetRequiresHttps(bool requiresHttps)
         {
             RequiresHttps = requiresHttps;
+            return this;
+        }
+
+        /// <summary>
+        /// Replaces the internal service resolver.
+        /// </summary>
+        /// <param name="serviceResolver">The service resolver.</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions ReplaceInternalServiceResolver(ILiteApiServiceResolver serviceResolver)
+        {
+            InternalServiceResolver = serviceResolver ?? throw new ArgumentNullException(nameof(serviceResolver));
             return this;
         }
     }
