@@ -9,7 +9,10 @@ namespace LiteApi.Tests
         [Fact]
         public async Task LiteApiMiddleareTests_Registered_CanBeInvoked()
         {
-            var middleware = new LiteApiMiddleware(null, LiteApiOptions.Default, (new Moq.Mock<IServiceProvider>()).Object);
+            var servicesMock = new Moq.Mock<IServiceProvider>();
+            servicesMock.Setup(x => x.GetService(typeof(IServiceProvider))).Returns(servicesMock.Object);
+
+            var middleware = new LiteApiMiddleware(null, LiteApiOptions.Default, servicesMock.Object);
             var httpCtx = new Fakes.FakeHttpContext();
             httpCtx.Request.Method = "GET";
             httpCtx.Request.Path = "/";
