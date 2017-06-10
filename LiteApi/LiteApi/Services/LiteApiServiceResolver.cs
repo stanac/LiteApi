@@ -39,7 +39,7 @@ namespace LiteApi.Services
             Register<IControllersValidator, ControllersValidator>();
             Register<IParametersDiscoverer, ParametersDiscoverer>();
             Register<IParametersValidator, ParametersValidator>();
-            RegisterSingleton<IPathResolver, PathResolver>();
+            RegisterInstance<IJsonSerializer>(new JsonSerializer());
         }
 
         /// <summary>
@@ -57,6 +57,12 @@ namespace LiteApi.Services
         /// Instance of <see cref="T:LiteApi.Contracts.Abstractions.IActionInvoker" />
         /// </returns>
         public virtual IActionInvoker GetActionInvoker() => Resolve<IActionInvoker>();
+
+        /// <summary>
+        /// Gets the JSON serializer.
+        /// </summary>
+        /// <returns>Instance of <see cref="IJsonSerializer"/></returns>
+        public virtual IJsonSerializer GetJsonSerializer() => Resolve<IJsonSerializer>();
 
         /// <summary>
         /// Gets the actions validator.
@@ -151,19 +157,6 @@ namespace LiteApi.Services
         {
             _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), instance);
         }
-
-        /// <summary>
-        /// Replaces the service.
-        /// </summary>
-        /// <typeparam name="TInterface">The type of the interface.</typeparam>
-        /// <typeparam name="TService">The type of the service.</typeparam>
-        /// <param name="singleton">if set to <c>true</c> [singleton].</param>
-        public virtual void ReplaceService<TInterface, TService>(bool singleton)
-                    where TService : class
-        {
-            if (singleton) RegisterSingleton<TInterface, TService>();
-            else Register<TInterface, TService>();
-        }
         
         /// <summary>
         /// Resolves typeof(T) instance.
@@ -199,15 +192,48 @@ namespace LiteApi.Services
             throw new ArgumentException($"Service of type {interfaceType} is not registered in LiteApiServiceResolver.");
         }
 
+        /// <summary>
+        /// Registers the specified factory.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of the interface.</typeparam>
+        /// <param name="factory">The factory.</param>
+        public void Register<TInterface>(Func<TInterface> factory)
+        {
+            _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), factory);
+        }
+
+        /// <summary>
+        /// Determines whether service is registered.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of the interface.</typeparam>
+        /// <returns>
+        ///   <c>true</c> if service is registered; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsServiceRegistered<TInterface>() => _serviceRegs.ContainsKey(typeof(TInterface));
+
+        /// <summary>
+        /// Determines whether service is registered.
+        /// </summary>
+        /// <param name="tInterface">The type of interface.</param>
+        /// <returns><c>true</c> if service is registered; otherwise, <c>false</c>.</returns>
+        public bool IsServiceRegistered(Type tInterface) => _serviceRegs.ContainsKey(tInterface);
+
         class ServiceRegistrationModel
         {
             public Type InterfaceType { get; private set; }
             public Type ImplementationType { get; private set; }
             public bool IsSingleton { get; private set; }
             public object SingletonInstance { get; private set; }
+            public Func<object> Factory { get; private set; }
 
             private ConstructorInfo _constructorInfo;
             private Type[] _constructorParamTypes;
+
+            public ServiceRegistrationModel(Type tInterface, Func<object> factory)
+            {
+                InterfaceType = tInterface ?? throw new ArgumentNullException(nameof(tInterface));
+                Factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            }
 
             public ServiceRegistrationModel(Type tInterface, object instance)
             {
@@ -247,6 +273,8 @@ namespace LiteApi.Services
 
             public object GetService(LiteApiServiceResolver serviceResolver)
             {
+                if (Factory != null) return Factory();
+
                 if (IsSingleton)
                 {
                     if (SingletonInstance == null)
@@ -255,6 +283,7 @@ namespace LiteApi.Services
                     }
                     return SingletonInstance;
                 }
+
                 return BuildObject(serviceResolver);
             }
 

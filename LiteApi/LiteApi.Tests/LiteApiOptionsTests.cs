@@ -40,32 +40,32 @@ namespace LiteApi.Tests
             Assert.NotNull(options.LoggerFactory);
         }
 
-        [Fact]
-        public void LiteApiOptionsSetJsonSerializer_NullJsonSerializer_ThrowsException()
-        {
-            var options = new LiteApiOptions();
-            bool error = false;
-            try
-            {
-                options.SetJsonSerializer(null);
-            }
-            catch (ArgumentNullException)
-            {
-                error = true;
-            }
+        //[Fact]
+        //public void LiteApiOptionsSetJsonSerializer_NullJsonSerializer_ThrowsException()
+        //{
+        //    var options = new LiteApiOptions();
+        //    bool error = false;
+        //    try
+        //    {
+        //        options.SetJsonSerializer(null);
+        //    }
+        //    catch (ArgumentNullException)
+        //    {
+        //        error = true;
+        //    }
 
-            Assert.True(error);
-        }
+        //    Assert.True(error);
+        //}
 
-        [Fact]
-        public void LiteApiOptionsSetJsonSerializer_NotNullJsonSerializer_ReplacesJsonSerializer()
-        {
-            var options = new LiteApiOptions();
-            var serializer = new Fakes.FakeJsonSerializer();
-            options.SetJsonSerializer(serializer);
+        //[Fact]
+        //public void LiteApiOptionsSetJsonSerializer_NotNullJsonSerializer_ReplacesJsonSerializer()
+        //{
+        //    var options = new LiteApiOptions();
+        //    var serializer = new Fakes.FakeJsonSerializer();
+        //    options.SetJsonSerializer(serializer);
             
-            Assert.Equal(options.JsonSerializer, serializer);
-        }
+        //    Assert.Equal(options.JsonSerializer, serializer);
+        //}
 
         [Fact]
         public void LiteApiOptionsAddControllerAssemblies_AddsControllerAssemblies_IncreaseNumberOfAssemblies()

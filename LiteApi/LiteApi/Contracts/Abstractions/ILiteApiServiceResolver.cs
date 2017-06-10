@@ -20,6 +20,12 @@ namespace LiteApi.Contracts.Abstractions
         IActionInvoker GetActionInvoker();
 
         /// <summary>
+        /// Gets the JSON serializer.
+        /// </summary>
+        /// <returns>Instance of <see cref="IJsonSerializer"/></returns>
+        IJsonSerializer GetJsonSerializer();
+
+        /// <summary>
         /// Gets the actions validator.
         /// </summary>
         /// <returns>Instance of <see cref="IActionsValidator"/></returns>
@@ -66,15 +72,7 @@ namespace LiteApi.Contracts.Abstractions
         /// </summary>
         /// <returns>Instance of <see cref="IParametersValidator"/></returns>
         IParametersValidator GetParametersValidator();
-
-        /// <summary>
-        /// Replaces the service.
-        /// </summary>
-        /// <typeparam name="TInterface">The type of the interface.</typeparam>
-        /// <typeparam name="TService">The type of the service.</typeparam>
-        /// <param name="singleton">if set to <c>true</c> will be registered as singleton.</param>
-        void ReplaceService<TInterface, TService>(bool singleton) where TService : class;
-
+        
         /// <summary>
         /// Resolves the specified interface type.
         /// </summary>
@@ -95,7 +93,14 @@ namespace LiteApi.Contracts.Abstractions
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <typeparam name="TService">The type of the service.</typeparam>
         void Register<TInterface, TService>() where TService : class;
-        
+
+        /// <summary>
+        /// Registers the specified factory.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of the interface.</typeparam>
+        /// <param name="factory">The factory.</param>
+        void Register<TInterface>(Func<TInterface> factory);
+
         /// <summary>
         /// Registers singleton instance.
         /// </summary>
@@ -109,6 +114,21 @@ namespace LiteApi.Contracts.Abstractions
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <param name="instance">The instance to register.</param>
         void RegisterInstance<TInterface>(object instance);
-        
+
+        /// <summary>
+        /// Determines whether provided service is registered.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of the interface.</typeparam>
+        /// <returns>
+        ///   <c>true</c> if service is registered; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsServiceRegistered<TInterface>();
+
+        /// <summary>
+        /// Determines whether service is registered.
+        /// </summary>
+        /// <param name="tInterface">The type of interface.</param>
+        /// <returns><c>true</c> if service is registered; otherwise, <c>false</c>.</returns>
+        bool IsServiceRegistered(Type tInterface);
     }
 }

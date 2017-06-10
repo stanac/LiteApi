@@ -20,23 +20,23 @@ namespace LiteApi.Services
         /// <value>
         /// JSON serializer.
         /// </value>
-        public static Func<IJsonSerializer> GetJsonSerializer { get; set; } = () => LiteApiMiddleware.Options.JsonSerializer;
-
         private readonly IControllerBuilder _controllerBuilder;
         private readonly IModelBinder _modelBinder;
+        private readonly IJsonSerializer _jsonSerializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionInvoker"/> class.
         /// </summary>
         /// <param name="controllerBuilder">The controller builder.</param>
         /// <param name="modelBinder">The model binder.</param>
-        
+        /// <param name="jsonSerializer">The JSON serializer.</param>
         /// <exception cref="System.ArgumentNullException">
         /// </exception>
-        public ActionInvoker(IControllerBuilder controllerBuilder, IModelBinder modelBinder)
+        public ActionInvoker(IControllerBuilder controllerBuilder, IModelBinder modelBinder, IJsonSerializer jsonSerializer)
         {
             _controllerBuilder = controllerBuilder ?? throw new ArgumentNullException(nameof(controllerBuilder));
             _modelBinder = modelBinder ?? throw new ArgumentNullException(nameof(modelBinder));
+            _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace LiteApi.Services
                 else
                 {
                     httpCtx.Response.ContentType = "application/json";
-                    await httpCtx.Response.WriteAsync(GetJsonSerializer().Serialize(result));
+                    await httpCtx.Response.WriteAsync(_jsonSerializer.Serialize(result));
                 }
             }
         }

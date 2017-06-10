@@ -48,15 +48,7 @@ namespace LiteApi
         /// The default.
         /// </value>
         public static LiteApiOptions Default => new LiteApiOptions();
-
-        /// <summary>
-        /// Gets the JSON serializer. Implementation of <see cref="IJsonSerializer"/>
-        /// </summary>
-        /// <value>
-        /// The JSON serializer. Implementation of <see cref="IJsonSerializer"/>
-        /// </value>
-        public IJsonSerializer JsonSerializer { get; private set; } = new JsonSerializer();
-
+        
         /// <summary>
         /// Gets a value indicating whether middleware should reject all non HTTPS requests.
         /// </summary>
@@ -72,20 +64,7 @@ namespace LiteApi
         /// The logger factory.
         /// </value>
         public ILoggerFactory LoggerFactory { get; private set; }
-
-        /// <summary>
-        /// Sets the JSON serializer.
-        /// </summary>
-        /// <param name="jsonSerializer">The JSON serializer.</param>
-        /// <returns>This instance</returns>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        public LiteApiOptions SetJsonSerializer(IJsonSerializer jsonSerializer)
-        {
-            if (jsonSerializer == null) throw new System.ArgumentNullException(nameof(jsonSerializer));
-            JsonSerializer = jsonSerializer;
-            return this;
-        }
-
+        
         /// <summary>
         /// Adds the controller assemblies.
         /// </summary>

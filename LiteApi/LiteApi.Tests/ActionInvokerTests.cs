@@ -19,7 +19,7 @@ namespace LiteApi.Tests
             try
             {
 
-                var a = new ActionInvoker(null, new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object));
+                var a = new ActionInvoker(null, new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object), new JsonSerializer());
             }
             catch (ArgumentNullException)
             {
@@ -30,7 +30,7 @@ namespace LiteApi.Tests
             error = false;
             try
             {
-                var a = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), null);
+                var a = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), null, new JsonSerializer());
             }
             catch (ArgumentNullException)
             {
@@ -107,7 +107,7 @@ namespace LiteApi.Tests
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
-                );
+                , new JsonSerializer());
             var ctx = new Fakes.FakeHttpContext();
             await invoker.Invoke(ctx, controller.Actions.First(x => x.Name == "toupper"), null);
             string body = ctx.Response.ReadBody();
@@ -151,6 +151,7 @@ namespace LiteApi.Tests
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
+                , new JsonSerializer()
                 );
             var ctx = new Fakes.FakeHttpContext();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
@@ -166,7 +167,7 @@ namespace LiteApi.Tests
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
-                );
+                , new JsonSerializer());
             var ctx = new Fakes.FakeHttpContext();
             (ctx.Request as Fakes.FakeHttpRequest).AddQuery("a", "2").AddQuery("b", "3").AddQuery("c", "4").AddQuery("d", "5");
             await invoker.Invoke(ctx, controller.Actions.First(x => x.HttpMethod == actionMethod), null);
@@ -181,6 +182,7 @@ namespace LiteApi.Tests
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
+                , new JsonSerializer()
                 );
             var ctx = new Fakes.FakeHttpContext();
             ctx.Request.Method = actionMethod.ToString().ToLower();
@@ -196,7 +198,7 @@ namespace LiteApi.Tests
             IActionInvoker invoker = new ActionInvoker(
                 new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object),
                 new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object)
-                );
+                , new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
             httpCtx.User = user;
             var action = controller.Actions.First(x => x.Name == "get14");

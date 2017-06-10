@@ -219,7 +219,7 @@ namespace LiteApi.Tests.FilterTests
 
             }
             var actionCtx = ctrl.Actions.Single(x => string.Compare(method, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
-            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object));
+            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
             httpCtx.User = user;
             httpCtx.Request.Path = "/api/secure/" + method;

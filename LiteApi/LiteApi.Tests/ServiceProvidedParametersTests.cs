@@ -25,7 +25,7 @@ namespace LiteApi.Tests
             Assert.Equal(2, parameters.Length);
             Assert.True(typeof(Controllers.IIncrementService).IsAssignableFrom(parameters[1].GetType()));
 
-            ActionInvoker invoker = new ActionInvoker(new ControllerBuilder(GetServiceProvider()), mb);
+            ActionInvoker invoker = new ActionInvoker(new ControllerBuilder(GetServiceProvider()), mb, new JsonSerializer());
             await invoker.Invoke(httpCtx, action);
             var result = httpCtx.Response.ReadBody();
             Assert.Equal("2", result);

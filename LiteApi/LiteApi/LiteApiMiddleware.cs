@@ -142,7 +142,7 @@ namespace LiteApi
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
 
             IControllerBuilder ctrlBuilder = Options.InternalServiceResolver.GetControllerBuilder();
-            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.JsonSerializer, services);
+            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.InternalServiceResolver.GetJsonSerializer(), services);
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {
                 modelBinder.AddAdditionalQueryModelBinder(qmb);
@@ -162,11 +162,13 @@ namespace LiteApi
                 throw new LiteApiRegistrationException($"Failed to initialize {nameof(LiteApiMiddleware)}, see property Errors, log if enabled, or check erros listed below." + allErrors, errors);
             }
 
-            // TODO: maybe replace with factory for IPathResolver
-            Options.InternalServiceResolver.RegisterInstance<ControllerContext[]>(ctrlContexts.ToArray());
-            // TODO: move JsonSerializer out of options into InternalServiceResolver
-            Options.InternalServiceResolver.RegisterInstance<IJsonSerializer>(Options.JsonSerializer);
-            Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);
+            Func<Type, bool> isRegistered = (type) => Options.InternalServiceResolver.IsServiceRegistered(type);
+            
+            if (!isRegistered(typeof(IPathResolver)))
+                Options.InternalServiceResolver.RegisterInstance<IPathResolver>(new PathResolver(ctrlContexts.ToArray()));
+
+            if (!isRegistered(typeof(IModelBinder)))
+                Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);
         }
     }
 }
