@@ -30,7 +30,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The authentication policy store factory.
         /// </value>
-        internal IAuthorizationPolicyStore AuthPolicyStore { get; set; } = LiteApiMiddleware.Options.AuthorizationPolicyStore;
+        internal IAuthorizationPolicyStore AuthPolicyStore { get; private set; } = LiteApiMiddleware.Options.AuthorizationPolicyStore;
 
         /// <summary>
         /// Gets or sets the route and name.

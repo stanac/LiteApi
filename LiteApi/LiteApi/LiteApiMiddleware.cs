@@ -25,6 +25,7 @@ namespace LiteApi
         private ILogger _logger;
         private bool _isLoggingEnabled;
 
+        // TODO: remove static from Options
         internal static LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
         internal static bool IsRegistered { get; private set; }
 
