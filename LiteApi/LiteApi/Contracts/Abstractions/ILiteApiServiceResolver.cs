@@ -88,28 +88,28 @@ namespace LiteApi.Contracts.Abstractions
         T Resolve<T>() where T : class;
 
         /// <summary>
-        /// Registers service instance.
+        /// Registers or replaces service.
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <typeparam name="TService">The type of the service.</typeparam>
         void Register<TInterface, TService>() where TService : class;
 
         /// <summary>
-        /// Registers the specified factory.
+        /// Registers or replaces the specified factory.
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <param name="factory">The factory.</param>
         void Register<TInterface>(Func<TInterface> factory);
 
         /// <summary>
-        /// Registers singleton instance.
+        /// Registers or replaces singleton instance.
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <typeparam name="TService">The type of the service.</typeparam>
         void RegisterSingleton<TInterface, TService>() where TService : class;
 
         /// <summary>
-        /// Registers single instance.
+        /// Registers or replaces single instance.
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <param name="instance">The instance to register.</param>
