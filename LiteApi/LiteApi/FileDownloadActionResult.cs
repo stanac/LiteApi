@@ -6,6 +6,8 @@ using System.IO;
 
 namespace LiteApi
 {
+    // TODO: consider inheriting ContentActionResult
+
     /// <summary>
     /// File download response
     /// </summary>
@@ -86,6 +88,7 @@ namespace LiteApi
         /// </exception>
         public Task WriteResponse(HttpContext httpCtx, ActionContext actionCtx)
         {
+            if (actionCtx == null) throw new ArgumentNullException(nameof(actionCtx));
             if (httpCtx == null) throw new ArgumentNullException(nameof(httpCtx));
 
             httpCtx.Response.Headers.Add("Content-Type", ContentType);

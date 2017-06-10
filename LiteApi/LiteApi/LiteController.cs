@@ -33,10 +33,8 @@ namespace LiteApi
         /// <param name="contentType">Content type header value.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Result that can be handled by the middleware.</returns>
-        public ILiteActionResult FileDownload(byte[] data, string contentType, string fileName)
-        {
-            return new FileDownloadActionResult(data, contentType, fileName);
-        }
+        public ILiteActionResult FileDownload(byte[] data, string contentType, string fileName) 
+            => new FileDownloadActionResult(data, contentType, fileName);
 
         /// <summary>
         /// Write response of file download. Provided Stream will not be disposed, you need to do it yourself.
@@ -45,10 +43,34 @@ namespace LiteApi
         /// <param name="contentType">Content type header value.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <returns>Result that can be handled by the middleware.</returns>
-        public ILiteActionResult FileDownload(Stream data, string contentType, string fileName)
-        {
-            return new FileDownloadActionResult(data, contentType, fileName);
-        }
+        public ILiteActionResult FileDownload(Stream data, string contentType, string fileName) 
+            => new FileDownloadActionResult(data, contentType, fileName);
+
+        /// <summary>
+        /// Creates response with the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="contentType">Type of the content.</param>
+        /// <returns>Result that can be handled by the middleware.</returns>
+        public ILiteActionResult Content(string data, string contentType)
+            => new ContentActionResult(data, contentType);
+
+        /// <summary>
+        /// Creates response with the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="contentType">Type of the content.</param>
+        /// <returns>Result that can be handled by the middleware.</returns>
+        public ILiteActionResult Content(byte[] data, string contentType)
+            => new ContentActionResult(data, contentType);
+
+        /// <summary>
+        /// Creates response with the specified JSON content.
+        /// </summary>
+        /// <param name="jsonContent">Content in JSON format.</param>
+        /// <returns>Result that can be handled by the middleware.</returns>
+        public ILiteActionResult Json(string jsonContent)
+            => new JsonActionResult(jsonContent);
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.

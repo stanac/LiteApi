@@ -134,6 +134,12 @@ namespace LiteApi.Services
             }
         }
 
+        /// <summary>
+        /// Runs the filters and check if should continue.
+        /// </summary>
+        /// <param name="httpCtx">The HTTP context.</param>
+        /// <param name="action">The action context.</param>
+        /// <returns>Task to await</returns>
         public static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
         {
             if (action.SkipAuth)

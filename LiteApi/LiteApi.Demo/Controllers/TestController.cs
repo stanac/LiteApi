@@ -77,5 +77,7 @@ namespace LiteApi.Demo.Controllers
                 hasNulls, sum
             };
         }
+
+        public ILiteActionResult EmpryJsonObject() => Json("{ }");
     }
 }

@@ -135,6 +135,7 @@ namespace MyApp
 
 ### 1.3
 - [ ] Support for versioning using request header value, versioning using routes is supported with `ControllerRouteAttribute`
+- [ ] Enable multiple instances of the middleware to run in one app
 
 ### 1.2
 - [ ] Performance testing, performance improvements with Roslyn code generators
