@@ -16,14 +16,14 @@ namespace LiteApi.Services
     /// <seealso cref="LiteApi.Contracts.Abstractions.ILiteApiServiceResolver" />
     public class LiteApiServiceResolver : ILiteApiServiceResolver
     {
-        private readonly IServiceProvider _serviceProvider;
+        private IServiceProvider _serviceProvider;
         private readonly IDictionary<Type, ServiceRegistrationModel> _serviceRegs = new ConcurrentDictionary<Type, ServiceRegistrationModel>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LiteApiServiceResolver"/> class.
+        /// Initializes the service provider.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        public LiteApiServiceResolver(IServiceProvider serviceProvider)
+        public virtual void Initialize(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
             RegisterAllInternalServices();
@@ -31,16 +31,35 @@ namespace LiteApi.Services
         
         private void RegisterAllInternalServices()
         {
-            Register<IActionDiscoverer, ActionDiscoverer>();
-            RegisterSingleton<IActionInvoker, ActionInvoker>();
-            Register<IActionsValidator, ActionsValidator>();
-            Register<IControllerBuilder, ControllerBuilder>();
-            Register<IControllerDiscoverer, ControllerDiscoverer>();
-            Register<IControllersValidator, ControllersValidator>();
-            Register<IParametersDiscoverer, ParametersDiscoverer>();
-            Register<IParametersValidator, ParametersValidator>();
-            RegisterInstance<IJsonSerializer>(new JsonSerializer());
+            if (!IsServiceRegistered<IActionDiscoverer>())
+                Register<IActionDiscoverer, ActionDiscoverer>();
+
+            if (!IsServiceRegistered<IActionInvoker>())
+                RegisterSingleton<IActionInvoker, ActionInvoker>();
+
+            if (!IsServiceRegistered<IActionsValidator>())
+                Register<IActionsValidator, ActionsValidator>();
+
+            if (!IsServiceRegistered<IControllerBuilder>())
+                Register<IControllerBuilder, ControllerBuilder>();
+
+            if (!IsServiceRegistered<IControllerDiscoverer>())
+                Register<IControllerDiscoverer, ControllerDiscoverer>();
+
+            if (!IsServiceRegistered<IControllersValidator>())
+                Register<IControllersValidator, ControllersValidator>();
+
+            if (!IsServiceRegistered<IParametersDiscoverer>())
+                Register<IParametersDiscoverer, ParametersDiscoverer>();
+
+            if (!IsServiceRegistered<IParametersValidator>())
+                Register<IParametersValidator, ParametersValidator>();
+
+            if (!IsServiceRegistered<IJsonSerializer>())
+                RegisterInstance<IJsonSerializer>(new JsonSerializer());
         }
+
+        #region Get services
 
         /// <summary>
         /// Gets the action discoverer.
@@ -124,14 +143,18 @@ namespace LiteApi.Services
         /// Gets the parameters validator.
         /// </summary>
         /// <returns>Instance of <see cref="IParametersValidator"/></returns>
-        public IParametersValidator GetParametersValidator() => Resolve<IParametersValidator>();
+        public virtual IParametersValidator GetParametersValidator() => Resolve<IParametersValidator>();
+
+        #endregion
+
+        #region Register
 
         /// <summary>
         /// Registers service instance.
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <typeparam name="TService">The type of the service.</typeparam>
-        public void Register<TInterface, TService>()
+        public virtual void Register<TInterface, TService>()
                     where TService : class
         {
             _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), typeof(TService), false);
@@ -142,7 +165,7 @@ namespace LiteApi.Services
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <typeparam name="TService">The type of the service.</typeparam>
-        public void RegisterSingleton<TInterface, TService>()
+        public virtual void RegisterSingleton<TInterface, TService>()
                     where TService : class
         {
             _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), typeof(TService), true);
@@ -153,17 +176,31 @@ namespace LiteApi.Services
         /// </summary>
         /// <typeparam name="TInterface">The type of the interface.</typeparam>
         /// <param name="instance">The instance to register.</param>
-        public void RegisterInstance<TInterface>(object instance)
+        public virtual void RegisterInstance<TInterface>(object instance)
         {
             _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), instance);
         }
         
         /// <summary>
+        /// Registers the specified factory.
+        /// </summary>
+        /// <typeparam name="TInterface">The type of the interface.</typeparam>
+        /// <param name="factory">The factory.</param>
+        public virtual void Register<TInterface>(Func<TInterface> factory)
+        {
+            _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), factory);
+        }
+
+        #endregion
+
+        #region Resolve
+
+        /// <summary>
         /// Resolves typeof(T) instance.
         /// </summary>
         /// <typeparam name="T">Type to resolve</typeparam>
         /// <returns>Instance of T</returns>
-        public T Resolve<T>()
+        public virtual T Resolve<T>()
                     where T : class
                     => Resolve(typeof(T)) as T;
 
@@ -192,15 +229,9 @@ namespace LiteApi.Services
             throw new ArgumentException($"Service of type {interfaceType} is not registered in LiteApiServiceResolver.");
         }
 
-        /// <summary>
-        /// Registers the specified factory.
-        /// </summary>
-        /// <typeparam name="TInterface">The type of the interface.</typeparam>
-        /// <param name="factory">The factory.</param>
-        public void Register<TInterface>(Func<TInterface> factory)
-        {
-            _serviceRegs[typeof(TInterface)] = new ServiceRegistrationModel(typeof(TInterface), factory);
-        }
+        #endregion
+
+        #region IsServiceRegistered
 
         /// <summary>
         /// Determines whether service is registered.
@@ -209,16 +240,18 @@ namespace LiteApi.Services
         /// <returns>
         ///   <c>true</c> if service is registered; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsServiceRegistered<TInterface>() => _serviceRegs.ContainsKey(typeof(TInterface));
+        public virtual bool IsServiceRegistered<TInterface>() => _serviceRegs.ContainsKey(typeof(TInterface));
 
         /// <summary>
         /// Determines whether service is registered.
         /// </summary>
         /// <param name="tInterface">The type of interface.</param>
         /// <returns><c>true</c> if service is registered; otherwise, <c>false</c>.</returns>
-        public bool IsServiceRegistered(Type tInterface) => _serviceRegs.ContainsKey(tInterface);
+        public virtual bool IsServiceRegistered(Type tInterface) => _serviceRegs.ContainsKey(tInterface);
 
-        class ServiceRegistrationModel
+        #endregion
+
+        private class ServiceRegistrationModel
         {
             public Type InterfaceType { get; private set; }
             public Type ImplementationType { get; private set; }

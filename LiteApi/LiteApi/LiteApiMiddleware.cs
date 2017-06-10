@@ -44,7 +44,7 @@ namespace LiteApi
 
             if (options == null) throw new ArgumentNullException(nameof(options));
 
-            if (options.InternalServiceResolver == null) options.InternalServiceResolver = new LiteApiServiceResolver(services);
+            options.InternalServiceResolver.Initialize(services);
 
             if (options.ControllerAssemblies?.Count == 0)
             {
@@ -109,23 +109,7 @@ namespace LiteApi
             }
             log.LogInformation("Request is processed");
         }
-
-        private void AddControllerAssemblies(IEnumerable<Assembly> assemblies)
-        {
-            foreach (var assembly in assemblies)
-            {
-                AddControllerAssembly(assembly);
-            }
-        }
-
-        private void AddControllerAssembly(Assembly assembly)
-        {
-            if (!Options.ControllerAssemblies.Any(x => x.FullName == assembly.FullName))
-            {
-                Options.ControllerAssemblies.Add(assembly);
-            }
-        }
-
+        
         private void Initialize(IServiceProvider services)
         {
             _logger.LogInformation("LiteApi middleware initialization started");

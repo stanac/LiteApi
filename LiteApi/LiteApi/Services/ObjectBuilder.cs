@@ -10,7 +10,7 @@ namespace LiteApi.Services
     /// <summary>
     /// Generic object instance builder that is using registered services withing the ASP.NET app
     /// </summary>
-    internal class ObjectBuilder
+    public class ObjectBuilder
     {
         private static readonly IDictionary<string, ConstructorInfo> Constructors = new ConcurrentDictionary<string, ConstructorInfo>();
         private static readonly IDictionary<string, ParameterInfo[]> ConstructorParameterTypes = new ConcurrentDictionary<string, ParameterInfo[]>();
@@ -32,7 +32,7 @@ namespace LiteApi.Services
         /// </summary>
         /// <param name="objectType">Type of the object.</param>
         /// <returns>Object instance</returns>
-        public object BuildObject(Type objectType)
+        public virtual object BuildObject(Type objectType)
         {
             ConstructorInfo constructor = GetConstructor(objectType);
             ParameterInfo[] parameters = GetConstructorParameters(constructor);
@@ -46,13 +46,20 @@ namespace LiteApi.Services
         /// </summary>
         /// <typeparam name="T">Type to build</typeparam>
         /// <returns>Instance of T</returns>
-        public T BuildObject<T>()
+        public virtual T BuildObject<T>()
             where T: class
         {
             return BuildObject(typeof(T)) as T;
         }
 
-        private ConstructorInfo GetConstructor(Type objectType)
+        /// <summary>
+        /// Gets the constructor.
+        /// </summary>
+        /// <param name="objectType">Type of the object.</param>
+        /// <returns>ConstructorInfo to use when constructing object</returns>
+        /// <exception cref="System.ArgumentNullException">objectType - Type is not provided</exception>
+        /// <exception cref="System.Exception"></exception>
+        protected virtual ConstructorInfo GetConstructor(Type objectType)
         {
             if (objectType == null) throw new ArgumentNullException(nameof(objectType), "Type is not provided");
 
@@ -78,7 +85,12 @@ namespace LiteApi.Services
             return constructors[0];
         }
 
-        private ParameterInfo[] GetConstructorParameters(ConstructorInfo constructor)
+        /// <summary>
+        /// Gets the info about constructor parameters.
+        /// </summary>
+        /// <param name="constructor">The constructor.</param>
+        /// <returns>ParameterInfo[] for the given constructor</returns>
+        protected virtual ParameterInfo[] GetConstructorParameters(ConstructorInfo constructor)
         {
             if (ConstructorParameterTypes.ContainsKey(constructor.DeclaringType.FullName))
             {
@@ -90,7 +102,12 @@ namespace LiteApi.Services
             return parameters;
         }
 
-        private object[] GetConstructorParameterValues(ParameterInfo[] parameters)
+        /// <summary>
+        /// Gets the constructor parameter values.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns>object[] to pass to the constructor</returns>
+        protected virtual object[] GetConstructorParameterValues(ParameterInfo[] parameters)
         {
             object[] values = new object[parameters.Length];
             for (int i = 0; i < values.Length; i++)

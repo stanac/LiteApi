@@ -13,7 +13,7 @@ namespace LiteApi.Services.ModelBinders
     /// Query model binder that supports lists and arrays
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IQueryModelBinder" />
-    internal class CollectionsQueryModelBinder : BasicQueryModelBinder
+    public class CollectionsQueryModelBinder : BasicQueryModelBinder
     {
         #region _supportedTypes
 

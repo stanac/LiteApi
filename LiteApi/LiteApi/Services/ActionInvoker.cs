@@ -12,7 +12,7 @@ namespace LiteApi.Services
     /// Class that is used for invoking actions
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionInvoker" />
-    internal class ActionInvoker : IActionInvoker
+    public class ActionInvoker : IActionInvoker
     {
         /// <summary>
         /// Gets or sets JSON serializer.
@@ -134,7 +134,7 @@ namespace LiteApi.Services
             }
         }
 
-        internal static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
+        public static async Task<ApiFilterRunResult> RunFiltersAndCheckIfShouldContinue(HttpContext httpCtx, ActionContext action)
         {
             if (action.SkipAuth)
             {

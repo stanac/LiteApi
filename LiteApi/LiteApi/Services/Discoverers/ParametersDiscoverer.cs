@@ -11,7 +11,7 @@ namespace LiteApi.Services.Discoverers
     /// Class for resolving parameters metadata in an action
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IParametersDiscoverer" />
-    internal class ParametersDiscoverer : IParametersDiscoverer
+    public class ParametersDiscoverer : IParametersDiscoverer
     {
         private readonly IServiceProvider _services;
 
@@ -30,7 +30,7 @@ namespace LiteApi.Services.Discoverers
         /// </summary>
         /// <param name="actionCtx">The action context.</param>
         /// <returns>Array of <see cref="ActionParameter"/> retrieved from action context.</returns>
-        public ActionParameter[] GetParameters(ActionContext actionCtx)
+        public virtual ActionParameter[] GetParameters(ActionContext actionCtx)
         {
             var methodParams = actionCtx.Method.GetParameters();
             ActionParameter[] parameters = new ActionParameter[methodParams.Length];

@@ -7,7 +7,7 @@ namespace LiteApi.Services
     /// Internal logger
     /// </summary>
     /// <seealso cref="Microsoft.Extensions.Logging.ILogger" />
-    internal class InternalLogger : ILogger
+    public class InternalLogger : ILogger
     {
         readonly bool _isEnabled;
         readonly ILogger _logger;

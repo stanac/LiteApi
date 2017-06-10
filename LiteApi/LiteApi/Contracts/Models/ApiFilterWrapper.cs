@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
 {
-    internal class ApiFilterWrapper
+    public class ApiFilterWrapper
     {
         public IApiFilter ApiFilter { get; private set; }
         public IApiFilterAsync ApiFilterAsync { get; private set; }

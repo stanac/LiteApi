@@ -23,7 +23,7 @@ namespace LiteApi
         /// <value>
         /// The internal service resolver.
         /// </value>
-        public ILiteApiServiceResolver InternalServiceResolver { get; internal set; }
+        public ILiteApiServiceResolver InternalServiceResolver { get; private set; } = new LiteApiServiceResolver();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.

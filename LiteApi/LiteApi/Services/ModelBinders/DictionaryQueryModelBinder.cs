@@ -12,7 +12,7 @@ namespace LiteApi.Services.ModelBinders
     /// Query model binder for IDictionary and Dictionary
     /// </summary>
     /// <seealso cref="LiteApi.Services.ModelBinders.BasicQueryModelBinder" />
-    internal class DictionaryQueryModelBinder : BasicQueryModelBinder
+    public class DictionaryQueryModelBinder : BasicQueryModelBinder
     {
         /// <summary>
         /// Gets or the supported types, supports dictionaries, use <see cref="DoesSupportType"/>

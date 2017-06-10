@@ -9,7 +9,7 @@ namespace LiteApi.Services
     /// Default implementation of <see cref="IJsonSerializer"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IJsonSerializer" />
-    internal class JsonSerializer : IJsonSerializer
+    public class JsonSerializer : IJsonSerializer
     {
         private static JsonSerializerSettings _settings = new JsonSerializerSettings
         {

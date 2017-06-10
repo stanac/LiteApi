@@ -8,6 +8,12 @@ namespace LiteApi.Contracts.Abstractions
     public interface ILiteApiServiceResolver
     {
         /// <summary>
+        /// Initializes the internal service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        void Initialize(IServiceProvider serviceProvider);
+
+        /// <summary>
         /// Gets the action discoverer.
         /// </summary>
         /// <returns>Instance of <see cref="IActionDiscoverer"/></returns>

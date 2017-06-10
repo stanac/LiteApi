@@ -10,7 +10,7 @@ namespace LiteApi.Services.Validators
     /// Class that validates actions before first request is received.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionsValidator" />
-    internal class ActionsValidator : IActionsValidator
+    public class ActionsValidator : IActionsValidator
     {
         private readonly IParametersValidator _paramsValidator;
         private readonly IAuthorizationPolicyStore _policyStore;
@@ -35,7 +35,7 @@ namespace LiteApi.Services.Validators
         /// <param name="actionCtxs">The action context.</param>
         /// <param name="isControllerRestful">True if parent controller is restful (has RestfulLinksAttribute)</param>
         /// <returns>Collection of strings that contains errors, if not empty an exception should be raised.</returns>
-        public IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs, bool isControllerRestful)
+        public virtual IEnumerable<string> GetValidationErrors(ActionContext[] actionCtxs, bool isControllerRestful)
         {
             foreach (var action in actionCtxs)
             {

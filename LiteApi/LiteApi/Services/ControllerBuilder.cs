@@ -9,7 +9,7 @@ namespace LiteApi.Services
     /// Class that builds controllers.
     /// </summary>
     /// <seealso cref="IControllerBuilder" />
-    internal class ControllerBuilder : ObjectBuilder, IControllerBuilder
+    public class ControllerBuilder : ObjectBuilder, IControllerBuilder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllerBuilder"/> class.
@@ -25,7 +25,7 @@ namespace LiteApi.Services
         /// <param name="controllerCtx">The controller context.</param>
         /// <param name="httpContext">The HTTP context.</param>
         /// <returns>Instance of the built controller.</returns>
-        public LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
+        public virtual LiteController Build(ControllerContext controllerCtx, HttpContext httpContext)
         {
             var controller = BuildObject(controllerCtx.ControllerType) as LiteController;
             controller.HttpContext = httpContext;

@@ -11,7 +11,7 @@ namespace LiteApi.Services.Discoverers
     /// Instance of this class is used for discovering controllers in given assembly
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IControllerDiscoverer" />
-    internal class ControllerDiscoverer : IControllerDiscoverer
+    public class ControllerDiscoverer : IControllerDiscoverer
     {
         private readonly IActionDiscoverer _actionDiscoverer;
 
@@ -30,7 +30,7 @@ namespace LiteApi.Services.Discoverers
         /// </summary>
         /// <param name="assembly">The assembly in which to look for controllers.</param>
         /// <returns>Array of <see cref="ControllerContext"/>, controllers found in given assembly</returns>
-        public ControllerContext[] GetControllers(Assembly assembly)
+        public virtual ControllerContext[] GetControllers(Assembly assembly)
         {
             var types = assembly.GetTypes()
                 .Where(x => typeof(LiteController).IsAssignableFrom(x) && !x.GetTypeInfo().IsAbstract)
@@ -38,27 +38,25 @@ namespace LiteApi.Services.Discoverers
             ControllerContext[] ctrls = new ControllerContext[types.Length];
             for (int i = 0; i < ctrls.Length; i++)
             {
-                //try
-                //{
-                    ctrls[i] = new ControllerContext
-                    {
-                        ControllerType = types[i],
-                        RouteAndName = GetControllerRute(types[i]),
-                        IsRestful = types[i].GetTypeInfo().GetCustomAttributes<RestfulAttribute>().Any()
-                    };
-                    ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
-                    ctrls[i].Init();
-                //}
-                //catch (Exception ex)
-                //{
-                //    throw;
-                //}
+                ctrls[i] = new ControllerContext
+                {
+                    ControllerType = types[i],
+                    RouteAndName = GetControllerRoute(types[i]),
+                    IsRestful = types[i].GetTypeInfo().GetCustomAttributes<RestfulAttribute>().Any()
+                };
+                ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
+                ctrls[i].Init();
             }
 
             return ctrls;
         }
-        
-        private static string GetControllerName(string typeFullName)
+
+        /// <summary>
+        /// Gets the name of the controller.
+        /// </summary>
+        /// <param name="typeFullName">Full name of the type.</param>
+        /// <returns></returns>
+        protected virtual string GetControllerName(string typeFullName)
         {
             const string controller = "controller";
             string name = typeFullName.Split('.').Last().ToLowerInvariant();
@@ -68,8 +66,13 @@ namespace LiteApi.Services.Discoverers
             }
             return name;
         }
-    
-        private static string GetControllerRute(Type ctrlType)
+
+        /// <summary>
+        /// Gets the controller route.
+        /// </summary>
+        /// <param name="ctrlType">Type of the control.</param>
+        /// <returns></returns>
+        protected virtual string GetControllerRoute(Type ctrlType)
         {
             string root = "api/" + GetControllerName(ctrlType.FullName);
             var rootAttrib = ctrlType.GetTypeInfo().GetCustomAttribute<ControllerRouteAttribute>();

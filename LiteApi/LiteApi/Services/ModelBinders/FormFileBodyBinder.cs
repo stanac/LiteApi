@@ -8,7 +8,7 @@ namespace LiteApi.Services.ModelBinders
     /// Model binder for files submitted using form
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IBodyModelBinder" />
-    internal class FormFileBodyBinder : IBodyModelBinder
+    public class FormFileBodyBinder : IBodyModelBinder
     {
         /// <summary>
         /// Determines whether this model binder can handle specified type.

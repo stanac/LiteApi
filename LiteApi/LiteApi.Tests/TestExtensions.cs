@@ -28,13 +28,15 @@ namespace LiteApi.Tests
 
         public static ControllerContext GetControllerContext(this LiteController ctrl)
         {
+            var ad = new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object));
+            var controllerDiscoverer = new ControllerDiscoverer(ad);
+
             var type = ctrl.GetType();
             var context = new ControllerContext
             {
                 ControllerType = type,
-                RouteAndName = GetControllerName(type)
+                RouteAndName = GetControllerName(type, controllerDiscoverer)
             };
-            var ad = new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object));
             context.Actions = ad.GetActions(context);
 
             return context;
@@ -45,10 +47,10 @@ namespace LiteApi.Tests
             return new ControllerContext[] { ctrl.GetControllerContext() };
         }
 
-        private static string GetControllerName(Type type)
+        private static string GetControllerName(Type type, ControllerDiscoverer ctrlDiscoverer)
         {
-            var method = typeof(ControllerDiscoverer).GetMethod("GetControllerRute", BindingFlags.NonPublic | BindingFlags.Static);
-            return method.Invoke(null, new object[] { type }) as string;
+            var method = typeof(ControllerDiscoverer).GetMethod("GetControllerRoute", BindingFlags.NonPublic | BindingFlags.Instance);
+            return method.Invoke(ctrlDiscoverer, new object[] { type }) as string;
         }
 
         private static object GetDefaultValue(this Type type)

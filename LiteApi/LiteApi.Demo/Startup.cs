@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using LiteApi.Contracts.Abstractions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,11 +25,17 @@ namespace LiteApi.Demo
             }
             app.UseStaticFiles();
 
-            app.UseLiteApi(
-                LiteApiOptions.Default
+            var options = LiteApiOptions.Default
                     .SetLoggerFactory(loggerFactory)
-                    .AddAdditionalQueryModelBinder(new StackQueryBinder())
-                    );
+                    .AddAdditionalQueryModelBinder(new StackQueryBinder());
+            options.InternalServiceResolver.Register<IControllerDiscoverer, CustomControllerDiscoverer>();
+            app.UseLiteApi(options);
+            
+            app.Run(async context =>
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync("404 - NOT FOUND");
+            });
         }
     }
 }

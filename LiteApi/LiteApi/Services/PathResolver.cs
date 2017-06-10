@@ -13,7 +13,7 @@ namespace LiteApi.Services
     /// Class for resolving which action (if any) should be invoked for the HTTP request.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IPathResolver" />
-    internal class PathResolver : IPathResolver
+    public class PathResolver : IPathResolver
     {
         private readonly ControllerContext[] _controllerContrxts;
         private static readonly char[] _separator = { '/' };
@@ -40,7 +40,7 @@ namespace LiteApi.Services
         /// <param name="request">The HTTP request.</param>
         /// <param name="logger">Logger to use, can be null</param>
         /// <returns>ActionContext that should be invoked.</returns>
-        public ActionContext ResolveAction(HttpRequest request, ILogger logger = null)
+        public virtual ActionContext ResolveAction(HttpRequest request, ILogger logger = null)
         {
             logger?.LogInformation($"Resolving action for request");
             ActionContext[] actions = GetActionsForPathAndMethod(request).ToArray();

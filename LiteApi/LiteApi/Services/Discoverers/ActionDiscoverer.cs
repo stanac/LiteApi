@@ -12,7 +12,7 @@ namespace LiteApi.Services.Discoverers
     /// Class that is discovering actions in given <see cref="ControllerContext"/>
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IActionDiscoverer" />
-    internal class ActionDiscoverer : IActionDiscoverer
+    public class ActionDiscoverer : IActionDiscoverer
     {
         private readonly IParametersDiscoverer _parameterDiscoverer;
 
@@ -23,8 +23,7 @@ namespace LiteApi.Services.Discoverers
         /// <exception cref="System.ArgumentNullException"></exception>
         public ActionDiscoverer(IParametersDiscoverer parameterDiscoverer)
         {
-            if (parameterDiscoverer == null) throw new ArgumentNullException(nameof(parameterDiscoverer));
-            _parameterDiscoverer = parameterDiscoverer;
+            _parameterDiscoverer = parameterDiscoverer ?? throw new ArgumentNullException(nameof(parameterDiscoverer));
         }
 
         /// <summary>
@@ -32,7 +31,7 @@ namespace LiteApi.Services.Discoverers
         /// </summary>
         /// <param name="controllerCtx">Controller context in which to look for actions.</param>
         /// <returns></returns>
-        public ActionContext[] GetActions(ControllerContext controllerCtx)
+        public virtual ActionContext[] GetActions(ControllerContext controllerCtx)
         {
             var properties = controllerCtx.ControllerType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var propertyMethods = new List<string>();
@@ -46,7 +45,12 @@ namespace LiteApi.Services.Discoverers
                 .ToArray();
         }
 
-        private static bool MethodIsAction(MethodInfo method)
+        /// <summary>
+        /// Checks if methods is action.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        protected virtual bool MethodIsAction(MethodInfo method)
         {
             if (method.GetCustomAttribute<DontMapToApiAttribute>() != null) return false;
 
@@ -55,14 +59,20 @@ namespace LiteApi.Services.Discoverers
             return true;
         }
 
-        private ActionContext GetActionContext(MethodInfo method, ControllerContext ctrlCtx)
+        /// <summary>
+        /// Gets the action context.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <param name="ctrlCtx">The control context.</param>
+        /// <returns></returns>
+        protected virtual ActionContext GetActionContext(MethodInfo method, ControllerContext ctrlCtx)
         {
             string methodName = method.Name.ToLowerInvariant();
             var segmentsAttr = method.GetCustomAttribute<ActionRouteAttribute>();
-            RouteSegment[] segments = new RouteSegment[0] ;
+            RouteSegment[] segments = new RouteSegment[0];
             if (!ctrlCtx.IsRestful)
             {
-                segments = new [] { new RouteSegment(methodName) };
+                segments = new[] { new RouteSegment(methodName) };
             }
             if (segmentsAttr != null)
             {
@@ -80,8 +90,14 @@ namespace LiteApi.Services.Discoverers
             return actionCtx;
         }
 
-        private static HttpBaseAttribute GetHttpAttribute(MethodInfo method)
+        /// <summary>
+        /// Gets the HTTP attribute.
+        /// </summary>
+        /// <param name="method">The method.</param>
+        /// <returns></returns>
+        protected virtual HttpBaseAttribute GetHttpAttribute(MethodInfo method)
         {
+            // TODO: replace with inherited attributes
             HttpBaseAttribute attrib = null;
             attrib = method.GetCustomAttribute<HttpGetAttribute>();
             if (attrib != null) return attrib;

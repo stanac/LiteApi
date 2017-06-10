@@ -9,7 +9,7 @@ namespace LiteApi.Services
     /// Gets and sets authorization policy by name
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IAuthorizationPolicyStore" />
-    internal class AuthorizationPolicyStore : IAuthorizationPolicyStore
+    public class AuthorizationPolicyStore : IAuthorizationPolicyStore
     {
         private Dictionary<string, Func<ClaimsPrincipal, bool>> _store = new Dictionary<string, Func<ClaimsPrincipal, bool>>();
 

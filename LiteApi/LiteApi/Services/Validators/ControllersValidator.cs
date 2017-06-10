@@ -11,7 +11,7 @@ namespace LiteApi.Services.Validators
     /// Class that validates controllers before first request is received.
     /// </summary>
     /// <seealso cref="LiteApi.Contracts.Abstractions.IControllersValidator" />
-    internal class ControllersValidator : IControllersValidator
+    public class ControllersValidator : IControllersValidator
     {
         private readonly IActionsValidator _actionValidator;
         private readonly IAuthorizationPolicyStore _policyStore;
@@ -35,7 +35,7 @@ namespace LiteApi.Services.Validators
         /// </summary>
         /// <param name="controllerCtxs">The controller context.</param>
         /// <returns>Collection of strings that contains errors, if not empty an exception should be raised.</returns>
-        public IEnumerable<string> GetValidationErrors(ControllerContext[] controllerCtxs)
+        public virtual IEnumerable<string> GetValidationErrors(ControllerContext[] controllerCtxs)
         {
             foreach (ControllerContext ctrl in controllerCtxs)
             {
