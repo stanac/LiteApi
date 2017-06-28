@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 
@@ -72,6 +74,40 @@ namespace LiteApi
         public ILiteActionResult Json(string jsonContent)
             => new JsonActionResult(jsonContent);
 
+        /// <summary>
+        /// Sets the response status code.
+        /// </summary>
+        /// <param name="responseCode">The response status code, if null or not set LiteApi will determine by itself response status code.</param>
+        public void SetResponseStatusCode(int? responseCode)
+        {
+            // TODO: validate the response code
+            HttpContext.SetResponseStatusCode(responseCode);
+        }
+
+        /// <summary>
+        /// Adds the response header.
+        /// </summary>
+        /// <param name="key">The header key.</param>
+        /// <param name="values">The header value(s).</param>
+        public void AddResponseHeader(string key, StringValues values)
+        {
+            var headers = HttpContext.GetResponseHeaders(false);
+            headers.Add(key, values);
+        }
+
+        /// <summary>
+        /// Adds the response headers.
+        /// </summary>
+        /// <param name="keyValuesPairs">The key values pairs to add.</param>
+        public void AddResponseHeaders(IDictionary<string, StringValues> keyValuesPairs)
+        {
+            var headers = HttpContext.GetResponseHeaders(false);
+            foreach (var kvp in keyValuesPairs)
+            {
+                headers[kvp.Key] = kvp.Value;
+            }
+        }
+        
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

@@ -78,6 +78,11 @@ namespace LiteApi.Demo.Controllers
             };
         }
 
-        public ILiteActionResult EmpryJsonObject() => Json("{ }");
+        public ILiteActionResult EmpryJsonObject()
+        {
+            AddResponseHeader("x-stat", "accepted");
+            SetResponseStatusCode(204);
+            return Json("{ }");
+        }
     }
 }

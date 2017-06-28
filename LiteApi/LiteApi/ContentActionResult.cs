@@ -15,11 +15,6 @@ namespace LiteApi
     public class ContentActionResult : ILiteActionResult
     {
         /// <summary>
-        /// HTTP headers to return in the response
-        /// </summary>
-        public static Dictionary<string, StringValues> Headers { get; private set; } = new Dictionary<string, StringValues>();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ContentActionResult"/> class.
         /// </summary>
         /// <param name="contentType">Type of the content.</param>
@@ -69,10 +64,6 @@ namespace LiteApi
             if (httpCtx == null) throw new ArgumentNullException(nameof(httpCtx));
             
             httpCtx.Response.Headers.Add("Content-Type", ContentType);
-            foreach (var h in Headers)
-            {
-                httpCtx.Response.Headers.Add(h.Key, h.Value);
-            }
             
             return httpCtx.Response.Body.WriteAsync(RawData, 0, RawData.Length);
         }

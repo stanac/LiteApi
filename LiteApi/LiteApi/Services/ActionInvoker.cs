@@ -105,16 +105,34 @@ namespace LiteApi.Services
                 result = actionCtx.Method.Invoke(ctrl, paramValues);
             }
 
-            int statusCode = 405; // method not allowed
-            switch (httpCtx.Request.Method.ToUpper())
+            int? overridenResponseCode = httpCtx.GetResponseStatusCode();
+            if (overridenResponseCode.HasValue)
             {
-                case "GET": statusCode = 200; break;
-                case "POST": statusCode = 201; break;
-                case "PUT": statusCode = 201; break;
-                case "DELETE": statusCode = 204; break;
+                httpCtx.Response.StatusCode = overridenResponseCode.Value;
             }
-            httpCtx.Response.StatusCode = statusCode;
+            else
+            {
+                int statusCode = 405; // method not allowed
+                switch (httpCtx.Request.Method.ToUpper())
+                {
+                    case "GET": statusCode = 200; break;
+                    case "POST": statusCode = 201; break;
+                    case "PUT": statusCode = 201; break;
+                    case "DELETE": statusCode = 204; break;
+                }
+                httpCtx.Response.StatusCode = statusCode;
+            }
+
             httpCtx.Response.Headers.Add("X-Powered-By-Middleware", "LiteApi");
+            var additionalHeaders = httpCtx.GetResponseHeaders(true);
+            if (additionalHeaders != null)
+            {
+                foreach (var header in additionalHeaders)
+                {
+                    httpCtx.Response.Headers.Add(header.Key, header.Value);
+                }
+            }
+
             if (isVoid)
             {
                 logger?.LogInformation("Not serializing result from invoked action, action is void or void task");
