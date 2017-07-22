@@ -138,7 +138,7 @@ namespace MyApp
 - [ ] Enable multiple instances of the middleware to run in one app
 
 ### 1.2
-- [ ] Performance testing, performance improvements with Roslyn code generators
+- [ ] Performance testing, performance improvements
 
 ### 1.1
 - [ ] Support for generating OpenAPI documentation (Swagger)
@@ -147,27 +147,27 @@ namespace MyApp
 - [ ] Stabilization, more testing
 
 ### 0.9 Feature complete (RC)
-- [x] Documentation and website [liteapi.net](http://liteapi.net)
+- [x] Documentation and website ([liteapi.net](http://liteapi.net))
 - [ ] Global filters
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
-- [x] Option to return raw JSON content from string and to set response code [link](http://liteapi.net/docs/custom-response)
-- [x] Extensibility point to enable replacing any internal service in the middleware [link](http://liteapi.net/docs/replacing-internal-services)
-- [x] Force HTTPS attribute in global config [link](http://liteapi.net/docs/require-https)
-- [x] Support action parameters from request header [link](http://liteapi.net/docs/parameter-retrieving-from-header)
+- [x] Option to return raw JSON content from string and to set response code ([link](http://liteapi.net/docs/custom-response))
+- [x] Extensibility point to enable replacing any internal service in the middleware ([link](http://liteapi.net/docs/replacing-internal-services))
+- [x] Force HTTPS attribute in global config ([link](http://liteapi.net/docs/require-https))
+- [x] Support action parameters from request header ([link](http://liteapi.net/docs/parameter-retrieving-from-header))
 
 ### 0.7
-- [x] Support for file uploading (streams) [link](http://liteapi.net/docs/files-upload-and-download)
-- [x] Support for file download (streams and byte arrays) [link](http://liteapi.net/docs/files-upload-and-download)
-- [x] Support for action parameters from IServiceProvider (dependency injection on action level) [link](http://liteapi.net/docs/parameter-retrieving-from-service-provider)
+- [x] Support for file uploading (streams) ([link](http://liteapi.net/docs/files-upload-and-download))
+- [x] Support for file download (streams and byte arrays) ([link](http://liteapi.net/docs/files-upload-and-download))
+- [x] Support for action parameters from IServiceProvider (dependency injection on action level) ([link](http://liteapi.net/docs/parameter-retrieving-from-service-provider))
 
 ### Previous
-- [x] Extensibility points for model binders and filters
-- [x] Authorization [link](http://liteapi.net/docs/authorization)
-- [x] Restful links [link](http://liteapi.net/docs/action-matching)
-- [x] Actions overloading [link](http://liteapi.net/docs/action-overloading)
-- [x] Dictionary from query
-- [x] Collections from query
+- [x] Extensibility points for model binders and filters ([link](http://liteapi.net/docs/extensibility-points))
+- [x] Authorization ([link](http://liteapi.net/docs/authorization))
+- [x] Restful links ([link](http://liteapi.net/docs/action-matching))
+- [x] Actions overloading ([link](http://liteapi.net/docs/action-overloading))
+- [x] Dictionary from query ([link](http://liteapi.net/docs/parameters-retrieving-dictionaries))
+- [x] Collections from query ([link](http://liteapi.net/docs/parameters-retrieving-collections))
 - [x] Default parameters
 - [x] Proof of concept
