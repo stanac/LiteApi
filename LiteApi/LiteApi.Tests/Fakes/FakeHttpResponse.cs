@@ -11,7 +11,7 @@ namespace LiteApi.Tests.Fakes
     public class FakeHttpResponse : HttpResponse, IDisposable
     {
         internal IResponseCookies cookies = null;
-        internal IHeaderDictionary headers = new Mock<IHeaderDictionary>().Object;
+        internal IHeaderDictionary headers = new FakeHeaderDictionary();
         internal HttpContext httpContext = null;
         internal bool hasStarted = false;
 
@@ -19,7 +19,11 @@ namespace LiteApi.Tests.Fakes
 
         public override long? ContentLength { get; set; }
 
-        public override string ContentType { get; set; }
+        public override string ContentType
+        {
+            get => Headers.FirstOrDefault(x => x.Key == "Content-Type").Value;
+            set => Headers["Content-Type"] = value;
+        }
 
         public override IResponseCookies Cookies => cookies;
 
