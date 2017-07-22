@@ -152,10 +152,10 @@ namespace MyApp
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
-- [x] Option to return raw JSON content from string and to set response code
-- [x] Extensibility point to enable replacing any internal service in the middleware
-- [x] Force HTTPS attribute and global config
-- [x] Support action parameters from request header (in 0.7.2)
+- [x] Option to return raw JSON content from string and to set response code [link](http://liteapi.net/docs/custom-response)
+- [x] Extensibility point to enable replacing any internal service in the middleware [link](http://liteapi.net/docs/replacing-internal-services)
+- [x] Force HTTPS attribute in global config [link](http://liteapi.net/docs/require-https)
+- [x] Support action parameters from request header [link](http://liteapi.net/docs/parameter-retrieving-from-header)
 
 ### 0.7
 - [x] Support for file uploading (streams) [link](http://liteapi.net/docs/files-upload-and-download)
