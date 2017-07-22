@@ -8,7 +8,7 @@
  [![license](https://img.shields.io/github/license/stanac/liteapi.svg)]()
 
 LiteApi is .net core middleware inspired by MVC-style Controller/Action principles.
-It's still in beta and currently initial tests are showing that it can handle about 50%-90%
+It's still in beta and currently initial tests are showing that it can handle about 20%-30%
 more requests per second than MVC6 (asp.net core). Check [getting started](http://liteapi.net/getting-started) and [performance comparison](http://liteapi.net/docs/performance).
 
 LiteApi is still in prerelease phase, to install it use nuget, or add it to project.json file manually:
@@ -152,7 +152,7 @@ namespace MyApp
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
-- [ ] Option to return raw JSON content from string and to set response code
+- [x] Option to return raw JSON content from string and to set response code
 - [x] Extensibility point to enable replacing any internal service in the middleware
 - [x] Force HTTPS attribute and global config
 - [x] Support action parameters from request header (in 0.7.2)
