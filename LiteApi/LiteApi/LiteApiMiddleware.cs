@@ -70,21 +70,21 @@ namespace LiteApi
         /// <summary>
         /// Gets called by ASP.NET framework
         /// </summary>
-        /// <param name="context">Instance of <see cref="HttpContext"/> provided by ASP.NET framework</param>
+        /// <param name="httpCtx">Instance of <see cref="HttpContext"/> provided by ASP.NET framework</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext httpCtx)
         {
-            ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, context.TraceIdentifier);
-            log.LogInformation($"Received request: {context.Request.Path} with query: {context.Request.QueryString.ToString() ?? ""}");
+            ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, httpCtx.TraceIdentifier);
+            log.LogInformation($"Received request: {httpCtx.Request.Path} with query: {httpCtx.Request.QueryString.ToString() ?? ""}");
             IPathResolver pathResolver = Options.InternalServiceResolver.GetPathResolver();
-            ActionContext action = pathResolver.ResolveAction(context.Request, log);
+            ActionContext action = pathResolver.ResolveAction(httpCtx.Request, log);
             if (action == null)
             {
                 log.LogInformation("Request is skipped to next middleware");
                 if (_next != null)
                 {
                     log.LogInformation("Invoking next middleware");
-                    await _next?.Invoke(context);
+                    await _next?.Invoke(httpCtx);
                     log.LogInformation("Next middleware invoked");
                 }
                 else
@@ -94,16 +94,21 @@ namespace LiteApi
             }
             else
             {
-                if (Options.RequiresHttps && !context.Request.IsHttps)
+                // TODO: consider replacing RequiresHttps with global filter
+                if (Options.RequiresHttps && !httpCtx.Request.IsHttps)
                 {
                     log.LogInformation("LiteApi options are set to require HTTPS, request rejected because request is HTTP");
-                    context.Response.StatusCode = 400;
-                    await context.Response.WriteAsync("Bad request, HTTPS request was expected.");
+                    httpCtx.Response.StatusCode = 400;
+                    await httpCtx.Response.WriteAsync("Bad request, HTTPS request was expected.");
                 }
                 else
                 {
+                    if (!(await CheckGlobalFiltersAndWriteResponseIfAny(httpCtx, log, action.SkipAuth)))
+                    {
+                        return;
+                    }
                     var actionInvoker = Options.InternalServiceResolver.GetActionInvoker();
-                    await actionInvoker.Invoke(context, action, log);
+                    await actionInvoker.Invoke(httpCtx, action, log);
                     log.LogInformation("Action is invoked");
                 }
             }
@@ -154,6 +159,29 @@ namespace LiteApi
 
             if (!isRegistered(typeof(IModelBinder)))
                 Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);
+        }
+
+        private async Task<bool> CheckGlobalFiltersAndWriteResponseIfAny(HttpContext httpCtx, ILogger log, bool actionHasSkipFilter)
+        {
+            IEnumerable<ApiFilterWrapper> filters = actionHasSkipFilter
+                ? Options.GlobalFilters.Where(x => x.IgnoreSkipFilter)
+                : Options.GlobalFilters;
+
+            ApiFilterRunResult result;
+            foreach (var filter in filters)
+            {
+                result = await filter.ShouldContinueAsync(httpCtx);
+                if (!result.ShouldContinue)
+                {
+                    int code = result.SetResponseCode ?? 401;
+                    string message = result.SetResponseMessage ?? "unauthorized request";
+                    httpCtx.Response.StatusCode = code;
+                    await httpCtx.Response.WriteAsync(message);
+                    log.LogInformation($"Global filter {filter.GetFilterTypeName()} return false for should continue.");
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

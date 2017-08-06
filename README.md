@@ -148,7 +148,7 @@ namespace MyApp
 
 ### 0.9 Feature complete (RC)
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
-- [ ] Global filters
+- [x] Global filters
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8

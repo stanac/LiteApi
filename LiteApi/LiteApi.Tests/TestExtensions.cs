@@ -28,7 +28,7 @@ namespace LiteApi.Tests
 
         public static ControllerContext GetControllerContext(this LiteController ctrl)
         {
-            var ad = new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object));
+            var ad = new ActionDiscoverer(new ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider()));
             var controllerDiscoverer = new ControllerDiscoverer(ad);
 
             var type = ctrl.GetType();

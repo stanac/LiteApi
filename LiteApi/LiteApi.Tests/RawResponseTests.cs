@@ -38,7 +38,7 @@ namespace LiteApi.Tests
             var ctrl = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.RawController))
                 .GetControllers(null)[0];
             var action = ctrl.Actions[0];
-            var serviceProvider = new Moq.Mock<IServiceProvider>().Object;
+            var serviceProvider = Fakes.FakeServiceProvider.GetServiceProvider();
             var ctrlBuilder = new ControllerBuilder(serviceProvider);
             var actionInvoker = new ActionInvoker(ctrlBuilder, new ModelBinderCollection(new JsonSerializer(), serviceProvider), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();

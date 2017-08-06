@@ -1,8 +1,10 @@
 ﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 using LiteApi.Services;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security.Claims;
 
@@ -17,6 +19,8 @@ namespace LiteApi
 
         internal IAuthorizationPolicyStore AuthorizationPolicyStore { get; } = new AuthorizationPolicyStore();
 
+        internal List<ApiFilterWrapper> GlobalFilters { get; } = new List<ApiFilterWrapper>();
+        
         /// <summary>
         /// Gets the internal service resolver.
         /// </summary>
@@ -136,6 +140,50 @@ namespace LiteApi
         public LiteApiOptions ReplaceInternalServiceResolver(ILiteApiServiceResolver serviceResolver)
         {
             InternalServiceResolver = serviceResolver ?? throw new ArgumentNullException(nameof(serviceResolver));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the global filter.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>Instance of this options</returns>
+        public LiteApiOptions AddGlobalFilter(IApiFilter filter)
+        {
+            GlobalFilters.Add(new ApiFilterWrapper(filter));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the global async filter.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>Instance of this options</returns>
+        public LiteApiOptions AddGlobalFilter(IApiFilterAsync filter)
+        {
+            GlobalFilters.Add(new ApiFilterWrapper(filter));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the global filters.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>Instance of this options</returns>
+        public LiteApiOptions AddGlobalFilters(IEnumerable<IApiFilter> filters)
+        {
+            GlobalFilters.AddRange(filters.Select(x => new ApiFilterWrapper(x)));
+            return this;
+        }
+
+        /// <summary>
+        /// Adds the global async filters.
+        /// </summary>
+        /// <param name="filters">The filters.</param>
+        /// <returns>Instance of this options</returns>
+        public LiteApiOptions AddGlobalFilters(IEnumerable<IApiFilterAsync> filters)
+        {
+            GlobalFilters.AddRange(filters.Select(x => new ApiFilterWrapper(x)));
             return this;
         }
     }

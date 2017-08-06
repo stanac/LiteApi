@@ -41,7 +41,7 @@ namespace LiteApi.Tests
         }
 
         private IModelBinder GetModelBinder()
-            => new ModelBinderCollection(new JsonSerializer(), new Mock<IServiceProvider>().Object);
+            => new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
 
         private HttpRequest GetHttpRequest(string paramKey, params string[] paramValues)
         {

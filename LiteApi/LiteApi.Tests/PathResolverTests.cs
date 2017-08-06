@@ -89,7 +89,7 @@ namespace LiteApi.Tests
         [Fact]
         public void PathResolver_DifferentOrNoRootController_CanResolveDifferentOrNoRootAction()
         {
-            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(new Moq.Mock<IServiceProvider>().Object)))
+            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider())))
                 .GetControllers(typeof(Controllers.NoRootController).GetTypeInfo().Assembly);
 
             var resolver = new PathResolver(ctrlCtx);

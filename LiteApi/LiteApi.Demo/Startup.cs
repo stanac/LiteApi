@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace LiteApi.Demo
 {
@@ -27,7 +28,8 @@ namespace LiteApi.Demo
 
             var options = LiteApiOptions.Default
                     .SetLoggerFactory(loggerFactory)
-                    .AddAdditionalQueryModelBinder(new StackQueryBinder());
+                    .AddAdditionalQueryModelBinder(new StackQueryBinder())
+                    .AddGlobalFilter(new TestGlobalFilter());
             options.InternalServiceResolver.Register<IControllerDiscoverer, CustomControllerDiscoverer>();
             app.UseLiteApi(options);
             
@@ -36,6 +38,17 @@ namespace LiteApi.Demo
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync("404 - NOT FOUND");
             });
+        }
+
+        class TestGlobalFilter : IApiFilter
+        {
+            public bool IgnoreSkipFilters => false;
+
+            public ApiFilterRunResult ShouldContinue(HttpContext httpCtx)
+            {
+                //return ApiFilterRunResult.Unauthenticated;
+                return ApiFilterRunResult.Continue;
+            }
         }
     }
 }

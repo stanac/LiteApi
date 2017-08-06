@@ -19,7 +19,7 @@ namespace LiteApi.Tests
             bool error = false;
             try
             {
-                var m = new ModelBinderCollection(null, new Moq.Mock<IServiceProvider>().Object);
+                var m = new ModelBinderCollection(null, Fakes.FakeServiceProvider.GetServiceProvider());
             }
             catch (ArgumentNullException)
             {
@@ -32,7 +32,7 @@ namespace LiteApi.Tests
         public void ModelBinderCollectionAddAdditionalQueryModelBinder_NullQueryModelBinder_ThrowsException()
         {
             bool error = false;
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             try
             {
                 collection.AddAdditionalQueryModelBinder(null);
@@ -50,7 +50,7 @@ namespace LiteApi.Tests
             var mock = new Mock<IQueryModelBinder>();
             mock.SetupGet(x => x.SupportedTypes).Returns(new [] { typeof(ModelBinderCollectionTests) });
 
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             collection.AddAdditionalQueryModelBinder(mock.Object);
             var containsCustomType = collection.GetSupportedTypesFromUrl().Contains(typeof(ModelBinderCollectionTests));
             Assert.True(containsCustomType);
@@ -59,7 +59,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ModelBinderCollectionDoesSupportType_TypeFromBody_IsSupported()
         {
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             bool supports = collection.DoesSupportType(typeof(ModelBinderCollectionTests), Contracts.Models.ParameterSources.Body);
             Assert.True(supports);
         }
@@ -67,7 +67,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ModelBinderCollectionDoesSupportType_FromUnknownSource_ThrowsException()
         {
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             bool error = false;
             try
             {
@@ -83,7 +83,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ModelBinderGetParameterValues_UnsuportedActionParameterFromQuery_ThrowsException()
         {
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             bool error = false;
             try
             {
@@ -108,7 +108,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ModelBinderGetParameterValues_UnknownSourceActionParameter_ThrowsException()
         {
-            var collection = new ModelBinderCollection(new JsonSerializer(), new Moq.Mock<IServiceProvider>().Object);
+            var collection = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider());
             bool error = false;
             try
             {

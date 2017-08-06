@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LiteApi.Contracts.Models
 {
-    public class ApiFilterWrapper
+    internal class ApiFilterWrapper
     {
         public IApiFilter ApiFilter { get; private set; }
         public IApiFilterAsync ApiFilterAsync { get; private set; }
@@ -21,14 +21,12 @@ namespace LiteApi.Contracts.Models
 
         public ApiFilterWrapper(IApiFilter apiFilter)
         {
-            if (apiFilter == null) throw new ArgumentNullException(nameof(apiFilter));
-            ApiFilter = apiFilter;
+            ApiFilter = apiFilter ?? throw new ArgumentNullException(nameof(apiFilter));
         }
 
         public ApiFilterWrapper(IApiFilterAsync apiFilter)
         {
-            if (apiFilter == null) throw new ArgumentNullException(nameof(apiFilter));
-            ApiFilterAsync = apiFilter;
+            ApiFilterAsync = apiFilter ?? throw new ArgumentNullException(nameof(apiFilter));
         }
 
         public ApiFilterWrapper(IPolicyApiFilter policyFilter, Func<IAuthorizationPolicyStore> policyStoreFactory)
@@ -43,6 +41,12 @@ namespace LiteApi.Contracts.Models
                 return await ApiFilterAsync.ShouldContinueAsync(httpCtx);
             }
             return ApiFilter.ShouldContinue(httpCtx);
+        }
+
+        public string GetFilterTypeName()
+        {
+            if (ApiFilter != null) return ApiFilter.GetType().FullName;
+            return ApiFilterAsync.GetType().FullName;
         }
 
         private class PolicyFilter : IApiFilter
