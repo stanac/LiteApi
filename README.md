@@ -146,7 +146,11 @@ namespace MyApp
 ### 1.0 Feature complete (stable)
 - [ ] Stabilization, more testing
 
-### 0.9 Feature complete (RC)
+### 0.10 Feature complete (RC)
+- [ ] Support for System.DateTimeOffset
+- [ ] Choosing DateTime and DateTimeOffset format when parsing parameter values
+
+### 0.9
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
 - [x] Global filters
 - [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
