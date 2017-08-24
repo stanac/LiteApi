@@ -1,8 +1,7 @@
 version: 0.7.2.{build}
 build_script:
 - ps: >-
-    choco install dotnetcore -version 2.0.0
-
+    dotnet -v
     dotnet restore LiteApi/LiteApi.sln
 
     dotnet build LiteApi/LiteApi.sln
