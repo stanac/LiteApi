@@ -1,4 +1,4 @@
-version: 0.7.2.{build}
+version: 0.9.1.{build}
 build_script:
 - ps: >-
     (New-Object System.Net.WebClient).DownloadFile('https://download.microsoft.com/download/0/F/D/0FD852A4-7EA1-4E2A-983A-0484AC19B92C/dotnet-sdk-2.0.0-win-x64.exe','dotnet-core-sdk.exe')
