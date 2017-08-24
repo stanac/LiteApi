@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <Description>LiteApi is alternative WEB API .NET Core middleware</Description>
+    <Version>0.9.0</Version>
+    <PackageProjectUrl>http://liteapi.net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/stanac/LiteApi</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>ASPCore Middleware WebApi aspnetcore web-api</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
