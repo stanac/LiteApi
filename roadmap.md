@@ -24,6 +24,7 @@
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
 - [x] Global filters
 - [x] Configuration to replace global API root route (replace "api" in URLs with custom string)
+- [x] Support for both .NET Standard 1.6 and 2.0
 
 ### 0.8
 - [x] Option to return raw JSON content from string and to set response code ([link](http://liteapi.net/docs/custom-response))
