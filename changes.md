@@ -1,3 +1,18 @@
+0.9.1
+- Nuget package fix
+
+0.9.0
+- Documentation and website
+- Global filters
+- Configuration to replace global API root route (replace "api" in URLs with custom string)
+- Support for both .NET Standard 1.6 and 2.0
+
+0.8.0
+-  Option to return raw JSON content from string and to set response code
+-  Extensibility point to enable replacing any internal service in the middleware
+-  Force HTTPS attribute in global config
+-  Support action parameters from request header
+
 0.7.4
 - Fixes
   - Fix .nuspec
