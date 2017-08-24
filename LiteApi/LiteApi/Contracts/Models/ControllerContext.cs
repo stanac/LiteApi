@@ -30,7 +30,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The authentication policy store factory.
         /// </value>
-        internal IAuthorizationPolicyStore AuthPolicyStore { get; private set; } = LiteApiMiddleware.Options.AuthorizationPolicyStore;
+        // internal IAuthorizationPolicyStore AuthPolicyStore { get; private set; } = LiteApiMiddleware.Options.AuthorizationPolicyStore;
 
         /// <summary>
         /// Gets or sets the route and name.
@@ -89,10 +89,17 @@ namespace LiteApi.Contracts.Models
         internal ApiFilterWrapper[] Filters { get; set; }
 
         /// <summary>
-        /// Initializes this instance.
+        /// Initializes the specified options retriver.
         /// </summary>
-        public void Init()
+        /// <param name="optionsRetriver">The options retriever.</param>
+        /// <exception cref="ArgumentNullException">optionsRetriver</exception>
+        public void Init(ILiteApiOptionsRetriever optionsRetriver)
         {
+            if (optionsRetriver == null)
+            {
+                throw new ArgumentNullException(nameof(optionsRetriver));
+            }
+
             if (Filters == null)
             {
                 var attributes = ControllerType.GetTypeInfo().GetCustomAttributes().ToArray();
@@ -110,11 +117,11 @@ namespace LiteApi.Contracts.Models
                     .ToArray();
                 Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
                     .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
-                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => AuthPolicyStore)))
+                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => optionsRetriver.GetOptions().AuthorizationPolicyStore)))
                     .ToArray();
                 foreach (var action in Actions)
                 {
-                    action.Init();
+                    action.Init(optionsRetriver);
                 }
             }
         }

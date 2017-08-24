@@ -21,5 +21,11 @@ namespace LiteApi.Contracts.Abstractions
         /// <param name="name">The name.</param>
         /// <param name="policy">The policy.</param>
         void SetPolicy(string name, Func<ClaimsPrincipal, bool> policy);
+
+        /// <summary>
+        /// Gets the policy names.
+        /// </summary>
+        /// <returns>Array of strings, containing policy names</returns>
+        string[] GetPolicyNames();
     }
 }

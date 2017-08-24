@@ -10,7 +10,7 @@ namespace LiteApi.Demo
 {
     public class CustomControllerDiscoverer : ControllerDiscoverer
     {
-        public CustomControllerDiscoverer(IActionDiscoverer actionDiscoverer) : base(actionDiscoverer)
+        public CustomControllerDiscoverer(IActionDiscoverer actionDiscoverer, ILiteApiOptionsRetriever optionsRetriever) : base(actionDiscoverer, optionsRetriever)
         {
         }
 

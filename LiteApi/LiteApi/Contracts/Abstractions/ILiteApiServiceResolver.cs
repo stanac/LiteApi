@@ -11,7 +11,8 @@ namespace LiteApi.Contracts.Abstractions
         /// Initializes the internal service provider.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        void Initialize(IServiceProvider serviceProvider);
+        /// <param name="options">The middleware options.</param>
+        void Initialize(IServiceProvider serviceProvider, LiteApiOptions options);
 
         /// <summary>
         /// Gets the action discoverer.
@@ -78,6 +79,12 @@ namespace LiteApi.Contracts.Abstractions
         /// </summary>
         /// <returns>Instance of <see cref="IParametersValidator"/></returns>
         IParametersValidator GetParametersValidator();
+
+        /// <summary>
+        /// Gets the middleware options resolver.
+        /// </summary>
+        /// <returns>Instance of <see cref="ILiteApiOptionsRetriever"/></returns>
+        ILiteApiOptionsRetriever GetOptionsRetriever();
         
         /// <summary>
         /// Resolves the specified interface type.

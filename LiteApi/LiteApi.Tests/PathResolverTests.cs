@@ -13,7 +13,7 @@ namespace LiteApi.Tests
         [Fact]
         public void PathResolver_ZeroControllers_ReturnsNull()
         {
-            PathResolver resolver = new PathResolver(new ControllerContext[0]);
+            PathResolver resolver = new PathResolver(new ControllerContext[0], new LiteApiOptionsRetriever(LiteApiOptions.Default));
             var request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/test1/test2/test3");
             var action = resolver.ResolveAction(request);
             Assert.Null(action);
@@ -24,7 +24,7 @@ namespace LiteApi.Tests
         {
             var ctrlCtx = new Controllers.DifferentHttpMethodsController().GetControllerContextAsArray();
 
-            var resolver = new PathResolver(ctrlCtx);
+            var resolver = new PathResolver(ctrlCtx, new LiteApiOptionsRetriever(LiteApiOptions.Default));
             var path = "/api/DifferentHttpMethods/Action";
             var request = Fakes.FakeHttpRequest.WithGetMethod().WithPath(path);
             resolver.ResolveAndAssert(request, "default get");
@@ -47,7 +47,7 @@ namespace LiteApi.Tests
         {
             var ctrlCtx = new Controllers.ActionOverloadController().GetControllerContextAsArray();
 
-            var resolver = new PathResolver(ctrlCtx);
+            var resolver = new PathResolver(ctrlCtx, new LiteApiOptionsRetriever(LiteApiOptions.Default));
             var path = "/api/ActionOverload/GetString";
 
             var request = Fakes.FakeHttpRequest.WithGetMethod()
@@ -89,10 +89,10 @@ namespace LiteApi.Tests
         [Fact]
         public void PathResolver_DifferentOrNoRootController_CanResolveDifferentOrNoRootAction()
         {
-            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider())))
+            var ctrlCtx = new ControllerDiscoverer(new ActionDiscoverer(new ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider())), new LiteApiOptionsRetriever(LiteApiOptions.Default))
                 .GetControllers(typeof(Controllers.NoRootController).GetTypeInfo().Assembly);
 
-            var resolver = new PathResolver(ctrlCtx);
+            var resolver = new PathResolver(ctrlCtx, new LiteApiOptionsRetriever(LiteApiOptions.Default));
 
             var request = Fakes.FakeHttpRequest.WithGetMethod().WithPath("/api/v2/DifferentRoot/Get");
             resolver.ResolveAndAssert(request, "DifferentRootController");

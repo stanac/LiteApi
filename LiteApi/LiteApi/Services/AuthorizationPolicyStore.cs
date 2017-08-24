@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace LiteApi.Services
@@ -30,6 +31,15 @@ namespace LiteApi.Services
             }
             return null;
         }
+
+        /// <summary>
+        /// Gets the policy names.
+        /// </summary>
+        /// <returns>
+        /// Array of strings, containing policy names
+        /// </returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public string[] GetPolicyNames() => _store.Keys.ToArray();
 
         /// <summary>
         /// Sets the policy.

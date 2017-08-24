@@ -125,8 +125,13 @@ namespace LiteApi.Contracts.Models
         /// <summary>
         /// Initializes filters and possibly other stuff
         /// </summary>
-        internal void Init()
+        internal void Init(ILiteApiOptionsRetriever optionsRetriever)
         {
+            if (optionsRetriever == null)
+            {
+                throw new ArgumentNullException(nameof(optionsRetriever));
+            }
+
             if (Filters == null)
             {
                 var attribs = Method.GetCustomAttributes().ToArray();
@@ -145,7 +150,7 @@ namespace LiteApi.Contracts.Models
 
                 Filters = apiFilters.Select(x => new ApiFilterWrapper(x))
                     .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
-                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => ParentController.AuthPolicyStore)))
+                    .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => optionsRetriever.GetOptions().AuthorizationPolicyStore)))
                     .ToArray();
 
                 SkipAuth = Method

@@ -14,15 +14,17 @@ namespace LiteApi.Services.Discoverers
     public class ControllerDiscoverer : IControllerDiscoverer
     {
         private readonly IActionDiscoverer _actionDiscoverer;
+        private readonly ILiteApiOptionsRetriever _optionsRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllerDiscoverer"/> class.
         /// </summary>
         /// <param name="actionDiscoverer">Instance of <see cref="IActionDiscoverer"/></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ControllerDiscoverer(IActionDiscoverer actionDiscoverer)
+        public ControllerDiscoverer(IActionDiscoverer actionDiscoverer, ILiteApiOptionsRetriever optionsRetriever)
         {
             _actionDiscoverer = actionDiscoverer ?? throw new ArgumentNullException(nameof(actionDiscoverer));
+            _optionsRetriever = optionsRetriever ?? throw new ArgumentNullException(nameof(_optionsRetriever));
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace LiteApi.Services.Discoverers
                     IsRestful = types[i].GetTypeInfo().GetCustomAttributes<RestfulAttribute>().Any()
                 };
                 ctrls[i].Actions = _actionDiscoverer.GetActions(ctrls[i]);
-                ctrls[i].Init();
+                ctrls[i].Init(_optionsRetriever);
             }
 
             return ctrls;
@@ -74,13 +76,14 @@ namespace LiteApi.Services.Discoverers
         /// <returns></returns>
         protected virtual string GetControllerRoute(Type ctrlType)
         {
-            string root = "api/" + GetControllerName(ctrlType.FullName);
+            string urlRoot = _optionsRetriever.GetOptions().UrlRoot;
+            string route = urlRoot + GetControllerName(ctrlType.FullName);
             var rootAttrib = ctrlType.GetTypeInfo().GetCustomAttribute<ControllerRouteAttribute>();
             if (rootAttrib != null)
             {
-                root = rootAttrib.Route ?? "";
+                route = rootAttrib.Route ?? "";
             }
-            return root.ToLower().Trim('/');
+            return route.ToLower().Trim('/');
         }
     }
 }

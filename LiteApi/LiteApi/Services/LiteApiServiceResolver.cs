@@ -23,13 +23,14 @@ namespace LiteApi.Services
         /// Initializes the service provider.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
-        public virtual void Initialize(IServiceProvider serviceProvider)
+        public virtual void Initialize(IServiceProvider serviceProvider, LiteApiOptions options)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            RegisterAllInternalServices();
+            if (options == null) throw new ArgumentNullException(nameof(options));
+            RegisterAllInternalServices(options);
         }
         
-        private void RegisterAllInternalServices()
+        private void RegisterAllInternalServices(LiteApiOptions options)
         {
             if (!IsServiceRegistered<IActionDiscoverer>())
                 Register<IActionDiscoverer, ActionDiscoverer>();
@@ -57,6 +58,9 @@ namespace LiteApi.Services
 
             if (!IsServiceRegistered<IJsonSerializer>())
                 RegisterInstance<IJsonSerializer>(new JsonSerializer());
+
+            if (!IsServiceRegistered<ILiteApiOptionsRetriever>())
+                RegisterInstance<ILiteApiOptionsRetriever>(new LiteApiOptionsRetriever(options));
         }
 
         #region Get services
@@ -144,6 +148,12 @@ namespace LiteApi.Services
         /// </summary>
         /// <returns>Instance of <see cref="IParametersValidator"/></returns>
         public virtual IParametersValidator GetParametersValidator() => Resolve<IParametersValidator>();
+
+        /// <summary>
+        /// Gets the middleware options retriever.
+        /// </summary>
+        /// <returns>Instance of <see cref="ILiteApiOptionsRetriever"/></returns>
+        public virtual ILiteApiOptionsRetriever GetOptionsRetriever() => Resolve<ILiteApiOptionsRetriever>();
 
         #endregion
 

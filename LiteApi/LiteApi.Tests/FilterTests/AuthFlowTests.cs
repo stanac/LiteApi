@@ -211,13 +211,19 @@ namespace LiteApi.Tests.FilterTests
             var ctrl = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.SecureController)).GetControllers(null).Single();
             if (policyStore != null)
             {
-                object[] methodCallProps = { policyStore };
-                typeof(ControllerContext)
-                    .GetTypeInfo()
-                    .GetProperty("AuthPolicyStore", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .SetMethod.Invoke(ctrl, methodCallProps);
-
+                var options = LiteApiOptions.Default;
+                foreach (var policy in policyStore.GetPolicyNames())
+                {
+                    options.AuthorizationPolicyStore.SetPolicy(policy, policyStore.GetPolicy(policy));
+                }
+                ctrl.Filters = null; // force refresh init with new policy store
+                foreach (var action in ctrl.Actions)
+                {
+                    action.Filters = null;
+                }
+                ctrl.Init(new LiteApiOptionsRetriever(options));
             }
+
             var actionCtx = ctrl.Actions.Single(x => string.Compare(method, x.Name, StringComparison.OrdinalIgnoreCase) == 0);
             var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider()), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();

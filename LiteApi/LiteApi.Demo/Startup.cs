@@ -29,7 +29,9 @@ namespace LiteApi.Demo
             var options = LiteApiOptions.Default
                     .SetLoggerFactory(loggerFactory)
                     .AddAdditionalQueryModelBinder(new StackQueryBinder())
-                    .AddGlobalFilter(new TestGlobalFilter());
+                    .AddGlobalFilter(new TestGlobalFilter())
+                    //.SetApiUrlRoot("api2/")
+                    ;
             options.InternalServiceResolver.Register<IControllerDiscoverer, CustomControllerDiscoverer>();
             app.UseLiteApi(options);
             

@@ -26,7 +26,7 @@ namespace LiteApi
         private bool _isLoggingEnabled;
 
         // TODO: remove static from Options
-        internal static LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
+        internal LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
         internal static bool IsRegistered { get; private set; }
 
         /// <summary>
@@ -41,16 +41,14 @@ namespace LiteApi
         public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services)
         {
             if (IsRegistered) throw new Exception("Middleware is already registered.");
+            Options = options ?? throw new ArgumentNullException(nameof(options));
 
-            if (options == null) throw new ArgumentNullException(nameof(options));
-
-            options.InternalServiceResolver.Initialize(services);
+            options.InternalServiceResolver.Initialize(services, options);
 
             if (options.ControllerAssemblies?.Count == 0)
             {
                 throw new ArgumentException("Assemblies with controllers is not passed to the LiteApiMiddleware");
             }
-            Options = options;
             if (options.LoggerFactory != null)
             {
                 _logger = new InternalLogger(true, options.LoggerFactory.CreateLogger<LiteApiMiddleware>());
@@ -155,7 +153,7 @@ namespace LiteApi
             Func<Type, bool> isRegistered = (type) => Options.InternalServiceResolver.IsServiceRegistered(type);
             
             if (!isRegistered(typeof(IPathResolver)))
-                Options.InternalServiceResolver.RegisterInstance<IPathResolver>(new PathResolver(ctrlContexts.ToArray()));
+                Options.InternalServiceResolver.RegisterInstance<IPathResolver>(new PathResolver(ctrlContexts.ToArray(), Options.InternalServiceResolver.GetOptionsRetriever()));
 
             if (!isRegistered(typeof(IModelBinder)))
                 Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);

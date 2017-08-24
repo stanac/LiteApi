@@ -23,7 +23,7 @@
 ### 0.9
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
 - [x] Global filters
-- [ ] Configuration to replace global API root route (replace "api" in URLs with custom string)
+- [x] Configuration to replace global API root route (replace "api" in URLs with custom string)
 
 ### 0.8
 - [x] Option to return raw JSON content from string and to set response code ([link](http://liteapi.net/docs/custom-response))

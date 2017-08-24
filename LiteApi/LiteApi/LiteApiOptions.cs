@@ -68,6 +68,14 @@ namespace LiteApi
         /// The logger factory.
         /// </value>
         public ILoggerFactory LoggerFactory { get; private set; }
+
+        /// <summary>
+        /// Gets the URL root. URL root is root URL route on which API responds, by default it's "api/"
+        /// </summary>
+        /// <value>
+        /// The URL root.
+        /// </value>
+        public string UrlRoot { get; private set; } = "api/";
         
         /// <summary>
         /// Adds the controller assemblies.
@@ -184,6 +192,28 @@ namespace LiteApi
         public LiteApiOptions AddGlobalFilters(IEnumerable<IApiFilterAsync> filters)
         {
             GlobalFilters.AddRange(filters.Select(x => new ApiFilterWrapper(x)));
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the API URL root. URL root is root URL route which API responds. Matching is case insensitive.
+        /// By default it's /api/.
+        /// </summary>
+        /// <param name="urlRoot">The URL root. Valid chars are digits and ASCII letters (uppercase or lowercase) and forward slash (/)</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetApiUrlRoot(string urlRoot)
+        {
+            const string validChars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789/";
+            if (string.IsNullOrWhiteSpace(urlRoot)) throw new ArgumentException("urlRoot cannot be null or empty", nameof(urlRoot));
+
+            urlRoot = urlRoot.Trim().Replace('\\', '/').TrimEnd('/').TrimStart('/');
+            string invalidChars = new string(urlRoot.Where(c => !validChars.Contains(c)).Distinct().ToArray());
+            if (invalidChars.Any())
+            {
+                throw new LiteApiRegistrationException($"urlRoot contains invalid chars: {invalidChars} only valid chars are digits and ASCII letters (upper or lowercase) and forward slash (/)");
+            }
+            UrlRoot = $"{urlRoot}/".ToLower();
+
             return this;
         }
     }
