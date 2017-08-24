@@ -1,26 +1,24 @@
 ## Roadmap
 
-### 1.4
+### 1.4 (stable)
 - [ ] Support for other document formats (XML out of the box, extensibility points for other types)
 
-### 1.3
+### 1.3 (stable)
 - [ ] Support for versioning using request header value, versioning using routes is supported with `ControllerRouteAttribute`
 - [ ] Enable multiple instances of the middleware to run in one app
 
-### 1.2
+### 1.2 (stable)
 - [ ] Performance testing, performance improvements
 
-### 1.1
+### 1.1 (stable)
 - [ ] Support for generating OpenAPI documentation (Swagger)
 
 ### 1.0 Feature complete (stable)
-- [ ] Stabilization, more testing
-
-### 0.10 Feature complete (RC)
 - [ ] Support for System.DateTimeOffset
 - [ ] Choosing DateTime and DateTimeOffset format when parsing parameter values
+- [ ] Automated integration tests
 
-### 0.9
+### 0.9 (stable)
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
 - [x] Global filters
 - [x] Configuration to replace global API root route (replace "api" in URLs with custom string)
