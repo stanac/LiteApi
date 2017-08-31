@@ -52,7 +52,7 @@ namespace LiteApi.Services.ModelBinders
             }
             // shouldn't reach stringValue == null
             if (stringValue == null) throw new Exception($"Route segment for parameter {parameter} in action {actionCtx} not found");
-            return BasicQueryModelBinder.ParseSingleQueryValue(stringValue, parameter.Type, false, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
+            return BasicQueryModelBinder.ParseSingleQueryValue(stringValue, parameter.Type, false, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()), request.HttpContext);
         }
     }
 }

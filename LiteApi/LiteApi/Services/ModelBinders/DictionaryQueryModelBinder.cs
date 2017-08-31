@@ -1,4 +1,5 @@
-﻿using LiteApi.Contracts.Models;
+﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections;
@@ -14,6 +15,15 @@ namespace LiteApi.Services.ModelBinders
     /// <seealso cref="LiteApi.Services.ModelBinders.BasicQueryModelBinder" />
     public class DictionaryQueryModelBinder : BasicQueryModelBinder
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DictionaryQueryModelBinder"/> class.
+        /// </summary>
+        /// <param name="liteApiOptionsRetriever">The lite API options retriever.</param>
+        public DictionaryQueryModelBinder(ILiteApiOptionsRetriever liteApiOptionsRetriever)
+            : base(liteApiOptionsRetriever)
+        {
+        }
+
         /// <summary>
         /// Gets or the supported types, supports dictionaries, use <see cref="DoesSupportType"/>
         /// </summary>
@@ -73,9 +83,9 @@ namespace LiteApi.Services.ModelBinders
             foreach (var queryKeyValues in queryKeys)
             {
                 object key = getDictionaryKey(queryKeyValues.Key);
-                key = ParseSingleQueryValue(key as string, details.KeyType, details.IsKeyTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
+                key = ParseSingleQueryValue(key as string, details.KeyType, details.IsKeyTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()), request.HttpContext);
                 object value = queryKeyValues.Value.Last();
-                value = ParseSingleQueryValue(value as string, details.ValueType, details.IsValueTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
+                value = ParseSingleQueryValue(value as string, details.ValueType, details.IsValueTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()), request.HttpContext);
                 dictionary.Add(key, value);
             }
             return dictionary;

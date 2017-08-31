@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using Microsoft.Extensions.Primitives;
+using LiteApi.Contracts.Abstractions;
 
 namespace LiteApi.Services.ModelBinders
 {
@@ -15,6 +16,15 @@ namespace LiteApi.Services.ModelBinders
     /// <seealso cref="LiteApi.Contracts.Abstractions.IQueryModelBinder" />
     public class CollectionsQueryModelBinder : BasicQueryModelBinder
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollectionsQueryModelBinder"/> class.
+        /// </summary>
+        /// <param name="liteApiOptionsRetriever">The lite API options retriever.</param>
+        public CollectionsQueryModelBinder(ILiteApiOptionsRetriever liteApiOptionsRetriever)
+            : base(liteApiOptionsRetriever)
+        {
+        }
+
         #region _supportedTypes
 
         private static readonly Type[] _supportedTypes =
@@ -185,7 +195,14 @@ namespace LiteApi.Services.ModelBinders
                 Array a = Array.CreateInstance(details.OriginalCollectionElementType, values.Length);
                 for (int i = 0; i < values.Length; i++)
                 {
-                    a.SetValue(ParseSingleQueryValue(values[i], details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString())), i);
+                    a.SetValue(ParseSingleQueryValue(
+                        values[i],
+                        details.CollectionElementType,
+                        details.IsCollectionElementTypeNullable,
+                        parameter.Name, 
+                        new Lazy<string>(() => parameter.ParentActionContext.ToString()), request.HttpContext),
+                        i
+                        );
                 }
                 return a;
             }
@@ -194,7 +211,13 @@ namespace LiteApi.Services.ModelBinders
                 IList parsedValues = Activator.CreateInstance(parameter.Type) as IList;
                 foreach (var value in values)
                 {
-                    parsedValues.Add(ParseSingleQueryValue(value, details.CollectionElementType, details.IsCollectionElementTypeNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString())));
+                    parsedValues.Add(ParseSingleQueryValue(
+                        value, 
+                        details.CollectionElementType, 
+                        details.IsCollectionElementTypeNullable, 
+                        parameter.Name, 
+                        new Lazy<string>(() => parameter.ParentActionContext.ToString()),
+                        request.HttpContext));
                 }
                 return parsedValues;
             }

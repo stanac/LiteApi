@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,24 @@ namespace LiteApi
         /// The internal service resolver.
         /// </value>
         public ILiteApiServiceResolver InternalServiceResolver { get; private set; } = new LiteApiServiceResolver();
+
+        /// <summary>
+        /// Gets the global date time parsing format. Affects <see cref="DateTime"/> and <see cref="DateTimeOffset"/>.
+        /// Default is null, which means it will try to parse regardless of the format provided.
+        /// </summary>
+        /// <value>
+        /// The global date time parsing format.
+        /// </value>
+        public string GlobalDateTimeParsingFormat { get; private set; }
+
+        /// <summary>
+        /// Gets the date time parsing format provider factory. Default is <see cref="System.Globalization.CultureInfo.CurrentCulture"/>
+        /// </summary>
+        /// <value>
+        /// The date time parsing format provider factory. Default is <see cref="System.Globalization.CultureInfo.CurrentCulture"/>
+        /// </value>
+        public Func<HttpContext, IFormatProvider> DateTimeParsingFormatProviderFactory { get; private set; }
+            = httpCtx => System.Globalization.CultureInfo.CurrentCulture;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiteApiOptions"/> class.
@@ -192,6 +211,32 @@ namespace LiteApi
         public LiteApiOptions AddGlobalFilters(IEnumerable<IApiFilterAsync> filters)
         {
             GlobalFilters.AddRange(filters.Select(x => new ApiFilterWrapper(x)));
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the global date time parsing format. Affects <see cref="DateTime"/> and <see cref="DateTimeOffset"/>.
+        /// Default is null, which means it will try to parse regardless of the format provided.
+        /// Can be overridden by controller or action with <see cref="Attributes.DateTimeParsingFormatAttribute"/>
+        /// </summary>
+        /// <param name="format">The format.</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetGlobalDateTimeParsingFormat(string format)
+        {
+            if (format == "") format = null;
+            GlobalDateTimeParsingFormat = format;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the date time parsing format provider factory.
+        /// Default is <see cref="System.Globalization.CultureInfo.CurrentCulture" />
+        /// </summary>
+        /// <param name="formatProviderFactory">The format provider factory.</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetDateTimeParsingFormatProviderFactory(Func<HttpContext, IFormatProvider> formatProviderFactory)
+        {
+            DateTimeParsingFormatProviderFactory = formatProviderFactory ?? throw new ArgumentNullException(nameof(formatProviderFactory));
             return this;
         }
 

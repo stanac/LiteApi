@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace LiteApi
     {
         private const string ResponseCodeKey = "LiteApi.HttpContextData.ResponseCode";
         private const string ResponseHeadersKey = "LiteApi.HttpContextData.ResponseHeaders";
+        private const string LiteApiOptionsKey = "LiteApi.LiteApiOptions";
+        private const string ActionContextKey = "LiteApi.Contracts.Models.ActionContext";
 
         public static int? GetResponseStatusCode(this HttpContext ctx)
         {
@@ -34,6 +37,27 @@ namespace LiteApi
                 ctx.Items[ResponseHeadersKey] = new Dictionary<string, StringValues>();
             }
             return ctx.Items[ResponseHeadersKey] as Dictionary<string, StringValues>;
+        }
+
+        public static void SetLiteApiOptions(this HttpContext ctx, LiteApiOptions options)
+        {
+            ctx.Items[LiteApiOptionsKey] = options;
+        }
+
+        public static LiteApiOptions GetLiteApiOptions(this HttpContext ctx)
+            => ctx.Items[LiteApiOptionsKey] as LiteApiOptions;
+
+        public static void SetActionContext(this HttpContext ctx, ActionContext actionCtx)
+        {
+            ctx.Items[ActionContextKey] = actionCtx;
+        }
+
+        public static ActionContext GetActionContext(this HttpContext ctx)
+        {
+            object actionCtx = null;
+            ctx.Items.TryGetValue(ActionContextKey, out actionCtx);
+            if (actionCtx == null) return null;
+            return actionCtx as ActionContext;
         }
     }
 }

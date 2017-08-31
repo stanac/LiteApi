@@ -40,7 +40,7 @@ namespace LiteApi.Tests
             var action = ctrl.Actions[0];
             var serviceProvider = Fakes.FakeServiceProvider.GetServiceProvider();
             var ctrlBuilder = new ControllerBuilder(serviceProvider);
-            var actionInvoker = new ActionInvoker(ctrlBuilder, new ModelBinderCollection(new JsonSerializer(), serviceProvider), new JsonSerializer());
+            var actionInvoker = new ActionInvoker(ctrlBuilder, new ModelBinderCollection(new JsonSerializer(), serviceProvider, new Fakes.FakeDefaultLiteApiOptionsRetriever()), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
             actionInvoker.Invoke(httpCtx, action).Wait();
             return httpCtx.Response;

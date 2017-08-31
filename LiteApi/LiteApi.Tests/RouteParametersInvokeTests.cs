@@ -118,7 +118,9 @@ namespace LiteApi.Tests
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == "plus3");
             var serializer = new JsonSerializer();
-            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new Services.ModelBinders.ModelBinderCollection(serializer, Fakes.FakeServiceProvider.GetServiceProvider()), new JsonSerializer());
+            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), 
+                new Services.ModelBinders.ModelBinderCollection(serializer, Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever()),
+                new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
             httpCtx.Request.Path = "/api/v2/route/2/Plus3/4";
             await invoker.Invoke(httpCtx, action);
@@ -151,7 +153,9 @@ namespace LiteApi.Tests
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == actionName.ToLower());
             var serializer = new JsonSerializer();
-            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), new Services.ModelBinders.ModelBinderCollection(serializer, Fakes.FakeServiceProvider.GetServiceProvider()), new JsonSerializer());
+            var invoker = new ActionInvoker(new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object), 
+                new Services.ModelBinders.ModelBinderCollection(
+                    serializer, Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever()), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
             httpCtx.Request.Path = "/api/RouteSupportedParameters/" + actionName + "/" + value;
             await invoker.Invoke(httpCtx, action);

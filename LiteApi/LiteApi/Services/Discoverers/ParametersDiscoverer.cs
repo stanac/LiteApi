@@ -14,15 +14,17 @@ namespace LiteApi.Services.Discoverers
     public class ParametersDiscoverer : IParametersDiscoverer
     {
         private readonly IServiceProvider _services;
+        private readonly ILiteApiOptionsRetriever _optionsRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParametersDiscoverer"/> class.
         /// </summary>
         /// <param name="services">The service provider.</param>
-        public ParametersDiscoverer(IServiceProvider services)
+        /// <param name="optionsRetriever">LiteApiOptions retriever.</param>
+        public ParametersDiscoverer(IServiceProvider services, ILiteApiOptionsRetriever optionsRetriever)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            _services = services;
+            _services = services ?? throw new ArgumentNullException(nameof(services));
+            _optionsRetriever = optionsRetriever ?? throw new ArgumentNullException(nameof(optionsRetriever));
         }
 
         /// <summary>
@@ -70,7 +72,8 @@ namespace LiteApi.Services.Discoverers
                 else if (!isFromQuery && isFromBody && !isFromRoute) source = ParameterSources.Body;
                 else if (!isFromQuery && !isFromBody && isFromRoute) source = ParameterSources.RouteSegment;
 
-                parameters[i] = new ActionParameter(actionCtx, new ModelBinders.ModelBinderCollection(new JsonSerializer(), _services))
+
+                parameters[i] = new ActionParameter(actionCtx, new ModelBinders.ModelBinderCollection(new JsonSerializer(), _services, _optionsRetriever))
                 {
                     Name = param.Name.ToLower(),
                     DefaultValue = param.DefaultValue,

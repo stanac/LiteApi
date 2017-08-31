@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using LiteApi.Services;
 
 namespace LiteApi.Demo
 {
@@ -26,9 +27,10 @@ namespace LiteApi.Demo
             }
             app.UseStaticFiles();
 
-            var options = LiteApiOptions.Default
+            LiteApiOptions options = LiteApiOptions.Default;
+            options
                     .SetLoggerFactory(loggerFactory)
-                    .AddAdditionalQueryModelBinder(new StackQueryBinder())
+                    .AddAdditionalQueryModelBinder(new StackQueryBinder(new LiteApiOptionsRetriever(options)))
                     .AddGlobalFilter(new TestGlobalFilter())
                     //.SetApiUrlRoot("api2/")
                     ;

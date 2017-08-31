@@ -89,6 +89,14 @@ namespace LiteApi.Contracts.Models
         internal ApiFilterWrapper[] Filters { get; set; }
 
         /// <summary>
+        /// Gets or sets the date time parsing format for controller.
+        /// </summary>
+        /// <value>
+        /// The date time parsing format for controller.
+        /// </value>
+        public string DateTimeParsingFormat { get; set; }
+
+        /// <summary>
         /// Initializes the specified options retriver.
         /// </summary>
         /// <param name="optionsRetriver">The options retriever.</param>
@@ -119,6 +127,11 @@ namespace LiteApi.Contracts.Models
                     .Union(asyncFilters.Select(x => new ApiFilterWrapper(x)))
                     .Union(policyFilters.Select(x => new ApiFilterWrapper(x, () => optionsRetriver.GetOptions().AuthorizationPolicyStore)))
                     .ToArray();
+                DateTimeParsingFormat = (
+                    attributes
+                    .FirstOrDefault(x => x is Attributes.DateTimeParsingFormatAttribute) 
+                                    as Attributes.DateTimeParsingFormatAttribute
+                                    )?.ParsingFormat;
                 foreach (var action in Actions)
                 {
                     action.Init(optionsRetriver);

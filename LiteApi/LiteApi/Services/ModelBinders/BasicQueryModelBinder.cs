@@ -14,6 +14,17 @@ namespace LiteApi.Services.ModelBinders
     /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
     public class BasicQueryModelBinder : IQueryModelBinder
     {
+        private readonly ILiteApiOptionsRetriever _optionsRetriever;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BasicQueryModelBinder"/> class.
+        /// </summary>
+        /// <param name="liteApiOptionsRetriever">The lite API options retriever.</param>
+        public BasicQueryModelBinder(ILiteApiOptionsRetriever liteApiOptionsRetriever)
+        {
+            _optionsRetriever = liteApiOptionsRetriever ?? throw new ArgumentNullException(nameof(liteApiOptionsRetriever));
+        }
+
         #region _supportedTypes
 
         private static readonly Type[] _supportedTypes =
@@ -113,7 +124,13 @@ namespace LiteApi.Services.ModelBinders
 
             if (parameter.HasDefaultValue && parameter.Type != typeof(string) && string.IsNullOrEmpty(value)) return parameter.DefaultValue;
             
-            return ParseSingleQueryValue(value, parameter.Type, parameter.IsNullable, parameter.Name, new Lazy<string>(() => parameter.ParentActionContext.ToString()));
+            return ParseSingleQueryValue(
+                value, 
+                parameter.Type, 
+                parameter.IsNullable, 
+                parameter.Name, 
+                new Lazy<string>(() => parameter.ParentActionContext.ToString()),
+                request.HttpContext);
         }
 
         /// <summary>
@@ -127,7 +144,7 @@ namespace LiteApi.Services.ModelBinders
         /// <returns></returns>
         /// <exception cref="System.ArgumentException"></exception>
         /// <exception cref="System.ArgumentOutOfRangeException"></exception>
-        public static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName, Lazy<string> actionNameRetriever)
+        public static object ParseSingleQueryValue(string value, Type type, bool isNullable, string parameterName, Lazy<string> actionNameRetriever, HttpContext httpCtx)
         {
             if (type == typeof(string))
             {
@@ -142,7 +159,7 @@ namespace LiteApi.Services.ModelBinders
                 }
                 throw new ArgumentException($"Value is not provided for parameter: '{parameterName}' in action '{actionNameRetriever.Value}'");
             }
-            // todo: check if using swith with Type.GUID.ToString() would be faster
+            // todo: check if using switch with Type.GUID.ToString() would be faster
             if (type == typeof(bool)) return bool.Parse(value);
             if (type == typeof(char)) return char.Parse(value);
             if (type == typeof(Guid)) return Guid.Parse(value);
@@ -157,10 +174,24 @@ namespace LiteApi.Services.ModelBinders
             if (type == typeof(decimal)) return decimal.Parse(value);
             if (type == typeof(float)) return float.Parse(value);
             if (type == typeof(double)) return double.Parse(value);
-            if (type == typeof(DateTime)) return DateTime.Parse(value);
+            if (type == typeof(DateTime)) return ParseDateTime(value, httpCtx);
             if (type == typeof(Guid)) return Guid.Parse(value);
 
             throw new ArgumentOutOfRangeException();
+        }
+
+        private static DateTime ParseDateTime(string value, HttpContext httpCtx)
+        {
+            var action = httpCtx.GetActionContext();
+            var options = httpCtx.GetLiteApiOptions();
+            string format = action.DateTimeParsingFormat;
+            if (format == null) format = action.ParentController.DateTimeParsingFormat;
+            if (format == null) format = options.GlobalDateTimeParsingFormat;
+
+            if (format == null) return DateTime.Parse(value);
+            
+            var formatInfo = options.DateTimeParsingFormatProviderFactory(httpCtx);
+            return DateTime.ParseExact(value, format, formatInfo);
         }
 
     }

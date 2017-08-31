@@ -68,7 +68,8 @@ namespace LiteApi.Tests
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.FileDownloadController));
             var ctrlCtx = discoverer.GetControllers(null).Single();
             var builder = new ControllerBuilder((new Moq.Mock<IServiceProvider>()).Object);
-            var invoker = new ActionInvoker(builder, new Services.ModelBinders.ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider()), new JsonSerializer());
+            var invoker = new ActionInvoker(builder, new Services.ModelBinders.ModelBinderCollection(
+                new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever()), new JsonSerializer());
             var action = ctrlCtx.Actions.First(x => x.Name == actionName);
             await invoker.Invoke(httpCtx, action);
             string response = httpCtx.Response.ReadBody();

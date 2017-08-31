@@ -18,7 +18,7 @@ namespace LiteApi.Tests
             IControllerDiscoverer discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ServiceProvidedParameterController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single();
-            var mb = new ModelBinderCollection(new JsonSerializer(), GetServiceProvider());
+            var mb = new ModelBinderCollection(new JsonSerializer(), GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever());
             var httpCtx = new Fakes.FakeHttpContext();
             (httpCtx.Request as Fakes.FakeHttpRequest).AddQuery("i", "1");
             object[] parameters = mb.GetParameterValues(httpCtx.Request, action);

@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Linq;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace LiteApi.Contracts.Models
 {
@@ -107,12 +108,20 @@ namespace LiteApi.Contracts.Models
         public bool SkipAuth { get; set; }
 
         /// <summary>
+        /// Gets or sets the date time parsing format for action.
+        /// </summary>
+        /// <value>
+        /// The date time parsing format for action.
+        /// </value>
+        public string DateTimeParsingFormat { get; set; }
+
+        /// <summary>
         /// Determines whether is HTTP method matched the specified HTTP method.
         /// </summary>
         /// <param name="httpMethod">The HTTP method.</param>
         /// <returns>Checks if provided httpMethod (as string) is supported by the action</returns>
         public bool IsHttpMethodMatched(string httpMethod) => httpMethod == _httpMethodString;
-
+        
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
@@ -157,6 +166,12 @@ namespace LiteApi.Contracts.Models
                     .GetCustomAttributes()
                     .Where(x => typeof(Attributes.SkipFiltersAttribute) == x.GetType())
                     .Count() > 0;
+
+                DateTimeParsingFormat = (
+                    attribs
+                    .FirstOrDefault(x => x is Attributes.DateTimeParsingFormatAttribute)
+                                    as Attributes.DateTimeParsingFormatAttribute
+                                    )?.ParsingFormat;
             }
         }
     }

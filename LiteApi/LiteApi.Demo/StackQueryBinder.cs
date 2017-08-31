@@ -5,11 +5,15 @@ using System.Linq;
 using System.Reflection;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
+using LiteApi.Contracts.Abstractions;
 
 namespace LiteApi.Demo
 {
     public class StackQueryBinder: BasicQueryModelBinder
     {
+        public StackQueryBinder(ILiteApiOptionsRetriever optionsRetriever)
+            : base(optionsRetriever) { }
+
         public override bool DoesSupportType(Type type)
         {
             var info = type.GetTypeInfo();
@@ -39,7 +43,8 @@ namespace LiteApi.Demo
                         details.BaseType, // needs to be base type, e.g. if parameter type is int? we need to pass int
                         details.IsNullable, 
                         parameter.Name, 
-                        new Lazy<string>(() => actionCtx.Name)
+                        new Lazy<string>(() => actionCtx.Name),
+                        request.HttpContext
                         );
                     pushMethod.Invoke(stack, new[] { value });
                 }

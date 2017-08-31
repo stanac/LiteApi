@@ -72,10 +72,13 @@ namespace LiteApi
         /// <returns></returns>
         public async Task Invoke(HttpContext httpCtx)
         {
+            httpCtx.SetLiteApiOptions(Options);
+
             ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, httpCtx.TraceIdentifier);
             log.LogInformation($"Received request: {httpCtx.Request.Path} with query: {httpCtx.Request.QueryString.ToString() ?? ""}");
             IPathResolver pathResolver = Options.InternalServiceResolver.GetPathResolver();
             ActionContext action = pathResolver.ResolveAction(httpCtx.Request, log);
+
             if (action == null)
             {
                 log.LogInformation("Request is skipped to next middleware");
@@ -101,6 +104,8 @@ namespace LiteApi
                 }
                 else
                 {
+                    httpCtx.SetActionContext(action);
+
                     if (!(await CheckGlobalFiltersAndWriteResponseIfAny(httpCtx, log, action.SkipAuth)))
                     {
                         return;
@@ -130,7 +135,7 @@ namespace LiteApi
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
 
             IControllerBuilder ctrlBuilder = Options.InternalServiceResolver.GetControllerBuilder();
-            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.InternalServiceResolver.GetJsonSerializer(), services);
+            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.InternalServiceResolver.GetJsonSerializer(), services, new LiteApiOptionsRetriever(Options));
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {
                 modelBinder.AddAdditionalQueryModelBinder(qmb);

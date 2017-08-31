@@ -24,17 +24,18 @@ namespace LiteApi.Services.ModelBinders
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelBinderCollection"/> class.
         /// </summary>
-        /// <param name="jsonSerializer">The json serialize.</param>
+        /// <param name="jsonSerializer">The JSON serialize.</param>
         /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="optionsRetriever">Options retriever.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider)
+        public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider, ILiteApiOptionsRetriever optionsRetriever)
         {
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
 
-            _queryBinders.Add(new BasicQueryModelBinder());
-            _queryBinders.Add(new CollectionsQueryModelBinder());
-            _queryBinders.Add(new DictionaryQueryModelBinder());
+            _queryBinders.Add(new BasicQueryModelBinder(optionsRetriever));
+            _queryBinders.Add(new CollectionsQueryModelBinder(optionsRetriever));
+            _queryBinders.Add(new DictionaryQueryModelBinder(optionsRetriever));
 
             _bodyBinders.Add(new FormFileBodyBinder());
         }
