@@ -14,8 +14,14 @@ more requests per second than MVC6 (asp.net core). Check [getting started](http:
 To install LiteApi use nuget, or add it to *.csproj file manually:
 
 ```
-Install-Package LiteApi
+PM> Install-Package LiteApi
 ```
+
+or with dotnet cli
+```
+> dotnet add package LiteApi
+```
+
 
 Super simple example of a controller: 
 
