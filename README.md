@@ -52,7 +52,7 @@ public class PersonsController: LiteController
     // method names are not affecting action routes
 
     [HttpGet] // will respond to /api/persons?id={someGuid}
-    public PersonModel ById(Guid id) => _dataAccess.Get(id);
+    public Task<PersonModel> ByIdAsync(Guid id) => _dataAccess.GetAsync(id);
 
     [HttpGet, ActionRoute("/{id}")] // will respond to /api/persons/{someGuid}
     public PersonModel ByIdFromRoute([FromRoute]Guid id) => _dataAccess.Get(id);
