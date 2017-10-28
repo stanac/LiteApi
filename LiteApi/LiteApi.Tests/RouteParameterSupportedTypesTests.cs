@@ -193,6 +193,18 @@ namespace LiteApi.Tests
         {
             AssertParameterOfTypeIsSupported<Guid?>();
         }
+        
+        [Fact]
+        public void ParameterOfType_DateTimeOffset_IsSupported()
+        {
+            AssertParameterOfTypeIsSupported<DateTimeOffset>();
+        }
+        
+        [Fact]
+        public void ParameterOfType_DateTimeOffsetNullable_IsNotSupported()
+        {
+            AssertParameterOfTypeIsSupported<DateTimeOffset?>();
+        }
 
         private void AssertParameterOfTypeIsSupported<T>()
         {

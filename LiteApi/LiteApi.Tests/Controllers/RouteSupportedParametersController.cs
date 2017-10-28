@@ -190,5 +190,17 @@ namespace LiteApi.Tests.Controllers
         {
             return p;
         }
+
+        [ActionRoute("/Action_DateTimeOffset/{p}")]
+        public DateTimeOffset Action_DateTimeOffset(DateTimeOffset p)
+        {
+            return p;
+        }
+
+        [ActionRoute("/Action_DateTimeOffset_Nullable/{p}")]
+        public DateTimeOffset? Action_DateTimeOffset_Nullable(DateTimeOffset? p)
+        {
+            return p;
+        }
     }
 }

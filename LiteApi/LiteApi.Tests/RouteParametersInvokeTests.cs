@@ -112,6 +112,12 @@ namespace LiteApi.Tests
         }
 
         [Fact]
+        public async Task Action_WithRouteParameterOfTypeDateTimeOffset_CanBeInvoked()
+        {
+            await AssertCanInvokeActionWithRouteParamOfType<DateTimeOffset>();
+        }
+
+        [Fact]
         public async Task Action_WithRouteParametersWithCapitalLetters_CanBeInvoked()
         {
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.RouteParamsController));
@@ -134,7 +140,11 @@ namespace LiteApi.Tests
             Type type = typeof(T);
             
             object value = "";
-            if (typeof(T) != typeof(string))
+            if (typeof(T) == typeof(DateTimeOffset))
+            {
+                value = "2017-10-28T09:51:17+07:00";
+            }
+            if (typeof(T) != typeof(string) && typeof(T) != typeof(DateTimeOffset))
             {
                 value = Activator.CreateInstance(type);
             }
@@ -165,6 +175,10 @@ namespace LiteApi.Tests
             if (typeof(T) == typeof(DateTime))
             {
                 value = default(DateTime);
+            }
+            if (typeof(T) == typeof(DateTimeOffset))
+            {
+                value = DateTimeOffset.Parse(value as string);
             }
             Assert.Equal(value, result);
         }

@@ -44,6 +44,7 @@ namespace LiteApi.Services.ModelBinders
             typeof (float),
             typeof (double),
             typeof (DateTime),
+            typeof (DateTimeOffset),
             typeof (Guid),
 
             typeof (bool?),
@@ -60,6 +61,7 @@ namespace LiteApi.Services.ModelBinders
             typeof (decimal?),
             typeof (float?),
             typeof (double?),
+            typeof (DateTimeOffset?),
             typeof (DateTime?),
             typeof (Guid?)
         };
@@ -175,11 +177,12 @@ namespace LiteApi.Services.ModelBinders
             if (type == typeof(float)) return float.Parse(value);
             if (type == typeof(double)) return double.Parse(value);
             if (type == typeof(DateTime)) return ParseDateTime(value, httpCtx);
+            if (type == typeof(DateTimeOffset)) return DateTimeOffset.Parse(value);
             if (type == typeof(Guid)) return Guid.Parse(value);
 
             throw new ArgumentOutOfRangeException();
         }
-
+        
         private static DateTime ParseDateTime(string value, HttpContext httpCtx)
         {
             var action = httpCtx.GetActionContext();
@@ -189,10 +192,9 @@ namespace LiteApi.Services.ModelBinders
             if (format == null) format = options.GlobalDateTimeParsingFormat;
 
             if (format == null) return DateTime.Parse(value);
-            
+
             var formatInfo = options.DateTimeParsingFormatProviderFactory(httpCtx);
             return DateTime.ParseExact(value, format, formatInfo);
         }
-
     }
 }
