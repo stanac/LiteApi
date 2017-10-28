@@ -9,6 +9,7 @@
 
 ### 1.2 (stable)
 - [ ] Performance testing, performance improvements
+- [ ] Automated integration tests
 
 ### 1.1 (stable)
 - [ ] Support for generating OpenAPI documentation (Swagger)
@@ -16,7 +17,7 @@
 ### 1.0 Feature complete (stable)
 - [ ] Support for System.DateTimeOffset
 - [ ] Choosing DateTime and DateTimeOffset format when parsing parameter values
-- [ ] Automated integration tests
+- [ ] Support for Enums
 
 ### 0.9 (stable)
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
