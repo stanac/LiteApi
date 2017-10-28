@@ -15,8 +15,8 @@
 - [ ] Support for generating OpenAPI documentation (Swagger)
 
 ### 1.0 Feature complete (stable)
-- [ ] Support for System.DateTimeOffset
-- [ ] Choosing DateTime and DateTimeOffset format when parsing parameter values
+- [x] Support for System.DateTimeOffset
+- [x] Choosing DateTime and DateTimeOffset format when parsing parameter values
 - [ ] Support for Enums
 
 ### 0.9 (stable)
