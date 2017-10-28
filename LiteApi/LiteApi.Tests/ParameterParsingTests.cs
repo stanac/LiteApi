@@ -324,6 +324,12 @@ namespace LiteApi.Tests
             AssertCanParseSimpleParam<Guid?>();
         }
 
+        [Fact]
+        public void ModelBinder_ParameterEnum_CanParse()
+        {
+            AssertCanParseSimpleParam<TestEnum>();
+        }
+
         private void AssertCanParseSimpleParam<T>()
         {
             Type type;
@@ -340,7 +346,11 @@ namespace LiteApi.Tests
             }
 
             object value = "";
-            if (typeof(T) != typeof(string))
+            if (typeof(T) == typeof(TestEnum))
+            {
+                value = TestEnum.TestValueTest;
+            }
+            else if (typeof(T) != typeof(string))
             {
                 value = Activator.CreateInstance(type);
             }
@@ -362,6 +372,9 @@ namespace LiteApi.Tests
             Assert.Equal(value, parameters.Single());
         }
 
-        
+        public enum TestEnum
+        {
+            ValueTest, TestValue, TestValueTest, ValueTestValue
+        }
     }
 }

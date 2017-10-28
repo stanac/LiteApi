@@ -1,4 +1,5 @@
 ﻿using System;
+using static LiteApi.Tests.ParameterParsingTests;
 
 namespace LiteApi.Tests.Controllers
 {
@@ -155,6 +156,11 @@ namespace LiteApi.Tests.Controllers
         }
 
         public Guid? Action_Guid_Nullable(Guid? p)
+        {
+            return p;
+        }
+
+        public TestEnum Action_TestEnum(TestEnum p)
         {
             return p;
         }

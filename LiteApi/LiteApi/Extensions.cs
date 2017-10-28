@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -46,6 +47,37 @@ namespace LiteApi
                 nullableArgument = info.GetGenericArguments().Single();
             }
             return isNullable;
+        }
+
+        /// <summary>
+        /// Determines whether type is supported collection.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="collectionElement">The collection element type.</param>
+        /// <returns>
+        ///   <c>true</c> if type is supported collection type; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsSupportedCollection(this Type type, out Type collectionElement)
+            => IsSupportedCollection(type.GetTypeInfo(), out collectionElement);
+
+        public static bool IsSupportedCollection(this TypeInfo type, out Type collectionElement)
+        {
+            collectionElement = null;
+            if (typeof(IEnumerable).IsAssignableFrom(type.AsType()))
+            {
+                if (type.IsArray && type.GetArrayRank() == 1)
+                {
+                    collectionElement = type.GetElementType();
+                    return true;
+                }
+                Type[] supportedCollections = { typeof(List<>), typeof(IEnumerable<>) };
+                if (type.IsGenericType && supportedCollections.Contains(type.GetGenericTypeDefinition()))
+                {
+                    collectionElement = type.GetGenericArguments().Single();
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

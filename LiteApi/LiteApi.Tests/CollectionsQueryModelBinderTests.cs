@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using static LiteApi.Tests.ParameterParsingTests;
 
 namespace LiteApi.Tests
 {
@@ -141,6 +142,18 @@ namespace LiteApi.Tests
 
             int?[] result = binder.ParseParameterValue(request, actionCtx, actionCtx.Parameters.Single()) as int?[];
             Assert.Equal(new int?[] { 1, null, 3 }, result);
+        }
+
+        [Fact]
+        public void CollectionsQueryModelBinder_EnumArray_CanParseEnumCollection()
+        {
+            GetCollectionsQueryModelBinder();
+            var binder = GetCollectionsQueryModelBinder();
+            var request = GetRequest("e", TestEnum.TestValue.ToString(), TestEnum.ValueTestValue.ToString(), TestEnum.ValueTest.ToString());
+            var actionCtx = GetActionContext("JoinEnumValues");
+
+            TestEnum[] result = binder.ParseParameterValue(request, actionCtx, actionCtx.Parameters.Single()) as TestEnum[];
+            Assert.Equal(new[] { TestEnum.TestValue, TestEnum.ValueTestValue, TestEnum.ValueTest }, result);
         }
 
         [Fact]

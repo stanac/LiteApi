@@ -39,7 +39,8 @@ namespace LiteApi.Services.Validators
                         yield return $"Parameter {param.Name} in action {actionCtx.Name} ({actionCtx.Method} in controller "
                             + $"{actionCtx?.ParentController.RouteAndName} ({actionCtx?.ParentController}) is from route and "
                             + $"of type {param.Type} which is not supported for route parameter type. Route parameter type are not null "
-                            + "types that can be found in ModelBinderCollection.GetSupportedTypesFromUrl()";                    }
+                            + "types that can be found in ModelBinderCollection.GetSupportedTypesFromUrl()";
+                    }
                 }
             }
             

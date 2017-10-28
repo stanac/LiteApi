@@ -152,7 +152,22 @@ namespace LiteApi.Services.ModelBinders
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
         public override bool DoesSupportType(Type type)
-            => _supportedTypes.Contains(type);
+        {
+            if (_supportedTypes.Contains(type))
+                return true;
+
+            Type collectionElementType;
+            if (type.IsSupportedCollection(out collectionElementType))
+            {
+                Type temp;
+                if (type.IsNullable(out temp))
+                {
+                    collectionElementType = temp;
+                }
+                return collectionElementType.GetTypeInfo().IsEnum;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Parses query parameter

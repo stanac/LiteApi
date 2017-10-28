@@ -78,11 +78,27 @@ namespace LiteApi.Demo.Controllers
             };
         }
 
+        public string EnumToString(Entity e = Entity.Account)
+        {
+            return e.ToString();
+        }
+
+        [ActionRoute("{e}/tostring")]
+        public string ToString(Entity e)
+        {
+            return e.ToString();
+        }
+
         public ILiteActionResult EmpryJsonObject()
         {
             AddResponseHeader("x-stat", "accepted");
             SetResponseStatusCode(204);
             return Json("{ }");
         }
+    }
+
+    public enum Entity
+    {
+        Person, Company, Account
     }
 }

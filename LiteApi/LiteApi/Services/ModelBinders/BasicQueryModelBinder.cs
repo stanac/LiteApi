@@ -5,13 +5,14 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace LiteApi.Services.ModelBinders
 {
     /// <summary>
     /// Class for resolving parameter values for given <see cref="ActionContext"/>
     /// </summary>
-    /// <seealso cref="LiteApi.Contracts.Abstractions.IModelBinder" />
+    /// <seealso cref="LiteApi.Contracts.Abstractions.IQueryModelBinder" />
     public class BasicQueryModelBinder : IQueryModelBinder
     {
         private readonly ILiteApiOptionsRetriever _optionsRetriever;
@@ -84,7 +85,7 @@ namespace LiteApi.Services.ModelBinders
         ///   <c>True</c> if type is supported, otherwise
         /// </returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual bool DoesSupportType(Type type) => _supportedTypes.Contains(type);
+        public virtual bool DoesSupportType(Type type) => _supportedTypes.Contains(type) || type.GetTypeInfo().IsEnum;
 
         /// <summary>
         /// Parses query parameter
@@ -152,6 +153,12 @@ namespace LiteApi.Services.ModelBinders
             {
                 return value;
             }
+
+            if (type.GetTypeInfo().IsEnum)
+            {
+                return Enum.Parse(type, value, true);
+            }
+
 
             if (string.IsNullOrEmpty(value))
             {
