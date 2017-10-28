@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services;
 using LiteApi.Services.ModelBinders;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -346,12 +347,15 @@ namespace LiteApi.Tests
 
             string actionName = "Action_" + type.Name + (isNullable ? "_Nullable" : "");
             string url = "/ParameterParsing/" + actionName;
-            var request = Fakes.FakeHttpRequest.WithGetMethod();
+            HttpContext ctx = new Fakes.FakeHttpContext();
+            ctx.SetLiteApiOptions(LiteApiOptions.Default);
+            var request = ctx.Request as Fakes.FakeHttpRequest;
             request.Path = url;
             request.AddQuery("p", value.ToString());
             var discoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.ParameterParsingController));
             var ctrl = discoverer.GetControllers(null).Single();
             var action = ctrl.Actions.Single(x => x.Name == actionName.ToLower());
+            ctx.SetActionContext(action);
 
             ModelBinderCollection mb = new ModelBinderCollection(new JsonSerializer(), Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever());
             object[] parameters = mb.GetParameterValues(request, action);

@@ -157,6 +157,7 @@ namespace LiteApi.Tests
                 new Services.ModelBinders.ModelBinderCollection(
                     serializer, Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever()), new JsonSerializer());
             var httpCtx = new Fakes.FakeHttpContext();
+            httpCtx.SetActionContext(action);
             httpCtx.Request.Path = "/api/RouteSupportedParameters/" + actionName + "/" + value;
             await invoker.Invoke(httpCtx, action);
             string jsonResult = httpCtx.Response.ReadBody();

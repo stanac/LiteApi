@@ -12,6 +12,8 @@ namespace LiteApi.Tests.Fakes
     {
         private FakeHttpRequest() { }
 
+        private HttpContext _httpContext;
+
         #region overrides
 
         public override Stream Body { get; set; }
@@ -30,7 +32,7 @@ namespace LiteApi.Tests.Fakes
 
         public override HostString Host { get; set; }
 
-        public override HttpContext HttpContext { get; }
+        public override HttpContext HttpContext { get { return _httpContext; } }
 
         public override bool IsHttps { get; set; }
 
@@ -98,6 +100,11 @@ namespace LiteApi.Tests.Fakes
             Body.Position = 0;
             ContentLength = Body.Length;
             return this;
+        }
+
+        public void SetHttpCtx(HttpContext httpCtx)
+        {
+            _httpContext = httpCtx;
         }
     }
 }

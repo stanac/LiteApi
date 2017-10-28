@@ -10,6 +10,12 @@ namespace LiteApi.Tests.Fakes
 {
     public class FakeHttpContext : HttpContext
     {
+        public FakeHttpContext()
+        {
+            (Request as FakeHttpRequest).SetHttpCtx(this);
+            this.SetLiteApiOptions(LiteApiOptions.Default);
+        }
+
         public override AuthenticationManager Authentication { get; }
 
         public override ConnectionInfo Connection { get; }
