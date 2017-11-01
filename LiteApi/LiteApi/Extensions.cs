@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LiteApi
 {
@@ -144,6 +146,33 @@ namespace LiteApi
             }
             name += ">";
             return name;
+        }
+
+        /// <summary>
+        /// Writes the response asynchronously.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="responseCode">The response status code.</param>
+        /// <param name="contentType">Content type header value.</param>
+        /// <param name="content">The response body content.</param>
+        /// <returns>Task to await</returns>
+        public static Task WriteAsync(this HttpResponse response, int responseCode, string contentType, string content)
+            => WriteAsync(response, responseCode, contentType, Encoding.UTF8.GetBytes(content ?? ""));
+
+        /// <summary>
+        /// Writes the response asynchronously.
+        /// </summary>
+        /// <param name="response">The response.</param>
+        /// <param name="responseCode">The response status code.</param>
+        /// <param name="contentType">Content type header value.</param>
+        /// <param name="content">The response body content.</param>
+        /// <returns>Task to await</returns>
+        public static Task WriteAsync(this HttpResponse response, int responseCode, string contentType, byte[] content)
+        {
+            content = content ?? new byte[0];
+            response.StatusCode = responseCode;
+            response.ContentType = contentType;
+            return response.Body.WriteAsync(content, 0, content.Length);
         }
 
         private static string GetTypeName(Type type, TypeFullName returnTypeFullName)

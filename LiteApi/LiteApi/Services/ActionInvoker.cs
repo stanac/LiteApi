@@ -3,6 +3,7 @@ using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -84,6 +85,14 @@ namespace LiteApi.Services
             logger?.LogInformation($"Invoking action: {actionCtx}");
             object result = null;
             bool isVoid = true;
+
+            var actionExecutionCtx = new ActionExecutingContext(actionCtx.Parameters, paramValues, httpCtx, actionCtx);
+            bool shouldContinueCheck = await ctrl.BeforeActionExecution(actionExecutionCtx);
+            if (!shouldContinueCheck)
+            {
+                return;
+            }
+
             if (actionCtx.Method.ReturnType == typeof(void))
             {
                 actionCtx.Method.Invoke(ctrl, paramValues);
@@ -104,6 +113,8 @@ namespace LiteApi.Services
                 isVoid = false;
                 result = actionCtx.Method.Invoke(ctrl, paramValues);
             }
+
+            await ctrl.AfterActionExecuted(actionExecutionCtx, result);
 
             int? overridenResponseCode = httpCtx.GetResponseStatusCode();
             if (overridenResponseCode.HasValue)

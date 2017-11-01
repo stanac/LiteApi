@@ -89,7 +89,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         /// The parent controller.
         /// </value>
-        public ControllerContext ParentController { get; set; }
+        public ControllerContext ParentController { get; internal set; }
 
         /// <summary>
         /// Gets or sets the filters.
@@ -105,7 +105,7 @@ namespace LiteApi.Contracts.Models
         /// <value>
         ///   <c>true</c> if skip authentication; otherwise, <c>false</c>. Determined by <see cref="LiteApi.Attributes.SkipFiltersAttribute"/>.
         /// </value>
-        public bool SkipAuth { get; set; }
+        public bool SkipAuth { get; internal set; }
 
         /// <summary>
         /// Gets or sets the date time parsing format for action.
@@ -114,14 +114,7 @@ namespace LiteApi.Contracts.Models
         /// The date time parsing format for action.
         /// </value>
         public string DateTimeParsingFormat { get; set; }
-
-        /// <summary>
-        /// Determines whether is HTTP method matched the specified HTTP method.
-        /// </summary>
-        /// <param name="httpMethod">The HTTP method.</param>
-        /// <returns>Checks if provided httpMethod (as string) is supported by the action</returns>
-        public bool IsHttpMethodMatched(string httpMethod) => httpMethod == _httpMethodString;
-        
+ 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>

@@ -101,7 +101,7 @@ namespace LiteApi.Contracts.Models
         /// </summary>
         /// <param name="optionsRetriver">The options retriever.</param>
         /// <exception cref="ArgumentNullException">optionsRetriver</exception>
-        public void Init(ILiteApiOptionsRetriever optionsRetriver)
+        internal void Init(ILiteApiOptionsRetriever optionsRetriver)
         {
             if (optionsRetriver == null)
             {

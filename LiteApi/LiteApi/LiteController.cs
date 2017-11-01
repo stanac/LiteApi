@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LiteApi.Contracts.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace LiteApi
 {
@@ -115,5 +117,28 @@ namespace LiteApi
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString() => "CTRL: " + GetType().FullName;
+
+        /// <summary>
+        /// Called before action execution. Should return bool value indicating whether action should be executed. 
+        /// </summary>
+        /// <param name="ctx">Action executing context.</param>
+        /// <returns>Task with bool result. If task result is true action will be executed.</returns>
+        [Attributes.DontMapToApiAttribute]
+        public virtual Task<bool> BeforeActionExecution(ActionExecutingContext ctx)
+        {
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called after the action is executed.
+        /// </summary>
+        /// <param name="ctx">Action executing context.</param>
+        /// <param name="result">Result of action call.</param>
+        /// <returns>Task to await.</returns>
+        [Attributes.DontMapToApiAttribute]
+        public virtual Task AfterActionExecuted(ActionExecutingContext ctx, object result)
+        {
+            return Task.FromResult(0);
+        }
     }
 }
