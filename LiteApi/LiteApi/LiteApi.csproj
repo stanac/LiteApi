@@ -12,6 +12,7 @@
     <Company></Company>
     <PackageLicenseUrl>https://github.com/stanac/LiteApi/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://cdn.rawgit.com/stanac/LiteApi/ea4415d6/logo.svg</PackageIconUrl>
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
