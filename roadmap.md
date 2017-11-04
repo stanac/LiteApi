@@ -17,7 +17,7 @@
 ### 1.0 Feature complete (stable)
 - [x] Support for System.DateTimeOffset
 - [x] Choosing DateTime and DateTimeOffset format when parsing parameter values
-- [ ] Support for Enums
+- [x] Support for Enums
 
 ### 0.9 (stable)
 - [x] Documentation and website ([liteapi.net](http://liteapi.net))
