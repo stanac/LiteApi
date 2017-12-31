@@ -1,0 +1,245 @@
+// data copy-pasted from: https://www.goodreads.com
+
+{
+  "authors": [
+    {
+      "Name": "Andy Weir",
+      "Id": "c7487d48-2384-454d-9d08-aac2a2b2b899"
+    },
+    {
+      "Name": "Arthur C. Clarke",
+      "Id": "9befe717-4e5e-4d4a-afb5-958fe6defea4"
+    },
+    {
+      "Name": "Dan Brown",
+      "Id": "d90d7d9d-2359-4d87-b93d-5aac57482ea2"
+    },
+    {
+      "Name": "Dean Koontz",
+      "Id": "c7cfc12a-0a59-4f4a-a3a4-1db4f5532002"
+    }
+  ],
+  "books": [
+    {
+      "Id": "b884f5df-76f4-4662-9c02-556058bc2b4e",
+      "Name": "The Martian",
+      "AuthodId": "c7487d48-2384-454d-9d08-aac2a2b2b899",
+      "Synopsis": "Six days ago, astronaut Mark Watney became one of the first people to walk on Mars. Now, he’s sure he’ll be the first person to die there.",
+      "PublishYear": 2014,
+      "Genres": [
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        },
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        }
+      ]
+    },
+    {
+      "Id": "6bf28bdd-ed98-41e9-9583-522b2e0c9b4f",
+      "Name": "Artemis",
+      "PublishYear": 2017,
+      "AuthodId": "c7487d48-2384-454d-9d08-aac2a2b2b899",
+      "Synopsis": "Well, sort of. Life on Artemis, the first and only city on the moon, is tough if you're not a rich tourist or an eccentric billionaire. So smuggling in the occasional harmless bit of contraband barely counts, right? Not when you've got debts to pay and your job as a porter barely covers the rent.",
+      "Genres": [
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        },
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        }
+      ]
+    },
+    {
+      "Id": "5508abac-4a47-4636-bacd-93f9d54d5d48",
+      "Name": "The Egg",
+      "PublishYear": 2009,
+      "AuthodId": "c7487d48-2384-454d-9d08-aac2a2b2b899",
+      "Synopsis": "A short story about the universe.",
+      "Genres": [
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        },
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Short",
+          "Id": "011b86fb-42b0-4fa7-83f5-59a159e008e0"
+        },
+        {
+          "Name": "Philosophy",
+          "Id": "ee148d4f-4a18-4cbe-af95-545b0e8521e6"
+        },
+        {
+          "Name": "Fantasy",
+          "Id": "c01a7690-e53e-4d08-9dbf-5d447abf1298"
+        }
+      ]
+    },
+    {
+      "Id": "97bc06ea-ca2f-48f4-890c-b805c6db67fe",
+      "Name": "The City and the Stars",
+      "AuthodId": "9befe717-4e5e-4d4a-afb5-958fe6defea4",
+      "Synopsis": "Clarke's masterful evocation of the far future of humanity, considered his finest novel.",
+      "PublishYear": 1956,
+      "Genres": [
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        },
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Classic",
+          "Id": "98e54903-85a2-43eb-bdc8-afc846bfe8ef"
+        }
+      ]
+    },
+    {
+      "Id": "721f3358-9353-4c3c-b423-bc135eefc2c5",
+      "Name": "Childhood's End",
+      "AuthodId": "9befe717-4e5e-4d4a-afb5-958fe6defea4",
+      "Synopsis": "Without warning, giant silver ships from deep space appear in the skies above every major city on Earth. Manned by the Overlords, in fifty years, they eliminate ignorance, disease, and poverty. Then this golden age ends--and then the age of Mankind begins....",
+      "PublishYear": 1987,
+      "Genres": [
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        },
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Classic",
+          "Id": "98e54903-85a2-43eb-bdc8-afc846bfe8ef"
+        }
+      ]
+    },
+    {
+      "Id": "8fe18a12-409e-4b15-b960-907e378f3db0",
+      "Name": "The Da Vinci Code",
+      "AuthodId": "d90d7d9d-2359-4d87-b93d-5aac57482ea2",
+      "Synopsis": "A fascinating and absorbing thriller -- perfect for history buffs, conspiracy nuts, puzzle lovers or anyone who appreciates a great, riveting story.",
+      "PublishYear": 2003,
+      "Genres": [
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Mystery",
+          "Id": "70820c7f-d229-4211-9cd5-0ea2dbf0e448"
+        },
+        {
+          "Name": "Thriller",
+          "Id": "479e1b52-e0ac-4c62-bdd1-2f203cc6c047"
+        },
+        {
+          "Name": "Suspense",
+          "Id": "beeba43e-d500-4ea8-a17b-e63102a30ff4"
+        }
+      ]
+    },
+    {
+      "Id": "48a031c7-5029-4b2f-9f5e-7e4d9b5078d0",
+      "Name": "Watchers",
+      "AuthodId": "c7cfc12a-0a59-4f4a-a3a4-1db4f5532002",
+      "Synopsis": "From a top secret government laboratory come two genetically altered life forms. One is a magnificent dog of astonishing intelligence. The other, a hybrid monster of a brutally violent nature. And both are on the loose…",
+      "PublishYear": 1987,
+      "Genres": [
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Mystery",
+          "Id": "70820c7f-d229-4211-9cd5-0ea2dbf0e448"
+        },
+        {
+          "Name": "Thriller",
+          "Id": "479e1b52-e0ac-4c62-bdd1-2f203cc6c047"
+        },
+        {
+          "Name": "Suspense",
+          "Id": "beeba43e-d500-4ea8-a17b-e63102a30ff4"
+        },
+        {
+          "Name": "Horror",
+          "Id": "5be66209-18dc-409f-944e-2bbd634caf78"
+        },
+        {
+          "Name": "Science Fiction",
+          "Id": "2e968246-9813-4363-a718-90bc598c032e"
+        }
+      ]
+    },
+    {
+      "Id": "aad43839-53e9-4496-bf6a-6ec62b2957ab",
+      "Name": "The Silent Corner",
+      "AuthodId": "c7cfc12a-0a59-4f4a-a3a4-1db4f5532002",
+      "Synopsis": "From #1 New York Times bestselling author of dark psychological suspense and modern classics of mystery and adventure comes a thriller that ventures into science, secrecy and danger.",
+      "PublishYear": 2017,
+      "Genres": [
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Mystery",
+          "Id": "70820c7f-d229-4211-9cd5-0ea2dbf0e448"
+        },
+        {
+          "Name": "Thriller",
+          "Id": "479e1b52-e0ac-4c62-bdd1-2f203cc6c047"
+        },
+        {
+          "Name": "Suspense",
+          "Id": "beeba43e-d500-4ea8-a17b-e63102a30ff4"
+        },
+        {
+          "Name": "Horror",
+          "Id": "5be66209-18dc-409f-944e-2bbd634caf78"
+        }
+      ]
+    },
+    {
+      "Id": "67ee6942-da25-4055-ae9d-056fc6534dd2",
+      "Name": "The Whispering Room",
+      "AuthodId": "c7cfc12a-0a59-4f4a-a3a4-1db4f5532002",
+      "Synopsis": "Jane Hawk--fiction's most relentless, resourceful, stunning new heroine--continues her battle against a murderous conspiracy in the riveting sequel to The Silent Corner.",
+      "PublishYear": 2017,
+      "Genres": [
+        {
+          "Name": "Fiction",
+          "Id": "f56457ec-11aa-4217-a9f5-28bda540cc36"
+        },
+        {
+          "Name": "Mystery",
+          "Id": "70820c7f-d229-4211-9cd5-0ea2dbf0e448"
+        },
+        {
+          "Name": "Thriller",
+          "Id": "479e1b52-e0ac-4c62-bdd1-2f203cc6c047"
+        },
+        {
+          "Name": "Suspense",
+          "Id": "beeba43e-d500-4ea8-a17b-e63102a30ff4"
+        },
+        {
+          "Name": "Horror",
+          "Id": "5be66209-18dc-409f-944e-2bbd634caf78"
+        }
+      ]
+    }
+  ]
+}

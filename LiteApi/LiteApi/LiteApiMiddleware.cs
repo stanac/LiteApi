@@ -24,6 +24,8 @@ namespace LiteApi
         private RequestDelegate _next;
         private ILogger _logger;
         private bool _isLoggingEnabled;
+        private ControllerContext[] _ctrlContexts;
+        private string _openApiJson;
 
         // TODO: remove static from Options
         internal LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
@@ -74,6 +76,11 @@ namespace LiteApi
         {
             httpCtx.SetLiteApiOptions(Options);
 
+            if (await InvokeOpenApiJson(httpCtx))
+            {
+                return;
+            }
+
             ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, httpCtx.TraceIdentifier);
             log.LogInformation($"Received request: {httpCtx.Request.Path} with query: {httpCtx.Request.QueryString.ToString() ?? ""}");
             IPathResolver pathResolver = Options.InternalServiceResolver.GetPathResolver();
@@ -117,6 +124,24 @@ namespace LiteApi
             }
             log.LogInformation("Request is processed");
         }
+
+        private async Task<bool> InvokeOpenApiJson(HttpContext ctx)
+        {
+            if (Options.UseOpenApi && ctx.Request.Method == "GET" && ctx.Request.Path == "/" + Options.UrlRoot + "swagger.json")
+            {
+                var json = _openApiJson;
+                if (json == null)
+                {
+                    var serializer = Options.InternalServiceResolver.GetJsonSerializer();
+                    json = serializer.Serialize(OpenApi.SpecificationBuilder.BuildSpecification(this, ctx));
+                    _openApiJson = json;
+                }
+                ctx.Response.StatusCode = 200;
+                ctx.Response.ContentType = "application/json";
+                await ctx.Response.WriteAsync(json);
+            }
+            return false;
+        }
         
         private void Initialize(IServiceProvider services)
         {
@@ -131,7 +156,7 @@ namespace LiteApi
             {
                 ctrlContexts.AddRange(ctrlDiscoverer.GetControllers(assembly));
             }
-
+            _ctrlContexts = ctrlContexts.ToArray();
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
 
             IControllerBuilder ctrlBuilder = Options.InternalServiceResolver.GetControllerBuilder();
@@ -186,5 +211,8 @@ namespace LiteApi
             }
             return true;
         }
+
+        internal ControllerContext[] GetControllerContexts() => _ctrlContexts;
+        
     }
 }

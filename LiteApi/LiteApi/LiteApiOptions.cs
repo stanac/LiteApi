@@ -95,7 +95,15 @@ namespace LiteApi
         /// The URL root.
         /// </value>
         public string UrlRoot { get; private set; } = "api/";
-        
+
+        /// <summary>
+        /// Gets a value indicating whether to use open API to render swagger.json.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if swagger.json should be generated; otherwise, <c>false</c>.
+        /// </value>
+        public bool UseOpenApi { get; private set; }
+
         /// <summary>
         /// Adds the controller assemblies.
         /// </summary>
@@ -259,6 +267,17 @@ namespace LiteApi
             }
             UrlRoot = $"{urlRoot}/".ToLower();
 
+            return this;
+        }
+
+        /// <summary>
+        /// Sets value to decide whether swagger.json should be used.
+        /// </summary>
+        /// <param name="use">if set to <c>true</c> generates swagger api at [API root]/swagger.json .</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetUseOpenApi(bool use)
+        {
+            UseOpenApi = use;
             return this;
         }
     }

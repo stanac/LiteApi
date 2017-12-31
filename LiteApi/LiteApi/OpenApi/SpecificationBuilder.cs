@@ -17,7 +17,7 @@ namespace LiteApi.OpenApi
 
             string basePath = "/"  + fromMiddleware.Options.UrlRoot.TrimEnd('/');
             basePath = basePath.Replace("//", "/");
-            var controllers = fromMiddleware.Controllers;
+            ControllerContext[] controllers = fromMiddleware.GetControllerContexts();
 
             var spec = new Specification();
             spec.BasePath = basePath;
@@ -35,9 +35,6 @@ namespace LiteApi.OpenApi
             }
 
             return spec;
-
-
-            throw new NotImplementedException();
         }
         
         private static List<Definition> GetDefinitions(ControllerContext[] ctrls)
