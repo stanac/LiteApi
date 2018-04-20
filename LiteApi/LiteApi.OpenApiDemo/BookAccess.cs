@@ -9,10 +9,10 @@ namespace LiteApi.OpenApiDemo
         public BookAccess()
         {
             SampleDataReader.SampleData sampleData = new SampleDataReader().ReadSampleData();
-            Genres.AddRange(sampleData.Books
-                .SelectMany(x => x.Generes)
-                .GroupBy(x => x.Id)
-                .Select(x => x.First()));
+            var allGeneres = sampleData.Books.SelectMany(x => x.Genres).ToArray();
+            var groups = allGeneres.GroupBy(x => x.Id).ToArray();
+            var distinct = groups.Select(x => x.First()).ToArray();
+            Genres.AddRange(distinct);
             Books.AddRange(sampleData.Books);
             Authors.AddRange(sampleData.Authors);
         }

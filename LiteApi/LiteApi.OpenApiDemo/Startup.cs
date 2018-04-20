@@ -27,7 +27,7 @@ namespace LiteApi.OpenApiDemo
             app.Run(async (context) =>
             {
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsync("not found");
+                await context.Response.WriteAsync("not found, please check: /api/swagger.json");
             });
         }
     }

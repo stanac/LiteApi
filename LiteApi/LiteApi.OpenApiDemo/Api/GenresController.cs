@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,6 +71,37 @@ namespace LiteApi.OpenApiDemo.Api
                 Message = "Created",
                 Success = true
             };
+        }
+
+        [HttpDelete, ActionRoute("/{id}")]
+        public ApiResponse Delete(Guid id)
+        {
+            var genre = _bookAccess.Genres.FirstOrDefault(x => x.Id == id);
+            if (genre == null)
+            {
+                SetResponseStatusCode(StatusCodes.Status404NotFound);
+                return new ApiResponse
+                {
+                    Message = "Genre not found",
+                    Success = false
+                };
+            }
+
+            if (_bookAccess.Books.Any(x => x.Genres.Any(g => g.Id == id)))
+            {
+                SetResponseStatusCode(StatusCodes.Status409Conflict);
+                return new ApiResponse
+                {
+                    Message = "Genre is in use, cannot be deleted while one or more books is referencing it. See /api/books/genre/" 
+                        + WebUtility.UrlEncode(genre.Name),
+                    Success = false
+                };
+            }
+
+            _bookAccess.Genres.Remove(genre);
+
+            SetResponseStatusCode(StatusCodes.Status204NoContent);
+            return null;
         }
     }
 }

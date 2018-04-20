@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace LiteApi.OpenApi
 {
@@ -84,6 +85,15 @@ namespace LiteApi.OpenApi
                 }
                 yield return definition;
             }
+            var retType = action.Method.ReturnType;
+            var retTypeInfo = action.Method.ReturnType.GetTypeInfo();
+            if (retTypeInfo.IsGenericType && retTypeInfo.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                retType = retTypeInfo.GetGenericArguments().Single();
+                retTypeInfo = retType.GetTypeInfo();
+            }
+
+            if (retType)
         }
     }
 }
