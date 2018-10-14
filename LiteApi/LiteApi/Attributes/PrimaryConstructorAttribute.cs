@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// If more than one constructor is present on a controller this attribute decides which constructor to use. 

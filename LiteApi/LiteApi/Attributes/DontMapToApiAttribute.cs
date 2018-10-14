@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Attribute used to tell LiteApi middleware not to map method to API in a controller.

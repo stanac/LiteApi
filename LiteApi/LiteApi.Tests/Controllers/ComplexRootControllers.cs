@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace LiteApi.Tests.Controllers
 {

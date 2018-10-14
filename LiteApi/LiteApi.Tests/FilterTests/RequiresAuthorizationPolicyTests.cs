@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-using LiteApi.Contracts.Abstractions;
+﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Tests.ModelSetup;
 using System;
 using System.Security.Claims;

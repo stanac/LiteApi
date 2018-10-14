@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +9,7 @@ namespace LiteApi.Services
     /// <summary>
     /// Generic object instance builder that is using registered services withing the ASP.NET app
     /// </summary>
-    public class ObjectBuilder
+    public class ObjectBuilder : IObjectBuilder
     {
         private static readonly IDictionary<string, ConstructorInfo> Constructors = new ConcurrentDictionary<string, ConstructorInfo>();
         private static readonly IDictionary<string, ParameterInfo[]> ConstructorParameterTypes = new ConcurrentDictionary<string, ParameterInfo[]>();

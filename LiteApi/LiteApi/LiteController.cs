@@ -123,7 +123,7 @@ namespace LiteApi
         /// </summary>
         /// <param name="ctx">Action executing context.</param>
         /// <returns>Task with bool result. If task result is true action will be executed.</returns>
-        [Attributes.DontMapToApiAttribute]
+        [DontMapToApiAttribute]
         public virtual Task<bool> BeforeActionExecution(ActionExecutingContext ctx)
         {
             return Task.FromResult(true);
@@ -135,7 +135,7 @@ namespace LiteApi
         /// <param name="ctx">Action executing context.</param>
         /// <param name="result">Result of action call.</param>
         /// <returns>Task to await.</returns>
-        [Attributes.DontMapToApiAttribute]
+        [DontMapToApiAttribute]
         public virtual Task AfterActionExecuted(ActionExecutingContext ctx, object result)
         {
             return Task.FromResult(0);

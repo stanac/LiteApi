@@ -1,6 +1,4 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.Tests.Controllers
+﻿namespace LiteApi.Tests.Controllers
 {
     [ControllerRoute("SomeOtherRoute/RouteAttributeTests")]
     public class RouteAttributeTestsController : LiteController

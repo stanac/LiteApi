@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using LiteApi.Attributes;
 using LiteApi.Contracts.Models;
 using System.Linq;
 using System;
@@ -24,7 +23,7 @@ namespace LiteApi.Demo.Controllers
 
         public override async Task<bool> BeforeActionExecution(ActionExecutingContext ctx)
         {
-            string paramType = ctx.Parameters.First(x => x.ParameterName.ToLower() == "type").Value as string;
+            string paramType = ctx.Parameters.First(x => string.Equals(x.ParameterName, "type", StringComparison.OrdinalIgnoreCase)).Value as string;
             if (paramType == "dinosaur")
             {
                 await ctx.HttpContext.Response.WriteAsync(400, "text/plain", "Entities of type dinosaur are not supported.");

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Authorization filter where claim has to have any of the provided values

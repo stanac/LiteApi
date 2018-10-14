@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Sets format for parsing <see cref="DateTime"/> and <see cref="DateTimeOffset"/>.

@@ -1,6 +1,4 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.Demo.Controllers
+﻿namespace LiteApi.Demo.Controllers
 {
     public class HttpsTestController: LiteController
     {

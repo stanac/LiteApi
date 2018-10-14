@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-using LiteApi.Contracts.Abstractions;
+﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Services.Discoverers;
 using LiteApi.Services.Validators;
 using System;

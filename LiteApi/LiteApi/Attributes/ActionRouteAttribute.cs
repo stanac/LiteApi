@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Attribute for renaming action and optionally adding route parameters

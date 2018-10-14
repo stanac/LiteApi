@@ -37,7 +37,7 @@ namespace LiteApi.AuthSample.Controllers
             return user;
         }
 
-        [LiteApi.Attributes.RequiresAuthentication]
+        [RequiresAuthentication]
         public async Task Logout()
         {
             await HttpContext.SignOutAsync(Startup.CookieAuthSchemeKey);

@@ -1,4 +1,4 @@
-﻿namespace LiteApi.Attributes
+﻿namespace LiteApi
 {
     /// <summary>
     /// Internally used for describing how to resolve some of the validation errors.

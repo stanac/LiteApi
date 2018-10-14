@@ -129,8 +129,8 @@ namespace LiteApi.Contracts.Models
                     .ToArray();
                 DateTimeParsingFormat = (
                     attributes
-                    .FirstOrDefault(x => x is Attributes.DateTimeParsingFormatAttribute) 
-                                    as Attributes.DateTimeParsingFormatAttribute
+                    .FirstOrDefault(x => x is DateTimeParsingFormatAttribute) 
+                                    as DateTimeParsingFormatAttribute
                                     )?.ParsingFormat;
                 foreach (var action in Actions)
                 {

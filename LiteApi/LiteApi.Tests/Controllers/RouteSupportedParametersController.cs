@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-using System;
+﻿using System;
 
 namespace LiteApi.Tests.Controllers
 {

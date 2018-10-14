@@ -1,6 +1,4 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.Tests.Controllers
+﻿namespace LiteApi.Tests.Controllers
 {
     [RequiresHttps]
     public class RequiresHttpsWithoutIgnoreSkipController : LiteController

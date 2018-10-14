@@ -2,7 +2,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Requires HTTPS protocol to be used. By default this attribute ignores <see cref="SkipFiltersAttribute"/> unless

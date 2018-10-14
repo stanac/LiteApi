@@ -1,11 +1,9 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.AuthSample.Controllers
+﻿namespace LiteApi.AuthSample.Controllers
 {
-    [LiteApi.Attributes.RequiresAuthentication]
+    [RequiresAuthentication]
     public class ServiceController : LiteController
     {
-        [LiteApi.Attributes.SkipFilters]
+        [SkipFilters]
         public string Public()
         {
             return "Success!";

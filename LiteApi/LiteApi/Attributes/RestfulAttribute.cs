@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Maps all actions to root path of controller, unless actions has some attributes to override its path

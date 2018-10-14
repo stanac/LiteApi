@@ -2,7 +2,7 @@
 using System;
 using Microsoft.AspNetCore.Http;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Validates access to controller/action. User must be authenticated in order for filter to pass.

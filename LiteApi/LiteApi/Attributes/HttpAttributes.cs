@@ -1,7 +1,7 @@
 ﻿using LiteApi.Contracts.Models;
 using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Tells the middleware that method should be invoked by HTTP GET method.
@@ -59,6 +59,7 @@ namespace LiteApi.Attributes
     /// Base for HTTP method attributes.
     /// </summary>
     /// <seealso cref="System.Attribute" />
+    [AttributeUsage(AttributeTargets.Method)]
     public abstract class HttpBaseAttribute : Attribute
     { 
         /// <summary>

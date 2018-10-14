@@ -1,6 +1,4 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.Tests.Controllers
+﻿namespace LiteApi.Tests.Controllers
 {
     [ControllerRoute("NoRoot")]
     public class NoRootController : LiteController

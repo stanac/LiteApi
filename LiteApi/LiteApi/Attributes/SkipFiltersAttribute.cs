@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Tells the middleware to invoke action even in user is not authorized or authenticated on controller level.

@@ -1,5 +1,4 @@
-﻿using LiteApi.Attributes;
-#pragma warning disable RECS0154 // Parameter is never used
+﻿#pragma warning disable RECS0154 // Parameter is never used
 
 namespace LiteApi.Tests.Controllers
 {

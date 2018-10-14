@@ -157,13 +157,13 @@ namespace LiteApi.Contracts.Models
 
                 SkipAuth = Method
                     .GetCustomAttributes()
-                    .Where(x => typeof(Attributes.SkipFiltersAttribute) == x.GetType())
+                    .Where(x => typeof(SkipFiltersAttribute) == x.GetType())
                     .Count() > 0;
 
                 DateTimeParsingFormat = (
                     attribs
-                    .FirstOrDefault(x => x is Attributes.DateTimeParsingFormatAttribute)
-                                    as Attributes.DateTimeParsingFormatAttribute
+                    .FirstOrDefault(x => x is DateTimeParsingFormatAttribute)
+                                    as DateTimeParsingFormatAttribute
                                     )?.ParsingFormat;
             }
         }

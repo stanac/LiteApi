@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Checks if user has specified roles and instructs the middleware for execute action or not

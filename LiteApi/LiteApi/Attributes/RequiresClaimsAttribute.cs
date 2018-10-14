@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Checks if user has specified claims and instructs the middleware for execute action or not

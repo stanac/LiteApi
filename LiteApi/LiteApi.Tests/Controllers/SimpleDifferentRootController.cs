@@ -1,6 +1,4 @@
-﻿using LiteApi.Attributes;
-
-namespace LiteApi.Tests.Controllers
+﻿namespace LiteApi.Tests.Controllers
 {
     [ControllerRoute("theApi/SimpleDifferentRoot")]
     public class SimpleDifferentRootController : LiteController

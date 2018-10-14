@@ -4,7 +4,7 @@ using LiteApi.Contracts.Abstractions;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     /// <summary>
     /// Authorization filter where claim has to have all the provided values

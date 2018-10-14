@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LiteApi.Attributes
+namespace LiteApi
 {
     // todo: refactor with attribute inheritance
 
