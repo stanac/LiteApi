@@ -127,42 +127,72 @@ namespace LiteApi.Services
             disctinctTypes = disctinctTypes.Distinct().ToList();
 
             List<ParameterTypeDefinition> paramDefinitions = disctinctTypes.Select(GetParameterTypeDefinition).ToList();
+            var paramDefDict = new Dictionary<string, object>();
+            foreach (var p in paramDefinitions)
+            {
+                paramDefDict[p.Name] = p;
+            }
+
+            var ctrlList = _controllers.Select(c =>
+            {
+                var actionDict = new Dictionary<string, object>();
+
+                var actions = c.Actions.Select(a =>
+                {
+                    var parms = a.Parameters.Where(x => x.ParameterSource != ParameterSources.Service).Select(p =>
+                            new
+                            {
+                                p.Name,
+                                p.IsNullable,
+                                p.IsComplex,
+                                p.IsCollection,
+                                p.IsCollectionElementTypeNullable,
+                                CollectionElementType = p.CollectionElementType?.GetFriendlyName(),
+                                p.OverridenName,
+                                p.ParameterSource,
+                                TypeName = p.Type.GetFriendlyName(),
+                                p.HasDefaultValue,
+                                p.DefaultValue
+                            }).ToList();
+                    var paramDict = new Dictionary<string, object>();
+                    foreach (var p in parms)
+                    {
+                        paramDict[p.Name] = p;
+                    }
+
+                    return new
+                    {
+                        Method = a.HttpMethod.ToString().ToUpper(),
+                        UsesCustomHandler = a.IsReturningLiteActionResult,
+                        a.Name,
+                        Route = "/" + a.ParentController.RouteAndName + "/" + string.Join("/", a.RouteSegments.Select(rs => rs.OriginalValue)),
+                        Parameters = paramDict
+                    };
+                });
+                foreach (var a in actions)
+                {
+                    actionDict[(a.Method.ToUpper() + " " + a.Route).Trim()] = a;
+                }
+
+                return new
+                {
+                    Name = "/" + c.RouteAndName,
+                    Actions = actionDict
+                };
+            }).ToList();
+            var ctrlDict = new Dictionary<string, object>();
+            foreach (var ctrl in ctrlList)
+            {
+                ctrlDict[ctrl.Name] = ctrl;
+            }
 
             return new
             {
-                Controllers = _controllers.Select(c =>
-                    new
-                    {
-                        Name = c.RouteAndName,
-                        c.UrlStart,
-                        Actions = c.Actions.Select(a => 
-                            new
-                            {
-                                Method = a.HttpMethod.ToString().ToUpper(),
-                                UsesCustomHandler = a.IsReturningLiteActionResult,
-                                a.Name,
-                                Route = string.Join("/", a.RouteSegments.Select(rs => rs.OriginalValue)),
-                                Parameters = a.Parameters.Where(x => x.ParameterSource != ParameterSources.Service).Select(p =>
-                                    new
-                                    {
-                                        p.Name,
-                                        p.IsNullable,
-                                        p.IsComplex,
-                                        p.IsCollection,
-                                        p.IsCollectionElementTypeNullable,
-                                        CollectionElementType = p.CollectionElementType?.GetFriendlyName(),
-                                        p.OverridenName,
-                                        p.ParameterSource,
-                                        TypeName = p.Type.GetFriendlyName(),
-                                        p.HasDefaultValue,
-                                        p.DefaultValue
-                                    }).ToList()
-                            }).ToList()
-                    }).ToList(),
+                Controllers = ctrlDict,
                 ApiRoot = _options.UrlRoot,
                 _options.RequiresHttps,
                 Info = "https://liteapi.net",
-                ParameterDefinitions = paramDefinitions
+                ParameterDefinitions = paramDefDict
             };
         }
 
@@ -196,22 +226,26 @@ namespace LiteApi.Services
                     new ParameterDefinitionProperty
                     {
                         Name = p.Name,
-                        Type = p.PropertyType.GetFriendlyName(),                        
+                        Type = p.PropertyType.GetFriendlyName(),
                         IsComplex = !_modelBinders.DoesSupportType(p.PropertyType, ParameterSources.Query)
-                    })
-                .ToList();
+                    }
+                    ).ToList();
 
-            return new ParameterTypeDefinition
+            var def = new ParameterTypeDefinition
             {
-                Name = name,
-                Properties = props
+                Name = name
             };
+            foreach (var p in props)
+            {
+                def.Properties[p.Name] = p;
+            }
+            return def;
         }
 
         private class ParameterTypeDefinition
         {
             public string Name { get; set; }
-            public List<ParameterDefinitionProperty> Properties { get; set; } = new List<ParameterDefinitionProperty>();
+            public Dictionary<string, ParameterDefinitionProperty> Properties { get; set; } = new Dictionary<string, ParameterDefinitionProperty>();
         }
 
         private class ParameterDefinitionProperty
