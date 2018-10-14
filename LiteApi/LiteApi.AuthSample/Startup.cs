@@ -15,8 +15,11 @@ namespace LiteApi.AuthSample
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDataProtection();                // needed for cookie authentication to work
-            services.AddScoped(_ => UrlEncoder.Default); // needed for cookie authentication to work
+            // services.AddDataProtection();                // needed for cookie authentication to work
+            // services.AddScoped(_ => UrlEncoder.Default); // needed for cookie authentication to work
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -28,10 +31,6 @@ namespace LiteApi.AuthSample
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
-            {
-                AuthenticationScheme = CookieAuthSchemeKey
-            });
 
             app.UseStaticFiles();
 
