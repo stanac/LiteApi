@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using System.Text.Encodings.Web;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace LiteApi.AuthSample
 {

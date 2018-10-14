@@ -30,6 +30,8 @@ namespace LiteApi.Tests.Fakes
 
         public ICollection<StringValues> Values => _data.Select(x => x.Value).ToList();
 
+        public long? ContentLength { get => null; set { } }
+
         public void Add(KeyValuePair<string, StringValues> item) => _data.Add(item.Key, item.Value);
 
         public void Add(string key, StringValues value) => _data.Add(key, value);

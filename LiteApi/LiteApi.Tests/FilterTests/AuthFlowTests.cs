@@ -221,7 +221,7 @@ namespace LiteApi.Tests.FilterTests
                 {
                     action.Filters = null;
                 }
-                ctrl.Init(new LiteApiOptionsRetriever(options));
+                ctrl.Init(new LiteApiOptionsAccessor(options));
             }
 
             var actionCtx = ctrl.Actions.Single(x => string.Compare(method, x.Name, StringComparison.OrdinalIgnoreCase) == 0);

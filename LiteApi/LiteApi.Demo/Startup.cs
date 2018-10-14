@@ -27,20 +27,19 @@ namespace LiteApi.Demo
             }
             app.UseStaticFiles();
 
-            LiteApiOptions options = LiteApiOptions.Default;
-            options
-                    .SetLoggerFactory(loggerFactory)
-                    .AddAdditionalQueryModelBinder(new StackQueryBinder(new LiteApiOptionsRetriever(options)))
-                    .AddGlobalFilter(new TestGlobalFilter())
-                    //.SetApiUrlRoot("api2/")
-                    ;
-            options.InternalServiceResolver.Register<IControllerDiscoverer, CustomControllerDiscoverer>();
-            app.UseLiteApi(options);
+            app.UseLiteApi(options =>
+            {
+                options.SetLoggerFactory(loggerFactory);
+                options.AddAdditionalQueryModelBinder(new StackQueryBinder(new LiteApiOptionsAccessor(options)));
+                options.AddGlobalFilter(new TestGlobalFilter());
+                options.InternalServiceResolver.Register<IControllerDiscoverer, CustomControllerDiscoverer>();
+                options.SetDiscoveryEnabled(true);
+            });
             
             app.Run(async context =>
             {
                 context.Response.StatusCode = 404;
-                await context.Response.WriteAsync("404 - NOT FOUND");
+                await context.Response.WriteAsync("404 - NOT FOUND, try going to /LiteApi/info");
             });
         }
 

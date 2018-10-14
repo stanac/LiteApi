@@ -95,7 +95,15 @@ namespace LiteApi
         /// The URL root.
         /// </value>
         public string UrlRoot { get; private set; } = "api/";
-        
+
+        /// <summary>
+        /// If true user can navigate to "/LiteApi/info" to see available controllers and actions
+        /// </summary>
+        /// <value>
+        /// Enabled or disabled discovery of 
+        /// </value>
+        public bool DiscoveryEnabled { get; private set; }
+
         /// <summary>
         /// Adds the controller assemblies.
         /// </summary>
@@ -237,6 +245,18 @@ namespace LiteApi
         public LiteApiOptions SetDateTimeParsingFormatProviderFactory(Func<HttpContext, IFormatProvider> formatProviderFactory)
         {
             DateTimeParsingFormatProviderFactory = formatProviderFactory ?? throw new ArgumentNullException(nameof(formatProviderFactory));
+            return this;
+        }
+
+        /// <summary>
+        /// Sets if discovery of controllers and action (on paths "/LiteApi/info.json" and "/LiteApi/info.html") is enabled. 
+        /// Default is disabled. If enabled you can invoke GET on "/LiteApi/info.json" or "/LiteApi/info.html".
+        /// </summary>
+        /// <param name="enabled">True to enable</param>
+        /// <returns>This instance</returns>
+        public LiteApiOptions SetDiscoveryEnabled(bool enabled)
+        {
+            DiscoveryEnabled = enabled;
             return this;
         }
 

@@ -19,7 +19,7 @@ namespace LiteApi.Services.ModelBinders
         /// Initializes a new instance of the <see cref="DictionaryQueryModelBinder"/> class.
         /// </summary>
         /// <param name="liteApiOptionsRetriever">The lite API options retriever.</param>
-        public DictionaryQueryModelBinder(ILiteApiOptionsRetriever liteApiOptionsRetriever)
+        public DictionaryQueryModelBinder(ILiteApiOptionsAccessor liteApiOptionsRetriever)
             : base(liteApiOptionsRetriever)
         {
         }

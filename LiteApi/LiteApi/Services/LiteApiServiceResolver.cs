@@ -59,8 +59,8 @@ namespace LiteApi.Services
             if (!IsServiceRegistered<IJsonSerializer>())
                 RegisterInstance<IJsonSerializer>(new JsonSerializer());
 
-            if (!IsServiceRegistered<ILiteApiOptionsRetriever>())
-                RegisterInstance<ILiteApiOptionsRetriever>(new LiteApiOptionsRetriever(options));
+            if (!IsServiceRegistered<ILiteApiOptionsAccessor>())
+                RegisterInstance<ILiteApiOptionsAccessor>(new LiteApiOptionsAccessor(options));
         }
 
         #region Get services
@@ -152,8 +152,14 @@ namespace LiteApi.Services
         /// <summary>
         /// Gets the middleware options retriever.
         /// </summary>
-        /// <returns>Instance of <see cref="ILiteApiOptionsRetriever"/></returns>
-        public virtual ILiteApiOptionsRetriever GetOptionsRetriever() => Resolve<ILiteApiOptionsRetriever>();
+        /// <returns>Instance of <see cref="ILiteApiOptionsAccessor"/></returns>
+        public virtual ILiteApiOptionsAccessor GetOptionsAccessor() => Resolve<ILiteApiOptionsAccessor>();
+
+        /// <summary>
+        /// Gets the discovery handler
+        /// </summary>
+        /// <returns>Instance of <see cref="IDiscoveryHandler"/></returns>
+        public IDiscoveryHandler GetDiscoveryHandler() => Resolve<IDiscoveryHandler>();
 
         #endregion
 

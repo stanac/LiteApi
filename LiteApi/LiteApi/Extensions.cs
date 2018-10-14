@@ -116,7 +116,12 @@ namespace LiteApi
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            if (type.IsArray) return type.GetElementType().GetFriendlyName(returnTypeFullName) + "[]";
+            if (type.IsArray)
+            {
+                var elementType = type.GetElementType();
+                var friendlyName = elementType.GetFriendlyName(returnTypeFullName);
+                return friendlyName + "[]";
+            }
 
             var info = type.GetTypeInfo();
 

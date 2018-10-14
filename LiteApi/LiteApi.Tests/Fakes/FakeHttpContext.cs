@@ -16,7 +16,11 @@ namespace LiteApi.Tests.Fakes
             this.SetLiteApiOptions(LiteApiOptions.Default);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0672 // Member overrides obsolete member
         public override AuthenticationManager Authentication { get; }
+#pragma warning restore CS0672 // Member overrides obsolete member
+#pragma warning restore CS0618 // Type or member is obsolete
 
         public override ConnectionInfo Connection { get; }
 

@@ -28,7 +28,7 @@ namespace LiteApi.Services.ModelBinders
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="optionsRetriever">Options retriever.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider, ILiteApiOptionsRetriever optionsRetriever)
+        public ModelBinderCollection(IJsonSerializer jsonSerializer, IServiceProvider serviceProvider, ILiteApiOptionsAccessor optionsRetriever)
         {
             _jsonSerializer = jsonSerializer ?? throw new ArgumentNullException(nameof(jsonSerializer));
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));

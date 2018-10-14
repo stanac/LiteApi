@@ -14,14 +14,14 @@ namespace LiteApi.Services.Discoverers
     public class ControllerDiscoverer : IControllerDiscoverer
     {
         private readonly IActionDiscoverer _actionDiscoverer;
-        private readonly ILiteApiOptionsRetriever _optionsRetriever;
+        private readonly ILiteApiOptionsAccessor _optionsRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllerDiscoverer"/> class.
         /// </summary>
         /// <param name="actionDiscoverer">Instance of <see cref="IActionDiscoverer"/></param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public ControllerDiscoverer(IActionDiscoverer actionDiscoverer, ILiteApiOptionsRetriever optionsRetriever)
+        public ControllerDiscoverer(IActionDiscoverer actionDiscoverer, ILiteApiOptionsAccessor optionsRetriever)
         {
             _actionDiscoverer = actionDiscoverer ?? throw new ArgumentNullException(nameof(actionDiscoverer));
             _optionsRetriever = optionsRetriever ?? throw new ArgumentNullException(nameof(_optionsRetriever));

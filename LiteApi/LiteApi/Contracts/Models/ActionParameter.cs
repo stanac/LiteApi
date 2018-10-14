@@ -122,7 +122,7 @@ namespace LiteApi.Contracts.Models
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether this action parameter is nullable.
         /// </summary>

@@ -29,7 +29,7 @@ namespace LiteApi.Tests
         public static ControllerContext GetControllerContext(this LiteController ctrl)
         {
             var ad = new ActionDiscoverer(new ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever()));
-            var controllerDiscoverer = new ControllerDiscoverer(ad, new LiteApiOptionsRetriever(LiteApiOptions.Default));
+            var controllerDiscoverer = new ControllerDiscoverer(ad, new LiteApiOptionsAccessor(LiteApiOptions.Default));
 
             var type = ctrl.GetType();
             var context = new ControllerContext

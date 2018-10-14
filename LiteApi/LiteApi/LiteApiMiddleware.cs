@@ -1,17 +1,14 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using LiteApi.Services;
-using LiteApi.Services.Discoverers;
 using LiteApi.Services.Logging;
 using LiteApi.Services.ModelBinders;
-using LiteApi.Services.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LiteApi
@@ -24,6 +21,9 @@ namespace LiteApi
         private RequestDelegate _next;
         private ILogger _logger;
         private bool _isLoggingEnabled;
+        private IPathResolver _pathResolver;
+        private IDiscoveryHandler _discoveryHandler;
+        private IActionInvoker _actionInvoker;
 
         // TODO: remove static from Options
         internal LiteApiOptions Options { get; private set; } = LiteApiOptions.Default;
@@ -35,9 +35,9 @@ namespace LiteApi
         /// <param name="next">The next, provided by ASP.NET</param>
         /// <param name="options">The options, passed by <see cref="IApplicationBuilder"/> extension method.</param>
         /// <param name="services">The services, provided by ASP.NET</param>
-        /// <exception cref="System.Exception">Middleware is already registered.</exception>
-        /// <exception cref="System.ArgumentNullException"></exception>
-        /// <exception cref="System.ArgumentException">Assemblies with controllers is not passed to the LiteApiMiddleware</exception>
+        /// <exception cref="Exception">Middleware is already registered.</exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException">Assemblies with controllers is not passed to the LiteApiMiddleware</exception>
         public LiteApiMiddleware(RequestDelegate next, LiteApiOptions options, IServiceProvider services)
         {
             if (IsRegistered) throw new Exception("Middleware is already registered.");
@@ -63,6 +63,10 @@ namespace LiteApi
             IsRegistered = true;            
             
             Initialize(services);
+
+            _actionInvoker = options.InternalServiceResolver.GetActionInvoker();
+            _discoveryHandler = options.InternalServiceResolver.GetDiscoveryHandler();
+            _pathResolver = options.InternalServiceResolver.GetPathResolver();
         }
 
         /// <summary>
@@ -76,8 +80,25 @@ namespace LiteApi
 
             ILogger log = new ContextAwareLogger(_isLoggingEnabled, _logger, httpCtx.TraceIdentifier);
             log.LogInformation($"Received request: {httpCtx.Request.Path} with query: {httpCtx.Request.QueryString.ToString() ?? ""}");
-            IPathResolver pathResolver = Options.InternalServiceResolver.GetPathResolver();
-            ActionContext action = pathResolver.ResolveAction(httpCtx.Request, log);
+
+            if (Options.RequiresHttps && !httpCtx.Request.IsHttps)
+            {
+                log.LogInformation("LiteApi options are set to require HTTPS, request rejected because request is HTTP");
+                httpCtx.Response.StatusCode = 400;
+                await httpCtx.Response.WriteAsync("Bad request, HTTPS request was expected.");
+                return;
+            }
+
+            if (Options.DiscoveryEnabled)
+            {
+                bool handledOnDiscovery = await _discoveryHandler.HandleIfNeeded(httpCtx);
+                if (handledOnDiscovery)
+                {
+                    return;
+                }
+            }
+
+            ActionContext action = _pathResolver.ResolveAction(httpCtx.Request, log);
 
             if (action == null)
             {
@@ -96,25 +117,17 @@ namespace LiteApi
             else
             {
                 // TODO: consider replacing RequiresHttps with global filter
-                if (Options.RequiresHttps && !httpCtx.Request.IsHttps)
-                {
-                    log.LogInformation("LiteApi options are set to require HTTPS, request rejected because request is HTTP");
-                    httpCtx.Response.StatusCode = 400;
-                    await httpCtx.Response.WriteAsync("Bad request, HTTPS request was expected.");
-                }
-                else
-                {
-                    httpCtx.SetActionContext(action);
+                httpCtx.SetActionContext(action);
 
-                    if (!(await CheckGlobalFiltersAndWriteResponseIfAny(httpCtx, log, action.SkipAuth)))
-                    {
-                        return;
-                    }
-                    var actionInvoker = Options.InternalServiceResolver.GetActionInvoker();
-                    await actionInvoker.Invoke(httpCtx, action, log);
-                    log.LogInformation("Action is invoked");
+                if (!(await CheckGlobalFiltersAndWriteResponseIfAny(httpCtx, log, action.SkipAuth)))
+                {
+                    return;
                 }
+
+                await _actionInvoker.Invoke(httpCtx, action, log);
+                log.LogInformation("Action is invoked");
             }
+
             log.LogInformation("Request is processed");
         }
         
@@ -133,9 +146,10 @@ namespace LiteApi
             }
 
             var actions = ctrlContexts.SelectMany(x => x.Actions).ToArray();
+            var ctrls = ctrlContexts.ToArray();
 
             IControllerBuilder ctrlBuilder = Options.InternalServiceResolver.GetControllerBuilder();
-            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.InternalServiceResolver.GetJsonSerializer(), services, new LiteApiOptionsRetriever(Options));
+            ModelBinderCollection modelBinder = new ModelBinderCollection(Options.InternalServiceResolver.GetJsonSerializer(), services, new LiteApiOptionsAccessor(Options));
             foreach (IQueryModelBinder qmb in Options.AdditionalQueryModelBinders)
             {
                 modelBinder.AddAdditionalQueryModelBinder(qmb);
@@ -143,7 +157,7 @@ namespace LiteApi
             
             var authPolicyStore = Options.AuthorizationPolicyStore;
             IControllersValidator validator = Options.InternalServiceResolver.GetControllerValidator();
-            var errors = validator.GetValidationErrors(ctrlContexts.ToArray()).ToArray();
+            var errors = validator.GetValidationErrors(ctrls).ToArray();
             if (errors.Any())
             {
                 _logger.LogError("One or more errors occurred while initializing LiteApi middleware. Check next log entry/entries.");
@@ -156,12 +170,23 @@ namespace LiteApi
             }
 
             Func<Type, bool> isRegistered = (type) => Options.InternalServiceResolver.IsServiceRegistered(type);
-            
+
+            var optionsAccessor = Options.InternalServiceResolver.GetOptionsAccessor();
+
             if (!isRegistered(typeof(IPathResolver)))
-                Options.InternalServiceResolver.RegisterInstance<IPathResolver>(new PathResolver(ctrlContexts.ToArray(), Options.InternalServiceResolver.GetOptionsRetriever()));
+                Options.InternalServiceResolver.RegisterInstance<IPathResolver>(new PathResolver(ctrls, optionsAccessor));
 
             if (!isRegistered(typeof(IModelBinder)))
                 Options.InternalServiceResolver.RegisterInstance<IModelBinder>(modelBinder);
+
+            if (!isRegistered(typeof(IDiscoveryHandler)))
+                Options.InternalServiceResolver.RegisterInstance<IDiscoveryHandler>(
+                    new DiscoveryHandler(ctrls, 
+                                         optionsAccessor, 
+                                         Options.InternalServiceResolver.GetJsonSerializer(), 
+                                         Options.InternalServiceResolver.Resolve<IModelBinder>()
+                                         )
+                    );
         }
 
         private async Task<bool> CheckGlobalFiltersAndWriteResponseIfAny(HttpContext httpCtx, ILogger log, bool actionHasSkipFilter)

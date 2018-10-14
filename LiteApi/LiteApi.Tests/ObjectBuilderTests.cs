@@ -104,11 +104,11 @@ namespace LiteApi.Tests
             var mock = new Mock<IServiceProvider>();
             mock.Setup(x => x.GetService(It.IsAny<Type>())).Returns<object>(type =>
             {
-                if (type == typeof(IAddIntStringService) || type == typeof(AddIntStringService))
+                if ((Type)type == typeof(IAddIntStringService) || (Type)type == typeof(AddIntStringService))
                 {
                     return new AddIntStringService();
                 }
-                if (type == typeof(IStringContactService) || type == typeof(StringContactService))
+                if ((Type)type == typeof(IStringContactService) || (Type)type == typeof(StringContactService))
                 {
                     return new StringContactService();
                 }

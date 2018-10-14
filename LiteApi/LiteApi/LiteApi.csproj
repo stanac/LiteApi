@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
-    <Description>LiteApi is alternative WEB API for .NET Standard (1.6 and 2.0) middleware</Description>
-    <Version>0.9.0</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>LiteApi is lightweight, fast and fully-featured WEB API middleware for .NET Standard 2.0</Description>
+    <Version>2.0.0</Version>
     <PackageProjectUrl>http://liteapi.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/stanac/LiteApi</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -12,19 +12,31 @@
     <Company></Company>
     <PackageLicenseUrl>https://github.com/stanac/LiteApi/blob/master/LICENSE</PackageLicenseUrl>
     <PackageIconUrl>https://cdn.rawgit.com/stanac/LiteApi/ea4415d6/logo.svg</PackageIconUrl>
-    <DebugType>Full</DebugType>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="1.1.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.1.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Code\GitHub\stanac\LiteApi\LiteApi\LiteApi\LiteApi.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="StaticDocuments\Discovery.html" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  <ItemGroup>
+    <EmbeddedResource Include="StaticDocuments\Discovery.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
 
 </Project>

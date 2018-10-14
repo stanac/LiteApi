@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -11,35 +12,35 @@ namespace LiteApi.AuthSample.Controllers
         public async Task<ClaimsPrincipal> LoginWithoutRolesOrClaims()
         {
             var user = GetUser(false, false);
-            await HttpContext.Authentication.SignInAsync(Startup.CookieAuthSchemeKey, user);
+            await HttpContext.SignInAsync(Startup.CookieAuthSchemeKey, user);
             return user;
         }
 
         public async Task<ClaimsPrincipal> LoginWithRolesAndClaims()
         {
             var user = GetUser(true, true);
-            await HttpContext.Authentication.SignInAsync(Startup.CookieAuthSchemeKey, user);
+            await HttpContext.SignInAsync(Startup.CookieAuthSchemeKey, user);
             return user;
         }
 
         public async Task<ClaimsPrincipal> LoginWithRolesOnly()
         {
             var user = GetUser(false, true);
-            await HttpContext.Authentication.SignInAsync(Startup.CookieAuthSchemeKey, user);
+            await HttpContext.SignInAsync(Startup.CookieAuthSchemeKey, user);
             return user;
         }
 
         public async Task<ClaimsPrincipal> LoginWithClaimsOnly()
         {
             var user = GetUser(true, false);
-            await HttpContext.Authentication.SignInAsync(Startup.CookieAuthSchemeKey, user);
+            await HttpContext.SignInAsync(Startup.CookieAuthSchemeKey, user);
             return user;
         }
 
         [LiteApi.Attributes.RequiresAuthentication]
         public async Task Logout()
         {
-            await HttpContext.Authentication.SignOutAsync(Startup.CookieAuthSchemeKey);
+            await HttpContext.SignOutAsync(Startup.CookieAuthSchemeKey);
         }
         
         private ClaimsPrincipal GetUser(bool addClaims, bool addRoles)

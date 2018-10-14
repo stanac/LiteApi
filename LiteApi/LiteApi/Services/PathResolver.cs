@@ -23,7 +23,7 @@ namespace LiteApi.Services
         /// </summary>
         /// <param name="controllers">Controllers to check.</param>
         /// <exception cref="System.ArgumentNullException"></exception>
-        public PathResolver(ControllerContext[] controllers, ILiteApiOptionsRetriever optionsRetriever)
+        public PathResolver(ControllerContext[] controllers, ILiteApiOptionsAccessor optionsRetriever)
         {
             if (controllers == null) throw new ArgumentNullException(nameof(controllers));
             if (optionsRetriever == null) throw new ArgumentNullException(nameof(optionsRetriever));

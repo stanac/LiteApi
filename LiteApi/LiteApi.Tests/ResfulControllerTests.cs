@@ -55,7 +55,7 @@ namespace LiteApi.Tests
             var ctrlDiscoverer = new Fakes.FakeLimitedControllerDiscoverer(typeof(Controllers.RestfulController));
             var ctrls = ctrlDiscoverer.GetControllers(null);
 
-            var pathResolver = new PathResolver(ctrls, new LiteApiOptionsRetriever(LiteApiOptions.Default));
+            var pathResolver = new PathResolver(ctrls, new LiteApiOptionsAccessor(LiteApiOptions.Default));
             var httpCtx = new Fakes.FakeHttpContext();
             if (isGet)
             {

@@ -127,7 +127,7 @@ namespace LiteApi.Contracts.Models
         /// <summary>
         /// Initializes filters and possibly other stuff
         /// </summary>
-        internal void Init(ILiteApiOptionsRetriever optionsRetriever)
+        internal void Init(ILiteApiOptionsAccessor optionsRetriever)
         {
             if (optionsRetriever == null)
             {

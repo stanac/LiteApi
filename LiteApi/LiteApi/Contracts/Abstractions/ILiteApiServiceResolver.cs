@@ -81,10 +81,16 @@ namespace LiteApi.Contracts.Abstractions
         IParametersValidator GetParametersValidator();
 
         /// <summary>
+        /// Gets the discovery handler
+        /// </summary>
+        /// <returns>Instance of <see cref="IDiscoveryHandler"/></returns>
+        IDiscoveryHandler GetDiscoveryHandler();
+
+        /// <summary>
         /// Gets the middleware options resolver.
         /// </summary>
-        /// <returns>Instance of <see cref="ILiteApiOptionsRetriever"/></returns>
-        ILiteApiOptionsRetriever GetOptionsRetriever();
+        /// <returns>Instance of <see cref="ILiteApiOptionsAccessor"/></returns>
+        ILiteApiOptionsAccessor GetOptionsAccessor();
         
         /// <summary>
         /// Resolves the specified interface type.

@@ -11,7 +11,7 @@ namespace LiteApi.Demo
 {
     public class StackQueryBinder: BasicQueryModelBinder
     {
-        public StackQueryBinder(ILiteApiOptionsRetriever optionsRetriever)
+        public StackQueryBinder(ILiteApiOptionsAccessor optionsRetriever)
             : base(optionsRetriever) { }
 
         public override bool DoesSupportType(Type type)

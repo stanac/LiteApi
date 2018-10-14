@@ -12,7 +12,7 @@ namespace LiteApi.Tests.Fakes
     public class FakeLimitedControllerDiscoverer : IControllerDiscoverer
     {
         private readonly IControllerDiscoverer _impl = new ControllerDiscoverer(new ActionDiscoverer(new 
-            ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever())), new LiteApiOptionsRetriever(LiteApiOptions.Default));
+            ParametersDiscoverer(Fakes.FakeServiceProvider.GetServiceProvider(), new Fakes.FakeDefaultLiteApiOptionsRetriever())), new LiteApiOptionsAccessor(LiteApiOptions.Default));
         private Type[] _controllersToDiscover;
 
         public FakeLimitedControllerDiscoverer(params Type[] controllersToDiscover)

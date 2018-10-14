@@ -15,13 +15,13 @@ namespace LiteApi.Services.ModelBinders
     /// <seealso cref="LiteApi.Contracts.Abstractions.IQueryModelBinder" />
     public class BasicQueryModelBinder : IQueryModelBinder
     {
-        private readonly ILiteApiOptionsRetriever _optionsRetriever;
+        private readonly ILiteApiOptionsAccessor _optionsRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BasicQueryModelBinder"/> class.
         /// </summary>
         /// <param name="liteApiOptionsRetriever">The lite API options retriever.</param>
-        public BasicQueryModelBinder(ILiteApiOptionsRetriever liteApiOptionsRetriever)
+        public BasicQueryModelBinder(ILiteApiOptionsAccessor liteApiOptionsRetriever)
         {
             _optionsRetriever = liteApiOptionsRetriever ?? throw new ArgumentNullException(nameof(liteApiOptionsRetriever));
         }

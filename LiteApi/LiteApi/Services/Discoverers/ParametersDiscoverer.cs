@@ -14,14 +14,14 @@ namespace LiteApi.Services.Discoverers
     public class ParametersDiscoverer : IParametersDiscoverer
     {
         private readonly IServiceProvider _services;
-        private readonly ILiteApiOptionsRetriever _optionsRetriever;
+        private readonly ILiteApiOptionsAccessor _optionsRetriever;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ParametersDiscoverer"/> class.
         /// </summary>
         /// <param name="services">The service provider.</param>
         /// <param name="optionsRetriever">LiteApiOptions retriever.</param>
-        public ParametersDiscoverer(IServiceProvider services, ILiteApiOptionsRetriever optionsRetriever)
+        public ParametersDiscoverer(IServiceProvider services, ILiteApiOptionsAccessor optionsRetriever)
         {
             _services = services ?? throw new ArgumentNullException(nameof(services));
             _optionsRetriever = optionsRetriever ?? throw new ArgumentNullException(nameof(optionsRetriever));

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace LiteApi.Tests.Fakes
 {
-    class FakeDefaultLiteApiOptionsRetriever : ILiteApiOptionsRetriever
+    class FakeDefaultLiteApiOptionsRetriever : ILiteApiOptionsAccessor
     {
         public LiteApiOptions GetOptions()
         {
