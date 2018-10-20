@@ -19,7 +19,7 @@ namespace LiteApi.Services
         {
             ConstructorInfo ctor = GetConstructor(objectType);
             var parameters = GetConstructorParameterValues(ctor.GetParameters());
-            Func<object[], object> delegat = _cache[objectType];
+            _cache.TryGetValue(objectType, out Func<object[], object> delegat);
             if (delegat == null)
             {
                 delegat = CreateDelegate(ctor);
