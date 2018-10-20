@@ -13,7 +13,7 @@ namespace LiteApi.Tests
             bool error = false;
             try
             {
-                var a = new ObjectBuilder(null);
+                var a = new ObjectBuilderIL(null);
             }
             catch (ArgumentNullException)
             {
@@ -28,7 +28,7 @@ namespace LiteApi.Tests
             bool error = false;
             try
             {
-                var ob = new ObjectBuilder(GetServiceProviderMock());
+                var ob = new ObjectBuilderIL(GetServiceProviderMock());
                 ob.BuildObject(null);
             }
             catch (ArgumentNullException)
@@ -41,7 +41,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ObjectBuilder_TypeWithDefaultConstructor_CanBeBuilt()
         {
-            var ob = new ObjectBuilder(GetServiceProviderMock());
+            var ob = new ObjectBuilderIL(GetServiceProviderMock());
             var o = ob.BuildObject<ObjToBuild_DefaultConstructor>();
             Assert.NotNull(o);
         }
@@ -49,7 +49,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ObjectBuilder_TypeWithDefinedConstructor_CanBeBuilt()
         {
-            var ob = new ObjectBuilder(GetServiceProviderMock());
+            var ob = new ObjectBuilderIL(GetServiceProviderMock());
             var o = ob.BuildObject<ObjToBuild_DefinedConstructor>();
             Assert.NotNull(o);
             Assert.Equal(5, o.I);
@@ -58,7 +58,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ObjectBuilder_TypeWithNotEmptyConstructor_CanBeBuilt()
         {
-            var ob = new ObjectBuilder(GetServiceProviderMock());
+            var ob = new ObjectBuilderIL(GetServiceProviderMock());
             var o = ob.BuildObject<ObjToBuild_WithNotEmptyConstructor>();
             Assert.NotNull(o);
             Assert.Equal("AB", o.AB);
@@ -70,7 +70,7 @@ namespace LiteApi.Tests
             bool error = false;
             try
             {
-                var ob = new ObjectBuilder(GetServiceProviderMock());
+                var ob = new ObjectBuilderIL(GetServiceProviderMock());
                 var o = ob.BuildObject<ObjToBuild_NoPrimaryConstructor>();
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ObjectBuilder_TypeWithEmptyPrimaryConstructor_CanBeBuilt()
         {
-            var ob = new ObjectBuilder(GetServiceProviderMock());
+            var ob = new ObjectBuilderIL(GetServiceProviderMock());
             var o = ob.BuildObject<ObjToBuild_EmptyPrimaryConstructor>();
             Assert.NotNull(o);
             Assert.Equal("_", o.S);
@@ -92,7 +92,7 @@ namespace LiteApi.Tests
         [Fact]
         public void ObjectBuilder_TypeWithNotEmptyPrimaryConstructor_CanBeBuilt()
         {
-            var ob = new ObjectBuilder(GetServiceProviderMock());
+            var ob = new ObjectBuilderIL(GetServiceProviderMock());
             var o = ob.BuildObject<ObjToBuild_NotEmptyPrimaryConstructor>();
             Assert.NotNull(o);
             Assert.Equal("C3", o.S);

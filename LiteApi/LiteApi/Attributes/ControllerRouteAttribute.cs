@@ -19,7 +19,7 @@ namespace LiteApi
         /// <value>
         /// The route.
         /// </value>
-        public string Route { get; private set; }
+        public string Route { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllerRouteAttribute"/> class.

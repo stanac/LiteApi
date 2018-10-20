@@ -8,8 +8,9 @@ namespace LiteApi.Services
 {
     /// <summary>
     /// Generic object instance builder that is using registered services withing the ASP.NET app
+    /// In 2.0 changed to be abstract, use faster new ObjectBuilderIL
     /// </summary>
-    public class ObjectBuilder : IObjectBuilder
+    public abstract class ObjectBuilder : IObjectBuilder
     {
         private static readonly IDictionary<string, ConstructorInfo> Constructors = new ConcurrentDictionary<string, ConstructorInfo>();
         private static readonly IDictionary<string, ParameterInfo[]> ConstructorParameterTypes = new ConcurrentDictionary<string, ParameterInfo[]>();
@@ -36,8 +37,7 @@ namespace LiteApi.Services
             ConstructorInfo constructor = GetConstructor(objectType);
             ParameterInfo[] parameters = GetConstructorParameters(constructor);
             object[] parameterValues = GetConstructorParameterValues(parameters);
-            object objectInstance = constructor.Invoke(parameterValues);
-            return objectInstance;
+            return constructor.Invoke(parameterValues);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace LiteApi.Services
         /// </summary>
         /// <typeparam name="T">Type to build</typeparam>
         /// <returns>Instance of T</returns>
-        public virtual T BuildObject<T>()
+        public T BuildObject<T>()
             where T: class
         {
             return BuildObject(typeof(T)) as T;

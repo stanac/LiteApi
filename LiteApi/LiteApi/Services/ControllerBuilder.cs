@@ -9,7 +9,7 @@ namespace LiteApi.Services
     /// Class that builds controllers.
     /// </summary>
     /// <seealso cref="IControllerBuilder" />
-    public class ControllerBuilder : ObjectBuilder, IControllerBuilder
+    public class ControllerBuilder : ObjectBuilderIL, IControllerBuilder
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ControllerBuilder"/> class.
