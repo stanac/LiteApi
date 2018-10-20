@@ -1,3 +1,17 @@
+2.0.0 (more info at [blog post](liteapi.net/blog/2018-05-20/release-2_0_0))
+- Dropped support for netstandard < 2.0
+- Attributes are no longer in LiteApi.Attributes namespace, they are in LiteApi namespace
+- Fixed XML documentation issue where IntelliSense didn't show documentation
+- Json.NET dependency updated to 11.0.2
+- Discovery of controllers, actions and parameters
+- `Action<LiteApi.LiteApiOptions>` override for middleware registration 
+
+1.0.1
+- Nuget package fix
+
+1.0.0
+- Stable release 
+
 0.9.1
 - Nuget package fix
 
