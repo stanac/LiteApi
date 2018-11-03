@@ -5,16 +5,28 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Builders
 {
+    /// <summary>
+    /// Implementation of faster object builder using IL emits
+    /// </summary>
     public class ObjectBuilderIL: ObjectBuilder
     {
         private static readonly IDictionary<Type, Func<object[], object>> _cache = new ConcurrentDictionary<Type, Func<object[], object>>();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="serviceProvider">Service provider needed to return registered services</param>
         public ObjectBuilderIL(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
+        /// <summary>
+        /// Builds object
+        /// </summary>
+        /// <param name="objectType">Object type</param>
+        /// <returns></returns>
         public override object BuildObject(Type objectType)
         {
             ConstructorInfo ctor = GetConstructor(objectType);

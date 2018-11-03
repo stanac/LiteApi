@@ -1,6 +1,7 @@
 ﻿using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using LiteApi.Services;
+using LiteApi.Services.Builders;
 using LiteApi.Services.ModelBinders;
 using LiteApi.Tests.ModelSetup;
 using System;

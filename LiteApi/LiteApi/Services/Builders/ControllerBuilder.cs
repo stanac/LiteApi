@@ -3,7 +3,7 @@ using LiteApi.Contracts.Abstractions;
 using LiteApi.Contracts.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Builders
 {
     /// <summary>
     /// Class that builds controllers.

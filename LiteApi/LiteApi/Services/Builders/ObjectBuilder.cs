@@ -1,14 +1,15 @@
-﻿using System;
+﻿using LiteApi.Contracts.Abstractions;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace LiteApi.Services
+namespace LiteApi.Services.Builders
 {
     /// <summary>
     /// Generic object instance builder that is using registered services withing the ASP.NET app
-    /// In 2.0 changed to be abstract, use faster new ObjectBuilderIL
+    /// In 2.0 changed to be abstract, use faster new <see cref="ObjectBuilderIL"/>
     /// </summary>
     public abstract class ObjectBuilder : IObjectBuilder
     {

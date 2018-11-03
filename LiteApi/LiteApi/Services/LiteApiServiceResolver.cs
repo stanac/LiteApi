@@ -1,4 +1,5 @@
 ﻿using LiteApi.Contracts.Abstractions;
+using LiteApi.Services.Builders;
 using LiteApi.Services.Discoverers;
 using LiteApi.Services.Validators;
 using System;
@@ -12,7 +13,7 @@ namespace LiteApi.Services
     /// <summary>
     /// Default implementation of ILiteApiServiceResolver
     /// </summary>
-    /// <seealso cref="LiteApi.Contracts.Abstractions.ILiteApiServiceResolver" />
+    /// <seealso cref="ILiteApiServiceResolver" />
     public class LiteApiServiceResolver : ILiteApiServiceResolver
     {
         private IServiceProvider _serviceProvider;
@@ -22,6 +23,7 @@ namespace LiteApi.Services
         /// Initializes the service provider.
         /// </summary>
         /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="options">Middleware options</param>
         public virtual void Initialize(IServiceProvider serviceProvider, LiteApiOptions options)
         {
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
